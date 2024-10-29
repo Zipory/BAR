@@ -32,3 +32,44 @@
 .entry p {
   margin-top: 2vh;
 }
+/* .flex-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+.flex-container .about-us {
+  width: 60%;
+  margin-top: 2vh;
+  border-radius: 0;
+  border-bottom: 4px double gray;
+}
+.flex-container .left {
+  align-items: flex-end;
+}
+.flex-container .right {
+  align-items: flex-start;
+} */
+.flex-container {
+  display: flex;
+  flex-direction: column; /* עמודות */
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.flex-container .about-us {
+  width: 50%;
+  margin-top: 2vh;
+  border-radius: 0;
+  border-bottom: 4px double gray;
+  text-align: center;
+}
+
+.flex-container .left {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.flex-container .right {
+  justify-content: flex-start;
+}
