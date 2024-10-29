@@ -3,19 +3,73 @@
   padding: 0;
 }
 :root {
+  --shadow-color: rgba(0, 0, 0, 0.3);
 }
 .entry-windows {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
 }
+.home h2 {
+  margin-top: 2vh;
+}
 .entry {
   border-radius: 10px;
   border: 3px solid black;
   display: inline-block;
   padding: 5vh 5vh 5vh 5vh;
+  margin-top: 2vh;
   /* box-shadow: black 0 black 0; */
 }
-.entry p {
+.entry p,
+.entry h1 {
   text-align: center;
+  text-shadow: 2px 2px 5px var(--shadow-color);
+}
+.entry h1 {
+  margin-bottom: 2vh;
+}
+.entry p {
+  margin-top: 2vh;
+}
+/* .flex-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+.flex-container .about-us {
+  width: 60%;
+  margin-top: 2vh;
+  border-radius: 0;
+  border-bottom: 4px double gray;
+}
+.flex-container .left {
+  align-items: flex-end;
+}
+.flex-container .right {
+  align-items: flex-start;
+} */
+.flex-container {
+  display: flex;
+  flex-direction: column; /* עמודות */
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.flex-container .about-us {
+  width: 50%;
+  margin-top: 2vh;
+  border-radius: 0;
+  border-bottom: 4px double gray;
+  text-align: center;
+}
+
+.flex-container .left {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.flex-container .right {
+  justify-content: flex-start;
 }
