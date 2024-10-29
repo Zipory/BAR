@@ -9,7 +9,7 @@ const slogan = [
 ];
 const HomePage = () => {
   return (
-    <div>
+    <div className="home">
       <h2>{slogan[Math.floor(Math.random() * slogan.length)]}</h2>
       <h2>בר, הפלטפורמה שמחברת בין מעסיקים למלצרים!</h2>
       <div className="entry-windows">
