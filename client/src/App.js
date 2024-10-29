@@ -1,9 +1,18 @@
 import Home from "./components/Home";
+import Footer from "./components/Footer";
+import "./App.css";
+
 function App() {
   return (
-    <div>
-      <Home />
-    </div>
+    <>
+      <header></header>
+      <main>
+        <Home />
+      </main>
+      <footer>
+        <Footer />
+      </footer>
+    </>
   );
 }
 
