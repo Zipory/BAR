@@ -1,11 +1,12 @@
 import React from 'react';
 // import Header from './Header';
 import Footer from './home-page/Footer';
-
-const HomePage = () => {
+import About from './home-page/About';
+import Logo from './Logo';
+const Home = () => {
   return (
     <div >
-      <Header />
+      <Logo/>
       <main >
         <h1 >Welcome to Our Website</h1>
         <p >
@@ -13,10 +14,11 @@ const HomePage = () => {
         </p>
         <button >Get Started</button>
       </main>
+      <About/>
       <Footer />
     </div>
   );
 };
 
 
-export default HomePage;
+export default Home;
