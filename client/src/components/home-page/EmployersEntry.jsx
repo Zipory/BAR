@@ -1,15 +1,39 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import "../../style/HomePage.css";
+import { typeOfUser } from "../../App";
 const employer = require("../../images/employer.png");
 const EmployersEntry = () => {
+  // const [employerEntry, setEmployerEntry] = useState(false);
+  // // const [waiterEntry, setWaiterEntry] = useState(false);
+  const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
+
   return (
     <div className="Employers entry left">
-      <h1 className="subject" onClick={() => {}}>
-        כניסת מעסיקים
-      </h1>
-      <img src={employer} alt="employer image" onClick={() => {}} />
-      <p className="waiters-register-p" onClick={() => {}}>
-        לא רשום? הירשם עכשיו!
+      <Link to={"/login"} style={{ textDecoration: "none", color: "inherit" }}>
+        <h1 className="subject">כניסת מעסיקים</h1>
+      </Link>
+      <Link to={"/login"}>
+        <img
+          src={employer}
+          alt="employer "
+          onClick={() => {
+            <Link to="/login" />;
+          }}
+        />
+      </Link>
+
+      <p
+        className="waiters-register-p"
+        onClick={() => {
+          setIsAwaiter(false);
+        }}>
+        <Link
+          to={"/register"}
+          style={{ textDecoration: "none", color: "inherit" }}>
+          {" "}
+          לא רשום? הירשם עכשיו!{" "}
+        </Link>
       </p>
     </div>
   );
