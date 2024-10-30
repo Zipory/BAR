@@ -14,25 +14,7 @@
 .home h2 {
   margin-top: 2vh;
 }
-.entry {
-  border-radius: 10px;
-  border: 3px solid black;
-  display: inline-block;
-  padding: 5vh 5vh 5vh 5vh;
-  margin-top: 2vh;
-  /* box-shadow: black 0 black 0; */
-}
-.entry p,
-.entry h1 {
-  text-align: center;
-  text-shadow: 2px 2px 5px var(--shadow-color);
-}
-.entry h1 {
-  margin-bottom: 2vh;
-}
-.entry p {
-  margin-top: 2vh;
-}
+
 /* .flex-container {
   display: flex;
   flex-direction: column;
@@ -51,9 +33,10 @@
 .flex-container .right {
   align-items: flex-start;
 } */
+
 .flex-container {
   display: flex;
-  flex-direction: column; /* עמודות */
+  flex-direction: column;
   margin-top: 2vh;
   margin-bottom: 2vh;
 }

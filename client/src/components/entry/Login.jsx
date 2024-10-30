@@ -1,4 +1,5 @@
 import "../../style/Login.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import React, { useState } from "react";
 
@@ -14,30 +15,31 @@ function Login() {
 
   return (
     <div className="auth-container">
-      <h2>Login</h2>
+      <h2>התחברות</h2>
       <form onSubmit={handleLogin}>
         <input
           type="email"
-          placeholder="Email Address"
+          placeholder="כתובת דואר אלקטרוני"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <input
-          type={showPassword ? "text" : "password"}
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <input
-          type="checkbox"
-          className="show-password-btn"
-          onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? "Hide Password" : "Show Password"}
-        </input>
+        <div className="password-class">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="סיסמא"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <div
+            className="eyeClick"
+            onClick={() => setShowPassword(!showPassword)}>
+            {(showPassword && <FaEyeSlash />) || <FaEye />}
+          </div>
+        </div>
         <button type="submit" className="login-btn">
-          Login
+          התחברות
         </button>
       </form>
     </div>
