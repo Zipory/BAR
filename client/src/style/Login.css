@@ -1,4 +1,4 @@
-.login {
+/* .login {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -7,4 +7,63 @@ h1 {
   text-align: center;
 }
 .login-element {
+} */
+/* Auth.css */
+.auth-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.auth-container h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-container input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.auth-container .show-password-btn,
+.auth-container .login-btn,
+.auth-container .register-btn {
+  padding: 0.75rem;
+  font-size: 1rem;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.auth-container .show-password-btn {
+  background-color: #777;
+}
+
+.auth-container .login-btn {
+  background-color: #4caf50;
+}
+
+.auth-container .register-btn {
+  background-color: #007bff;
+}
+
+.auth-container .show-password-btn:hover,
+.auth-container .login-btn:hover,
+.auth-container .register-btn:hover {
+  opacity: 0.9;
 }
