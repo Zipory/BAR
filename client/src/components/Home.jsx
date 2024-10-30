@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import WaitersEntry from "./home-page/WaitersEntry";
 import EmployersEntry from "./home-page/EmployersEntry";
 import Login from "./entry/Login";
+import Register from "./entry/Register";
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
   "יש לך זמן פנוי שאתה רוצה לעבוד בו?",
@@ -21,6 +22,7 @@ const Home = () => {
         <EmployersEntry />
       </div>
       <Login />
+      <Register />
       <About />
     </div>
   );
