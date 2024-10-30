@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 :root {
   --shadow-color: rgba(0, 0, 0, 0.3);
@@ -72,4 +73,10 @@
 
 .flex-container .right {
   justify-content: flex-start;
+}
+
+.logo {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 3em;
 }

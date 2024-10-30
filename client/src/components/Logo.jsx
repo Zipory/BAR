@@ -9,8 +9,8 @@ const Logo = () => {
           class="rotate-90"
           src={tie}
           alt="tie"
-          width="50px"
-          height="26px"
+          width="120px"
+          height="80px"
           objectFit="cover"
         />
       </h1>
