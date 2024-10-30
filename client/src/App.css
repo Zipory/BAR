@@ -1,0 +1,13 @@
+@keyframes rotateAndMove {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+  100% {
+    transform: translateX(25px) rotate(90deg);
+  }
+}
+
+.rotate-90 {
+  transform-origin: center center;
+  animation: rotateAndMove 2s ease-in-out 1s forwards;
+}

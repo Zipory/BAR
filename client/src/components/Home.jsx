@@ -14,9 +14,13 @@ const slogan = [
 const Home = () => {
   return (
     <div>
-      <Logo />
-      <h2>{slogan[Math.floor(Math.random() * slogan.length)]}</h2>
-      <h2>בר, הפלטפורמה שמחברת בין מעסיקים למלצרים!</h2>
+      <div className="logo">
+        <Logo />
+        <h2>{slogan[Math.floor(Math.random() * slogan.length)]}</h2>
+        <h2><u>בר</u>, הפלטפורמה שמחברת בין מעסיקים למלצרים!</h2>
+      </div>
+      
+
       <div className="entry-windows">
         <WaitersEntry />
         <EmployersEntry />
