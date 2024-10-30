@@ -1,9 +1,10 @@
 // Register.js
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import "../../style/Login.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { typeOfUser } from "../../App";
 
-function Register() {
+function Register(props) {
   /**general ref's*/
   let email = useRef("");
   let password = useRef("");
@@ -20,21 +21,24 @@ function Register() {
   /** hooks*/
   const [showPassword, setShowPassword] = useState(false);
   const [showCorenfinPassword, setShowCorenfinPassword] = useState(false);
-  const [isAwaiters, setIsAwaiters] = useState(true);
+  /** */
+  const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
 
   //   const handleRegister = (e) => {};
+  const checkRegister = (event) => {
+    event.prevet;
+  };
 
   return (
     <div className="auth-container">
       <h2>הרשמה</h2>
-
       <form
       //    onSubmit={handleRegister}
       >
-        {!isAwaiters && (
+        {!isAwaiter && (
           <input type="text" placeholder="שם חברה" ref={companyName} required />
         )}
-        {!isAwaiters && (
+        {!isAwaiter && (
           <input
             type="text"
             placeholder="שם איש הקשר"
@@ -42,7 +46,7 @@ function Register() {
             required
           />
         )}
-        {!isAwaiters && (
+        {!isAwaiter && (
           <input
             type="text"
             placeholder="מספר של איש הקשר"
@@ -50,20 +54,20 @@ function Register() {
             required
           />
         )}
-        {isAwaiters && (
+        {isAwaiter && (
           <input type="text" placeholder="שם פרטי" ref={firstName}></input>
         )}
-        {isAwaiters && (
+        {isAwaiter && (
           <input type="text" placeholder="שם משפחה" ref={lastName}></input>
         )}
-        {isAwaiters && (
+        {isAwaiter && (
           <input
             dir="rtl"
             type="tel"
             placeholder="פלאפון"
             ref={phoneNumber}></input>
         )}
-        {isAwaiters && (
+        {isAwaiter && (
           <input type="date" placeholder="גיל" ref={waiterAge}></input>
         )}
         <input
