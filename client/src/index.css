@@ -1,3 +1,11 @@
+
+:root {
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --black-background-color: #343131;
+  --old-red-color: #A04747;
+  --braun-gold-color: #D8A25E;
+  --yellow-color: #EEDF7A;
+}
 /* .flex-container {
   display: flex;
   flex-direction: column;
@@ -46,3 +54,20 @@
   text-align: center;
   font-size: 3em;
 }
+
+.about-us {
+  font-size: 2.5em;
+}
+
+footer {
+  background-color: var(--black-background-color);
+  color: whitesmoke;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+a {
+  color: var(--braun-gold-color);
+}
+
+
