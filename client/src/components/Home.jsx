@@ -25,8 +25,8 @@ const Home = () => {
         <WaitersEntry />
         <EmployersEntry />
       </div>
-      <Login />
-      <Register />
+      {/* <Login />
+      <Register /> */}
       <About />
     </div>
   );
