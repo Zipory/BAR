@@ -1,4 +1,5 @@
 import React from "react";
+import "../../style/HomePage.css";
 const employer = require("../../images/employer.png");
 const EmployersEntry = () => {
   return (
