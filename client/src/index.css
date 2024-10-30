@@ -1,20 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-:root {
-  --shadow-color: rgba(0, 0, 0, 0.3);
-}
-.entry-windows {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-}
-.home h2 {
-  margin-top: 2vh;
-}
-
 /* .flex-container {
   display: flex;
   flex-direction: column;
