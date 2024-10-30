@@ -4,6 +4,8 @@ import Register from "./components/entry/Register";
 import Footer from "./components/Footer";
 import { Route, Routes } from "react-router-dom";
 import { useState, createContext } from "react";
+import  Info from "./components/manager/Info.jsx"
+
 import "./App.css";
 import Logo from "./components/Logo";
 
@@ -37,6 +39,7 @@ function App() {
           </Routes>
         </typeOfUser.Provider>
       </main>
+      <Info/>
       <footer>
         <Footer />
       </footer>
