@@ -4,6 +4,7 @@ import Register from "./components/entry/Register";
 import Footer from "./components/Footer";
 import { Route, Routes } from "react-router-dom";
 import { useState, createContext } from "react";
+
 import Managerdashboard from "./components/Managerdashbord.jsx";
 import "./App.css";
 import Logo from "./components/Logo";
@@ -16,7 +17,7 @@ const slogan = [
 export const typeOfUser = createContext(null);
 
 function App() {
-  const [isAwaiter, setIsAwaiter] = useState(false);
+  const [isAwaiter, setIsAwaiter] = useState(true);
   return (
     <>
       <header></header>
@@ -38,7 +39,9 @@ function App() {
           </Routes>
         </typeOfUser.Provider>
       </main>
+
       <Managerdashboard />
+
       <footer>
         <Footer />
       </footer>

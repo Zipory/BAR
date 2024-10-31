@@ -26,7 +26,13 @@ function Register(props) {
 
   //   const handleRegister = (e) => {};
   const checkRegister = (event) => {
-    event.prevetDefault();
+
+    event.preventDefault();
+    let isTrue = email && password && confirmPassword;
+    //TODO
+    if (isAwaiter) {
+    }
+
   };
 
   return (
