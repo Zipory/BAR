@@ -29,15 +29,6 @@ function App() {
           </h2>
           {/* {(isAwaiter && <h2>הוא מלצר</h2>) || <h2>הוא מעסיק</h2>} */}
         </div>
-        //testing
-        <iframe
-          title="Data viewer"
-          width="700"
-          height="400"
-          src="https://data.gov.il/dataset/321/resource/a7296d1a-f8c9-4b70-96c2-6ebb4352f8e3/view/8236830b-6549-4daa-8cf3-a4ad0265ec95"
-          frameBorder="0"
-        ></iframe>
-        //testing
         <typeOfUser.Provider value={[isAwaiter, setIsAwaiter]}>
           <Routes>
             <Route path="/" element={<Home />} />
