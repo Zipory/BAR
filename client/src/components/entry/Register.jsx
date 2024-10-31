@@ -26,7 +26,7 @@ function Register(props) {
 
   //   const handleRegister = (e) => {};
   const checkRegister = (event) => {
-    event.prevet;
+    event.prevetDefault();
   };
 
   return (
@@ -105,7 +105,7 @@ function Register(props) {
           </div>
         </div>
 
-        <button type="submit" className="register-btn">
+        <button type="submit" className="register-btn" onClick={!isAwaiter && sendInfo}>
           התחברות
         </button>
       </form>
@@ -114,3 +114,7 @@ function Register(props) {
 }
 
 export default Register;
+
+function sendInfo() {
+  
+}
