@@ -1,0 +1,47 @@
+.manager-dashboard {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .manager-info {
+    margin-bottom: 20px;
+  }
+  
+  .big-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .big-button:hover {
+    background-color: #45a049;
+  }
+  
+  .future-events {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .medium-button {
+    display: block;
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .medium-button:hover {
+    background-color: #007bb5;
+  }
