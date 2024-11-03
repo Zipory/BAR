@@ -1,15 +1,15 @@
 export async function Fetch(url, setState) {
-    fetch(url)
-      .then((res) => res.json())
-      .then((json) => {
-        setState(json);
-        console.log(json);
-      });
-    console.log(url);
-  }
+  fetch(url)
+    .then((res) => res.json())
+    .then((json) => {
+      setState(json);
+      console.log(json);
+    });
+  console.log(url);
+}
 
- export async function FetchPost(url, data, setState) {
-    // let response = null;
+export async function FetchPost(url, data, setState) {
+  try {
     fetch(url, {
       method: "POST",
       headers: {
@@ -20,12 +20,13 @@ export async function Fetch(url, setState) {
       .then((res) => {
         if (res.ok) {
           // console.log("created");
-  
+
           return res.json();
         } else {
           console.error("Failed to create");
         }
       })
+      // i dont know why i need this
       .then((json) => {
         if (json) {
           if (setState) {
@@ -34,5 +35,8 @@ export async function Fetch(url, setState) {
             console.log("There is no setState");
           }
         }
-      });
+      });   
+  } catch (error) {
+    console.error("Error logging in:", error);
   }
+}

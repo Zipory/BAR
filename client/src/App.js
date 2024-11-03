@@ -15,9 +15,10 @@ const slogan = [
   "שובר את הראש בגיוס מלצרים בכל אירוע מחדש?",
 ];
 export const typeOfUser = createContext(null);
-
+export const userInfo = createContext(null);
 function App() {
   const [isAwaiter, setIsAwaiter] = useState(true);
+  const [user, setUser] = useState({name: "", catering: "", email: ""});
   return (
     <>
       <header></header>
@@ -31,16 +32,18 @@ function App() {
           {/* {(isAwaiter && <h2>הוא מלצר</h2>) || <h2>הוא מעסיק</h2>} */}
         </div>
         <typeOfUser.Provider value={[isAwaiter, setIsAwaiter]}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Routes>
+          <userInfo.Provider value={[user, setUser]}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/events-manager" element={<Managerdashboard />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Routes>
+          </userInfo.Provider>
         </typeOfUser.Provider>
       </main>
 
-      <Managerdashboard />
+      {/* <Managerdashboard /> */}
 
       <footer>
         <Footer />
