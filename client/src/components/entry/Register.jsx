@@ -26,7 +26,7 @@ function Register(props) {
 
   //   const handleRegister = (e) => {};
   const checkRegister = (event) => {
-
+    document.querySelector(".myForm").checkVisibility();
     event.preventDefault();
     let isTrue = email && password && confirmPassword;
     //TODO
@@ -38,7 +38,7 @@ function Register(props) {
   return (
     <div className="auth-container">
       <h2>הרשמה</h2>
-      <form
+      <form className="myForm"
       //    onSubmit={handleRegister}
       >
         {!isAwaiter && (
@@ -111,7 +111,7 @@ function Register(props) {
           </div>
         </div>
 
-        <button type="submit" className="register-btn" onClick={!isAwaiter && sendInfo}>
+        <button type="submit" className="register-btn" onClick={!isAwaiter ? checkRegister : undefined}>
           התחברות
         </button>
       </form>
@@ -121,6 +121,3 @@ function Register(props) {
 
 export default Register;
 
-function sendInfo() {
-  
-}
