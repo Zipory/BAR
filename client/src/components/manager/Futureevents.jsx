@@ -3,6 +3,9 @@ import { userInfo } from '../../App'
 const Futureevents = () => {
   const [user, setUser] = useContext(userInfo);
   const [events, setEvents] = useState([user.events]);
+  const percentage = (event) => {
+    return (event.numberOfWaiters / event.numberOfWaitersNeeded) * 100;
+  }
   return (
     <div className="future-events">
     <h3>אירועים עתידים:</h3>
@@ -11,7 +14,7 @@ const Futureevents = () => {
       <li>אירוע 2: כיכר החתולות ירושלים - 16/03/25  == 3/3 מלצרים</li>
       <li>אירוע 3: רמדה רנסאנס ירושלים - 01/04/25  == 2/10 מלצרים</li>
       {/* <progress value="37" max="100"></progress> */}
-      {/* <meter value="10" max="100">100%</meter> */}
+      {/* <meter value={events.numberOfWaiters} max={events.numberOfWaitersNeeded}>{percentage(events[0])}%</meter> */}
       {/* {events.map((event, index) => (
         <li>אירוע {index+1}: {event.city} - {event.date} == {event.numberOfWaitersNeeded}/{event.numberOfWaiters}</li>
       ))} */}

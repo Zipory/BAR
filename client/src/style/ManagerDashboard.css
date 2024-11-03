@@ -45,3 +45,23 @@
   .medium-button:hover {
     background-color: #007bb5;
   }
+
+  .meter {
+    
+    height: 30px;
+    width: 200px;
+    background-color: gainsboro;
+    border: 1px solid gray;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  .inner-meter {
+      height: 30px;
+      width: 150px;
+      background-color: green;
+      border-right: 1px solid gray;
+      display: flex;
+      justify-content: center;
+    color: white;
+    align-items: center;
+  }
