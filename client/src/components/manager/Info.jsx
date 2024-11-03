@@ -1,11 +1,12 @@
-import React from 'react'
-
+import React, { useContext } from 'react'
+import { userInfo } from '../../App'
 const Info = () => {
+  const [user, setUser] = useContext(userInfo);
   return (
      <div className="manager-info">
-     <h2>ברוך הבא המנהל יוסף</h2>
-     <p>קייטרינג: משביע לכולם</p>
-     <p>Email: yosef.vf@example.com</p>
+     <h2>ברוך הבא המנהל {user.name}</h2>
+     <p>קייטרינג: {user.catering}</p>
+     <p>Email: {user.email}</p>
    </div>
   )
 }

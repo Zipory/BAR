@@ -6,12 +6,12 @@ const Logo = () => {
       <h1>
         AR
         <img
-          class="rotate-90"
+          className="rotate-90"
           src={tie}
           alt="tie"
           width="120px"
           height="80px"
-          objectFit="cover"
+          objectfit="cover"
         />
       </h1>
     </header>
