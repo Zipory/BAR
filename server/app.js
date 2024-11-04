@@ -9,6 +9,30 @@ const { log } = require("console");
 const app = express();
 const SECRET_KEY = "BAR_best_project_ever";
 
+/**----------------Variables---------------- */
+const waitersFields = [
+  "first_name",
+  "last_name",
+  "phone",
+  "birthday",
+  "email",
+  "w_password",
+  "gender",
+  "avg_rating",
+  "status",
+];
+
+const employersFields = [
+  "company_name",
+  "manager",
+  "manager_phone",
+  "email",
+  "e_password",
+  "about",
+  "avg_rating",
+  "status",
+];
+
 app.use(
   cors({
     origin: "*",
@@ -35,76 +59,10 @@ const connection = mysql.createConnection({
 // });
 
 /*-----------------authenticate Token----------------- */
-// const authenticateToken = (req, res, next) => {
-//   const token = req.headers["authorization"]?.split(" ")[1]; // token מתוך ה-header
 
-//   if (!token)
-//     return res.status(401).json({ message: "Access denied, token missing" });
-
-//   // אימות הטוקן
-//   jwt.verify(token, SECRET_KEY, (err, user) => {
-//     if (err) return res.status(403).json({ message: "Invalid token" });
-
-//     req.user = user;
-//     next();
-//   });
-// };
 
 /*-----------------Routes----------------------- */
-//Dynamic login
-// app.post("/login", (req, res) => {
-//   const user = req.body; //catch the user
-//   let response = {}; //variable for response
-//   const arr = [user.email]; //Dynamic array for query
-//   const employer_ditails =
-//     "id , company_name , manager,manager_phone , email , about , avg_rating"; //Query for employer
-//   const waiter_ditails =
-//     "first_name,last_name,phone,birthday,email,gender,avg_rating"; //Query for waiter
 
-//   //Dynamic query
-//   connection.query(
-//     `SELECT ${user.isAwaiter ? waiter_ditails : employer_ditails} FROM ${
-//       user.isAwaiter ? "waiters" : "employers"
-//     } WHERE email =?;`,
-//     arr,
-//     (err, results) => {
-//       if (err) {
-//         console.error(316, "Error fetching data:", err);
-//         res
-//           .status(500)
-//           .send(JSON.stringify("Error fetching data from the database"));
-//       } else if (user.isAwaiter) {
-//         //If its a waiter loged
-//         //TODO login for waiter!
-//         // connection.query(``,[],(err,results)=>{if(err){}else{}})
-//       } else {
-//         //If its an employer loged
-
-//         Object.assign(response, results[0]); //It takes the response felds and put inside the response variable
-//         const arr2 = [results[0].id]; //It takes the employer loged id
-
-//         const events_ditails =
-//           "e_date , e_time , length , street , suite , event_description , waiters_sum , payment , is_global , has_sleep"; //The required felds
-
-//         connection.query(
-//           `SELECT ${events_ditails} FROM events WHERE employer_fk =?;`,
-//           arr2,
-//           (err, results) => {
-//             if (err) {
-//               console.error(316, "Error fetching data:", err);
-//               res
-//                 .status(500)
-//                 .send(JSON.stringify("Error fetching data from the database"));
-//             } else {
-//               response.events = results; //Puts the events array inside the response Object
-//               res.json(response);
-//             }
-//           }
-//         );
-//       }
-//     }
-//   );
-// });
 
 app.post("/login", (req, res) => {
   const user = req.body; //catch the user
@@ -116,7 +74,7 @@ app.post("/login", (req, res) => {
   const waiter_ditails =
     "first_name,last_name,phone,birthday,email,gender,avg_rating"; //Query for waiter
 
-  sqlQuery(
+  sqlQuerySelect(
     `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
     `${user.isAwaiter ? "waiters" : "employers"}`,
     ["email"],
@@ -138,7 +96,7 @@ app.post("/login", (req, res) => {
         const arr2 = [results[0].id]; //It takes the employer loged id
         const events_ditails =
           "e_date , e_time , length , street , suite , event_description , waiters_sum , payment , is_global , has_sleep"; //The required felds
-        sqlQuery(
+        sqlQuerySelect(
           `${events_ditails}`,
           "events",
           ["employer_fk"],
@@ -164,89 +122,168 @@ app.post("/login", (req, res) => {
     }
   );
 });
-/*-----------------Routes----------------------- */
-//login
-//verify user
-// app.post("/login", (req, res) => {
-//   const user = req.body;
-//   connection.query(
-//     `SELECT email,password FROM ${
-//       user.isWaiter ? "waiters" : "employers"
-//     } WHERE email =? and password =?`,
-//     [user.email, user.password],
-//     (err, results) => {
-//       if (err) {
-//         console.error(316, "Error fetching data:", err);
-//         res
-//           .status(500)
-//           .send(JSON.stringify("Error fetching data from the database"));
-//       } else {
-//         console.log(results);
-//         const token = jwt.sign(user, SECRET_KEY);
-//         res.json({ token });
-//       }
-//     }
-//   );
-//   //verify user
-// });
-// app.post("/register", (req, res) => {
-//   const user = req.body;
-//   let arr = [user.email];
-//   if (!user.isWaiter) {
-//     arr.push(user.companyName);
-//   }
-//   connection.query(
-//     `SELECT email${user.isWaiter ? "" : ",company_name"} FROM ${
-//       user.isWaiter ? "waiters" : "employers"
-//     } WHERE email =? ${user.isWaiter ? "" : "OR company_name=?"} limit 1`,
-//     arr,
 
-//     (err, results) => {
-//       if (err) {
-//         console.error(316, "Error fetching data:", err);
-//         res
-//           .status(500)
-//           .send(JSON.stringify("Error fetching data from the database"));
-//       } else if (results.length === 0) {
-//         console.log(results);
-//         const token = jwt.sign(user, SECRET_KEY);
-//         res.json({ token });
-//       } else {
-//         res.json("the email or company name already exists");
-//       }
-//     }
-//   );
-//   //verify user
-// });
+//register
+app.post("/register", (req, res) => {
+  const user = req.body;
 
-//route
-// app.get("/protected", authenticateToken, (req, res) => {
-//   res.json({
-//     message: `Welcome ${req.user.username}! This is a protected route.`,
-//   });
-// });
+  console.log("is A waiter: ", user.isAwaiter);
 
-// app.post("/test", (req, res) => {
-//   console.log("user: ", req.body);
-//   const user = req.body;
+  if (!user.isAwaiter) {
+    sqlQuerySelect(
+      "*",
+      "employers",
+      ["email"],
+      [user.email],
+      0,
+      (err, results) => {
+        if (err) {
+          res
+            .status(500)
+            .send(JSON.stringify("Error fetching data from the database"));
+        } else {
+          if (results.length > 0) {
+            res
+              .status(500)
+              .send(
+                JSON.stringify("There is already an account with this details")
+              );
+          } else {
+            sqlQuerySelect(
+              "*",
+              "employers",
+              ["company_name"],
+              [user.companyName],
+              0,
+              (err, results) => {
+                if (err) {
+                  res
+                    .status(500)
+                    .send(
+                      JSON.stringify("Error fetching data from the database")
+                    );
+                } else {
+                  if (results.length > 0) {
+                    res
+                      .status(500)
+                      .send(
+                        JSON.stringify(
+                          "There is already an account with this details"
+                        )
+                      );
+                  } else {
+                    //register him
 
-//   sqlQuery("*", "employers", ["email"], [user.email], 0, (err, response) => {
-//     if (err) {
-//       console.error("Error: ", err);
-//       res.status(500).send("Error fetching data from the database");
-//     } else {
-//       console.log("response: ", response);
-//       res.json(response);
-//     }
-//   });
-// });
+                    sqlQueryInsert(
+                      "employers",
+                      employersFields,
+                      [
+                        user.company_name,
+                        user.manager,
+                        user.manager_phone,
+                        user.email,
+                        user.e_password,
+                        user.about,
+                        user.avg_rating,
+                        "active",
+                      ],
+                      (err, results) => {
+                        if (err) {
+                          res
+                            .status(500)
+                            .send(
+                              JSON.stringify(
+                                "Error inserting data to the database 2"
+                              )
+                            );
+                        } else {
+                          res
+                            .status(200)
+                            .send(JSON.stringify("Successfully registered"));
+                        }
+                      }
+                    );
+                  }
+                }
+              }
+            );
+          }
+        }
+      }
+    );
+  } else {
+    sqlQuerySelect(
+      "*",
+      "waiters",
+      ["email"],
+      [user.email],
+      0,
+      (err, results) => {
+        if (err) {
+          res
+            .status(500)
+            .send(JSON.stringify("Error fetching data from the database"));
+        } else {
+          if (results.length > 0) {
+            res
+              .status(500)
+              .send(
+                JSON.stringify("There is already an account with this details")
+              );
+          } else {
+            //register him
+            console.log("values: ", [
+              user.first_name,
+              user.last_name,
+              user.phone,
+              user.birthday,
+              user.email,
+              user.password,
+              user.gender,
+              user.avg_rating,
+              "active",
+            ]);
+            sqlQueryInsert(
+              "waiters",
+              waitersFields,
+              [
+                user.first_name,
+                user.last_name,
+                user.phone,
+                user.birthday,
+                user.email,
+                user.password,
+                user.gender,
+                user.avg_rating,
+                "active",
+              ],
+              (err, results) => {
+                if (err) {
+                  res
+                    .status(500)
+                    .send(
+                      JSON.stringify("Error inserting data to the database 1")
+                    );
+                } else {
+                  res
+                    .status(200)
+                    .send(JSON.stringify("Successfully registered"));
+                }
+              }
+            );
+          }
+        }
+      }
+    );
+  }
+});
 
 /*-----------------set listener open on port 4000 ------------------ */
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-function sqlQuery(
+function sqlQuerySelect(
   selectWhat,
   fromWhat,
   whereCondition = [],
@@ -278,6 +315,28 @@ function sqlQuery(
     }
   });
 }
+
+function sqlQueryInsert(table, fields = [], values = [], callback) {
+  const placeholders = fields.map(() => "?").join(", ");
+  const sql = `INSERT INTO ${table} (${fields.join(
+    ", "
+  )}) VALUES (${placeholders})`;
+
+  console.log("table: ", table);
+  console.log("fields: ", fields);
+  console.log("values: ", values);
+  console.log("sql: ", sql);
+
+  connection.query(sql, values, (err, results) => {
+    if (err) {
+      console.error("Error inserting data:", err);
+      callback(err, null); // Call the callback with an error
+    } else {
+      callback(null, results); // Call the callback with results
+    }
+  });
+}
+
 function cutIsoDate(e_date) {
   if (e_date instanceof Date) {
     const year = e_date.getFullYear();
