@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { typeOfUser } from "../../App";
 import  {FetchPost} from "../Fetch"
 import { userInfo } from "../../App";
-const serverUrl = "http://localhost:4000/";
+const serverUrl = "http://localhost:4000/login";
 
 function Login() {
   const [email, setEmail] = useState("");
