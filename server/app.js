@@ -60,9 +60,7 @@ const connection = mysql.createConnection({
 
 /*-----------------authenticate Token----------------- */
 
-
 /*-----------------Routes----------------------- */
-
 
 app.post("/login", (req, res) => {
   const user = req.body; //catch the user
@@ -231,18 +229,6 @@ app.post("/register", (req, res) => {
                 JSON.stringify("There is already an account with this details")
               );
           } else {
-            //register him
-            console.log("values: ", [
-              user.first_name,
-              user.last_name,
-              user.phone,
-              user.birthday,
-              user.email,
-              user.password,
-              user.gender,
-              user.avg_rating,
-              "active",
-            ]);
             sqlQueryInsert(
               "waiters",
               waitersFields,
@@ -275,6 +261,24 @@ app.post("/register", (req, res) => {
         }
       }
     );
+  }
+});
+
+app.post("/events", (req, res) => {
+  const user = req.body;
+  if (user.isAwaiter) {
+    //get user events
+  } else {
+    //TODO get emploer events
+    sqlQuerySelect("*", "events", [], [], 0, (err, results) => {
+      if (err) {
+        res
+          .status(500)
+          .send(JSON.stringify("Error fetching data from the database"));
+      } else {
+        res.json(results);
+      }
+    });
   }
 });
 
@@ -321,11 +325,6 @@ function sqlQueryInsert(table, fields = [], values = [], callback) {
   const sql = `INSERT INTO ${table} (${fields.join(
     ", "
   )}) VALUES (${placeholders})`;
-
-  console.log("table: ", table);
-  console.log("fields: ", fields);
-  console.log("values: ", values);
-  console.log("sql: ", sql);
 
   connection.query(sql, values, (err, results) => {
     if (err) {
