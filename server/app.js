@@ -9,6 +9,43 @@ const { log } = require("console");
 const app = express();
 const SECRET_KEY = "BAR_best_project_ever";
 
+/**----------------Variables---------------- */
+const waitersFields = [
+  "first_name",
+  "last_name",
+  "phone",
+  "birthday",
+  "email",
+  "w_password",
+  "gender",
+  "avg_rating",
+  "status",
+];
+
+const employersFields = [
+  "company_name",
+  "manager",
+  "manager_phone",
+  "email",
+  "e_password",
+  "about",
+  "avg_rating",
+  "status",
+];
+
+const eventsFields = [
+  "employer_fk",
+  "e_date",
+  "e_time",
+  "length",
+  "street",
+  "suite",
+  "event_description",
+  "waiters_sum",
+  "payment",
+  "is_global",
+  "has_sleep",
+];
 app.use(
   cors({
     origin: "*",
@@ -35,76 +72,8 @@ const connection = mysql.createConnection({
 // });
 
 /*-----------------authenticate Token----------------- */
-// const authenticateToken = (req, res, next) => {
-//   const token = req.headers["authorization"]?.split(" ")[1]; // token מתוך ה-header
-
-//   if (!token)
-//     return res.status(401).json({ message: "Access denied, token missing" });
-
-//   // אימות הטוקן
-//   jwt.verify(token, SECRET_KEY, (err, user) => {
-//     if (err) return res.status(403).json({ message: "Invalid token" });
-
-//     req.user = user;
-//     next();
-//   });
-// };
 
 /*-----------------Routes----------------------- */
-//Dynamic login
-// app.post("/login", (req, res) => {
-//   const user = req.body; //catch the user
-//   let response = {}; //variable for response
-//   const arr = [user.email]; //Dynamic array for query
-//   const employer_ditails =
-//     "id , company_name , manager,manager_phone , email , about , avg_rating"; //Query for employer
-//   const waiter_ditails =
-//     "first_name,last_name,phone,birthday,email,gender,avg_rating"; //Query for waiter
-
-//   //Dynamic query
-//   connection.query(
-//     `SELECT ${user.isAwaiter ? waiter_ditails : employer_ditails} FROM ${
-//       user.isAwaiter ? "waiters" : "employers"
-//     } WHERE email =?;`,
-//     arr,
-//     (err, results) => {
-//       if (err) {
-//         console.error(316, "Error fetching data:", err);
-//         res
-//           .status(500)
-//           .send(JSON.stringify("Error fetching data from the database"));
-//       } else if (user.isAwaiter) {
-//         //If its a waiter loged
-//         //TODO login for waiter!
-//         // connection.query(``,[],(err,results)=>{if(err){}else{}})
-//       } else {
-//         //If its an employer loged
-
-//         Object.assign(response, results[0]); //It takes the response felds and put inside the response variable
-//         const arr2 = [results[0].id]; //It takes the employer loged id
-
-//         const events_ditails =
-//           "e_date , e_time , length , street , suite , event_description , waiters_sum , payment , is_global , has_sleep"; //The required felds
-
-//         connection.query(
-//           `SELECT ${events_ditails} FROM events WHERE employer_fk =?;`,
-//           arr2,
-//           (err, results) => {
-//             if (err) {
-//               console.error(316, "Error fetching data:", err);
-//               res
-//                 .status(500)
-//                 .send(JSON.stringify("Error fetching data from the database"));
-//             } else {
-//               response.events = results; //Puts the events array inside the response Object
-//               res.json(response);
-//             }
-//           }
-//         );
-//       }
-//     }
-//   );
-// });
 
 app.post("/login", (req, res) => {
   const user = req.body; //catch the user
@@ -116,10 +85,11 @@ app.post("/login", (req, res) => {
   const waiter_ditails =
     "first_name,last_name,phone,birthday,email,gender,avg_rating"; //Query for waiter
 
-  sqlQuery(
+  sqlQuerySelect(
     `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
     `${user.isAwaiter ? "waiters" : "employers"}`,
     ["email"],
+    "=",
     arr,
     0,
     (err, results) => {
@@ -138,10 +108,11 @@ app.post("/login", (req, res) => {
         const arr2 = [results[0].id]; //It takes the employer loged id
         const events_ditails =
           "e_date , e_time , length , street , suite , event_description , waiters_sum , payment , is_global , has_sleep"; //The required felds
-        sqlQuery(
+        sqlQuerySelect(
           `${events_ditails}`,
           "events",
           ["employer_fk"],
+          "=",
           arr2,
           0,
           (err, results) => {
@@ -164,92 +135,214 @@ app.post("/login", (req, res) => {
     }
   );
 });
-/*-----------------Routes----------------------- */
-//login
-//verify user
-// app.post("/login", (req, res) => {
-//   const user = req.body;
-//   connection.query(
-//     `SELECT email,password FROM ${
-//       user.isWaiter ? "waiters" : "employers"
-//     } WHERE email =? and password =?`,
-//     [user.email, user.password],
-//     (err, results) => {
-//       if (err) {
-//         console.error(316, "Error fetching data:", err);
-//         res
-//           .status(500)
-//           .send(JSON.stringify("Error fetching data from the database"));
-//       } else {
-//         console.log(results);
-//         const token = jwt.sign(user, SECRET_KEY);
-//         res.json({ token });
-//       }
-//     }
-//   );
-//   //verify user
-// });
-// app.post("/register", (req, res) => {
-//   const user = req.body;
-//   let arr = [user.email];
-//   if (!user.isWaiter) {
-//     arr.push(user.companyName);
-//   }
-//   connection.query(
-//     `SELECT email${user.isWaiter ? "" : ",company_name"} FROM ${
-//       user.isWaiter ? "waiters" : "employers"
-//     } WHERE email =? ${user.isWaiter ? "" : "OR company_name=?"} limit 1`,
-//     arr,
 
-//     (err, results) => {
-//       if (err) {
-//         console.error(316, "Error fetching data:", err);
-//         res
-//           .status(500)
-//           .send(JSON.stringify("Error fetching data from the database"));
-//       } else if (results.length === 0) {
-//         console.log(results);
-//         const token = jwt.sign(user, SECRET_KEY);
-//         res.json({ token });
-//       } else {
-//         res.json("the email or company name already exists");
-//       }
-//     }
-//   );
-//   //verify user
-// });
+//register
+app.post("/register", (req, res) => {
+  const user = req.body;
 
-//route
-// app.get("/protected", authenticateToken, (req, res) => {
-//   res.json({
-//     message: `Welcome ${req.user.username}! This is a protected route.`,
-//   });
-// });
+  console.log("is A waiter: ", user.isAwaiter);
 
-// app.post("/test", (req, res) => {
-//   console.log("user: ", req.body);
-//   const user = req.body;
+  if (!user.isAwaiter) {
+    sqlQuerySelect(
+      "*",
+      "employers",
+      ["email"],
+      [user.email],
+      0,
+      (err, results) => {
+        if (err) {
+          res
+            .status(500)
+            .send(JSON.stringify("Error fetching data from the database"));
+        } else {
+          if (results.length > 0) {
+            res
+              .status(500)
+              .send(
+                JSON.stringify("There is already an account with this details")
+              );
+          } else {
+            sqlQuerySelect(
+              "*",
+              "employers",
+              ["company_name"],
+              [user.companyName],
+              0,
+              (err, results) => {
+                if (err) {
+                  res
+                    .status(500)
+                    .send(
+                      JSON.stringify("Error fetching data from the database")
+                    );
+                } else {
+                  if (results.length > 0) {
+                    res
+                      .status(500)
+                      .send(
+                        JSON.stringify(
+                          "There is already an account with this details"
+                        )
+                      );
+                  } else {
+                    //register him
 
-//   sqlQuery("*", "employers", ["email"], [user.email], 0, (err, response) => {
-//     if (err) {
-//       console.error("Error: ", err);
-//       res.status(500).send("Error fetching data from the database");
-//     } else {
-//       console.log("response: ", response);
-//       res.json(response);
-//     }
-//   });
-// });
+                    sqlQueryInsert(
+                      "employers",
+                      employersFields,
+                      [
+                        user.company_name,
+                        user.manager,
+                        user.manager_phone,
+                        user.email,
+                        user.e_password,
+                        user.about,
+                        user.avg_rating,
+                        "active",
+                      ],
+                      (err, results) => {
+                        if (err) {
+                          res
+                            .status(500)
+                            .send(
+                              JSON.stringify(
+                                "Error inserting data to the database 2"
+                              )
+                            );
+                        } else {
+                          res
+                            .status(200)
+                            .send(JSON.stringify("Successfully registered"));
+                        }
+                      }
+                    );
+                  }
+                }
+              }
+            );
+          }
+        }
+      }
+    );
+  } else {
+    sqlQuerySelect(
+      "*",
+      "waiters",
+      ["email"],
+      [user.email],
+      0,
+      (err, results) => {
+        if (err) {
+          res
+            .status(500)
+            .send(JSON.stringify("Error fetching data from the database"));
+        } else {
+          if (results.length > 0) {
+            res
+              .status(500)
+              .send(
+                JSON.stringify("There is already an account with this details")
+              );
+          } else {
+            sqlQueryInsert(
+              "waiters",
+              waitersFields,
+              [
+                user.first_name,
+                user.last_name,
+                user.phone,
+                user.birthday,
+                user.email,
+                user.password,
+                user.gender,
+                user.avg_rating,
+                "active",
+              ],
+              (err, results) => {
+                if (err) {
+                  res
+                    .status(500)
+                    .send(
+                      JSON.stringify("Error inserting data to the database 1")
+                    );
+                } else {
+                  res
+                    .status(200)
+                    .send(JSON.stringify("Successfully registered"));
+                }
+              }
+            );
+          }
+        }
+      }
+    );
+  }
+});
+
+app.get("/events", (req, res) => {
+  // const userToken = JSON.parse(req.header("Authorization")) || true;
+  const userToken = req.header("Authorization") || true;
+
+  //Get all events with limit - optional
+  if (userToken) {
+    sqlQuerySelect(
+      eventsFields,
+      "events",
+      ["e_date"],
+      ">=",
+      [getCurrentDate()],
+      0,
+      (err, results) => {
+        if (err) {
+          res
+            .status(500)
+            .send(JSON.stringify("Error fetching events from the database"));
+        } else {
+          // create a copy of results
+          let resultsArray = [...results];
+
+          // cut iso date
+          resultsArray.forEach((event) => {
+            event.e_date = cutIsoDate(event.e_date);
+          });
+
+          // filter out events that have passed
+          resultsArray = resultsArray.filter((event) => {
+            return (
+              event.e_date > getCurrentDate() ||
+              (event.e_date === getCurrentDate() &&
+                event.e_time > getCurrentTime())
+            );
+          });
+          // console.log("resultsArray length: ", resultsArray.length);
+
+          res.status(200).send(JSON.stringify(resultsArray));
+        }
+      }
+    );
+  }
+});
 
 /*-----------------set listener open on port 4000 ------------------ */
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-function sqlQuery(
+/*-------------------SQL Query functions----------------*/
+//to use this function you must put this arguments:
+// what do you want to select "string" - required
+// from which table "string" - required
+// where condition [array] - optional => but put an empty array []
+// condition "string" - required
+// compar condition [array] - optional => but put an empty array []
+// limit number "number" - optional => but put 0
+// callback function - required
+
+function sqlQuerySelect(
   selectWhat,
   fromWhat,
   whereCondition = [],
+  conditionChar = "=",
   comparCondition = [],
   limitNum = 0,
   callback
@@ -259,13 +352,16 @@ function sqlQuery(
   // Adding WHERE conditions if provided
   if (whereCondition.length > 0) {
     sql += " WHERE ";
-    sql += whereCondition.map((condition) => `${condition} = ?`).join(" AND ");
+    sql += whereCondition
+      .map((condition) => `${condition} ${conditionChar} ?`)
+      .join(" AND ");
   }
 
   // Adding LIMIT clause if specified
   if (Number(limitNum) > 0) {
     sql += ` LIMIT ${limitNum}`;
   }
+  console.log("sql query: ", sql);
 
   // Executing the query
   connection.query(sql, comparCondition, (err, results) => {
@@ -278,6 +374,31 @@ function sqlQuery(
     }
   });
 }
+
+//to use this function you must put this arguments:
+// table name "string" - required
+// fields [array] - required
+// values [array] - required
+// callback function- required
+//returns results of sql query in [{},{}...]
+function sqlQueryInsert(table, fields = [], values = [], callback) {
+  const placeholders = fields.map(() => "?").join(", ");
+  const sql = `INSERT INTO ${table} (${fields.join(
+    ", "
+  )}) VALUES (${placeholders})`;
+
+  connection.query(sql, values, (err, results) => {
+    if (err) {
+      console.error("Error inserting data:", err);
+      callback(err, null); // Call the callback with an error
+    } else {
+      callback(null, results); // Call the callback with results
+    }
+  });
+}
+//to use this function you must put this arguments:
+//date in "Date" type or string
+//returns current date in "string"
 function cutIsoDate(e_date) {
   if (e_date instanceof Date) {
     const year = e_date.getFullYear();
@@ -290,4 +411,24 @@ function cutIsoDate(e_date) {
     e_date = String(e_date);
     return e_date.slice(0, 10);
   }
+}
+//returns current date in "string"
+function getCurrentDate() {
+  const date = new Date();
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+//returns current time in "string"
+function getCurrentTime() {
+  const date = new Date();
+
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  return `${hours}:${minutes}:${seconds}`;
 }
