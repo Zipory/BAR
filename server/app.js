@@ -103,6 +103,8 @@ app.post("/login", (req, res) => {
         //TODO login for waiter!
         //sqlQuery(``,[],(err,results)=>{if(err){}else{}})
       } else {
+// TODO: need to check if there is a good results.
+
         //If its an employer loged
         Object.assign(response, results[0]); //It takes the response felds and put inside the response variable
         const arr2 = [results[0].id]; //It takes the employer loged id
@@ -202,6 +204,7 @@ app.post("/register", (req, res) => {
                       ],
                       (err, results) => {
                         if (err) {
+                          //TODO: send it as an object {message, successed?}
                           res
                             .status(500)
                             .send(
@@ -210,6 +213,7 @@ app.post("/register", (req, res) => {
                               )
                             );
                         } else {
+                          //TODO: send it as an object {message, successed?}
                           res
                             .status(200)
                             .send(JSON.stringify("Successfully registered"));
@@ -322,7 +326,10 @@ app.get("/events", (req, res) => {
     );
   }
 });
-
+//TODO:
+//app.get("/events/:email"){
+  //header isAwaiter
+//};
 /*-----------------set listener open on port 4000 ------------------ */
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
