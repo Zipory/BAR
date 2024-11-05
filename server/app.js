@@ -33,6 +33,19 @@ const employersFields = [
   "status",
 ];
 
+const eventsFields = [
+  "employer_fk",
+  "e_date",
+  "e_time",
+  "length",
+  "street",
+  "suite",
+  "event_description",
+  "waiters_sum",
+  "payment",
+  "is_global",
+  "has_sleep",
+];
 app.use(
   cors({
     origin: "*",
@@ -76,6 +89,7 @@ app.post("/login", (req, res) => {
     `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
     `${user.isAwaiter ? "waiters" : "employers"}`,
     ["email"],
+    "=",
     arr,
     0,
     (err, results) => {
@@ -98,6 +112,7 @@ app.post("/login", (req, res) => {
           `${events_ditails}`,
           "events",
           ["employer_fk"],
+          "=",
           arr2,
           0,
           (err, results) => {
@@ -264,21 +279,47 @@ app.post("/register", (req, res) => {
   }
 });
 
-app.post("/events", (req, res) => {
-  const user = req.body;
-  if (user.isAwaiter) {
-    //get user events
-  } else {
-    //TODO get emploer events
-    sqlQuerySelect("*", "events", [], [], 0, (err, results) => {
-      if (err) {
-        res
-          .status(500)
-          .send(JSON.stringify("Error fetching data from the database"));
-      } else {
-        res.json(results);
+app.get("/events", (req, res) => {
+  // const userToken = JSON.parse(req.header("Authorization")) || true;
+  const userToken = req.header("Authorization") || true;
+
+  //Get all events with limit - optional
+  if (userToken) {
+    sqlQuerySelect(
+      eventsFields,
+      "events",
+      ["e_date"],
+      ">=",
+      [getCurrentDate()],
+      0,
+      (err, results) => {
+        if (err) {
+          res
+            .status(500)
+            .send(JSON.stringify("Error fetching events from the database"));
+        } else {
+          // create a copy of results
+          let resultsArray = [...results];
+
+          // cut iso date
+          resultsArray.forEach((event) => {
+            event.e_date = cutIsoDate(event.e_date);
+          });
+
+          // filter out events that have passed
+          resultsArray = resultsArray.filter((event) => {
+            return (
+              event.e_date > getCurrentDate() ||
+              (event.e_date === getCurrentDate() &&
+                event.e_time > getCurrentTime())
+            );
+          });
+          // console.log("resultsArray length: ", resultsArray.length);
+
+          res.status(200).send(JSON.stringify(resultsArray));
+        }
       }
-    });
+    );
   }
 });
 
@@ -287,10 +328,21 @@ app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
+/*-------------------SQL Query functions----------------*/
+//to use this function you must put this arguments:
+// what do you want to select "string" - required
+// from which table "string" - required
+// where condition [array] - optional => but put an empty array []
+// condition "string" - required
+// compar condition [array] - optional => but put an empty array []
+// limit number "number" - optional => but put 0
+// callback function - required
+
 function sqlQuerySelect(
   selectWhat,
   fromWhat,
   whereCondition = [],
+  conditionChar = "=",
   comparCondition = [],
   limitNum = 0,
   callback
@@ -300,13 +352,16 @@ function sqlQuerySelect(
   // Adding WHERE conditions if provided
   if (whereCondition.length > 0) {
     sql += " WHERE ";
-    sql += whereCondition.map((condition) => `${condition} = ?`).join(" AND ");
+    sql += whereCondition
+      .map((condition) => `${condition} ${conditionChar} ?`)
+      .join(" AND ");
   }
 
   // Adding LIMIT clause if specified
   if (Number(limitNum) > 0) {
     sql += ` LIMIT ${limitNum}`;
   }
+  console.log("sql query: ", sql);
 
   // Executing the query
   connection.query(sql, comparCondition, (err, results) => {
@@ -320,6 +375,12 @@ function sqlQuerySelect(
   });
 }
 
+//to use this function you must put this arguments:
+// table name "string" - required
+// fields [array] - required
+// values [array] - required
+// callback function- required
+//returns results of sql query in [{},{}...]
 function sqlQueryInsert(table, fields = [], values = [], callback) {
   const placeholders = fields.map(() => "?").join(", ");
   const sql = `INSERT INTO ${table} (${fields.join(
@@ -335,7 +396,9 @@ function sqlQueryInsert(table, fields = [], values = [], callback) {
     }
   });
 }
-
+//to use this function you must put this arguments:
+//date in "Date" type or string
+//returns current date in "string"
 function cutIsoDate(e_date) {
   if (e_date instanceof Date) {
     const year = e_date.getFullYear();
@@ -348,4 +411,24 @@ function cutIsoDate(e_date) {
     e_date = String(e_date);
     return e_date.slice(0, 10);
   }
+}
+//returns current date in "string"
+function getCurrentDate() {
+  const date = new Date();
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+//returns current time in "string"
+function getCurrentTime() {
+  const date = new Date();
+
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  return `${hours}:${minutes}:${seconds}`;
 }
