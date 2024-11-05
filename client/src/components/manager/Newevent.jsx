@@ -1,49 +1,72 @@
 import React, { useState } from "react";
 import Calendar from "./Calender";
-import { Fetch } from "../Fetch";
+import { FetchPost } from "../Fetch";
 import "../../style/new-event.css";
+
+const apiUrl = "http://localhost:4000/new-event"
+
 const Newevent = () => {
   const [date, setDate] = useState(new Date());
-  const eventInfo = {};
-  function handleForm(event) { 
+  const [sendOk, setSendOk] = useState(false);
+  const eventInfo = {sleep : false};
+  function handleForm(event) {
     const { name, value, type, checked } = event.target;
-  
     // Update the eventInfo object based on input type
-    eventInfo[name] = type === 'checkbox' ? checked : value;
-  
+    eventInfo[name] = type === "checkbox" ? checked : value;
+    eventInfo["date"] = date;
     console.log(eventInfo); // Log the updated eventInfo to verify changes
+    // console.log(event.target.name);
+    
+  }
+  function sendForm(e) {
+    e.preventDefault();
+    eventInfo["street"] = eventInfo["city"] + " " + eventInfo["street"];
+    console.log(eventInfo);
+    
+    FetchPost(apiUrl, eventInfo,);
   }
   return (
     <div>
       <h1>Create New Event</h1>
-      <form className="eventForm">
+      <form className="eventForm" onChange={handleForm} onSubmit={sendForm}>
         {/* date, time, len, street, suite, description, waiters_sum, payment, is_global, has sleep */}
         <Calendar setDate={setDate} />
-        <input type="date" disabled value={date} />
+        <input name="date" type="date" disabled value={date} required />
         <label htmlFor="start-time">שעת התחלה:</label>
-        <input type="time" step={900} id="start-time"/>
-        <input type="number" placeholder="length" min={1} />
-        <input type="text" placeholder="city" />
-        <input type="text" placeholder="street" />
-        <input type="text" placeholder="suite" />
-        <textarea placeholder="description about the event" />
-        <input type="number" placeholder="how much waiters" />
+        <input name="time" type="time" id="start-time" required />
+        <input name="length" type="number" placeholder="length" min={1} required />
+        <input name="city" type="text" placeholder="city" required />
+        <input name="street" type="text" placeholder="street" required />
+        <input name="suite" type="text" placeholder="suite" required />
+        <textarea name="description" placeholder="description about the event" />
+        <input name="waitersSum" type="number" placeholder="how much waiters" required />
         <br />
-        <input type="number" placeholder="payment" />
+        <input name="payment" type="number" placeholder="payment" required />
         <div>
-        
-          <input type="radio" id="html" name="fav_language" value="HTML" />
+          <input
+            type="radio"
+            id="hourly"
+            name="globaly"
+            value={false}
+            required
+          />
           <label htmlFor="html">תשלום שעתי</label>
-          <input type="radio" id="css" name="fav_language" value="CSS" />
+          <input
+            type="radio"
+            id="globaly"
+            name="globaly"
+            value={true}
+            required
+          />
           <label htmlFor="css">שכר גלובלי</label>
         </div>
 
         <br />
         <div>
-          
           <label htmlFor="sleep">כולל שינה</label>
-          <input type="checkbox" />
+          <input name="sleep" type="checkbox" />
         </div>
+        <button type="submit">שליחה </button>
       </form>
     </div>
   );
