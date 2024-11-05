@@ -18,6 +18,7 @@ const EmployersEntry = () => {
           src={employer}
           alt="employer "
           onClick={() => {
+            setIsAwaiter(false);
             <Link to="/login" />;
           }}
         />
