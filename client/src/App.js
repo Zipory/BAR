@@ -8,6 +8,7 @@ import { useState, createContext } from "react";
 import Managerdashboard from "./components/Managerdashbord.jsx";
 import "./App.css";
 import Logo from "./components/Logo";
+import Newevent from "./components/manager/Newevent.jsx";
 
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
@@ -43,7 +44,7 @@ function App() {
         </typeOfUser.Provider>
       </main>
 
-      {/* <Managerdashboard /> */}
+      <Newevent/>
 
       <footer>
         <Footer />

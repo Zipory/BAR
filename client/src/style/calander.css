@@ -1,0 +1,7 @@
+.calendar-container {
+    /* overflow: hidden; */
+    width: 30vw;
+    height: 30vw;
+    margin: 0 auto;
+    margin-bottom: 10vh;
+}
