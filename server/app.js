@@ -46,6 +46,11 @@ const eventsFields = [
   "is_global",
   "has_sleep",
 ];
+
+const employer_ditails =
+  "id , company_name , manager,manager_phone , email , about , avg_rating"; //Query for employer
+const waiter_ditails =
+  "first_name,last_name,phone,birthday,email,gender,avg_rating"; //Query for waiter
 app.use(
   cors({
     origin: "*",
@@ -80,11 +85,6 @@ app.post("/login", (req, res) => {
   let response = {}; //variable for response
   const arr = [user.email]; //Dynamic array for query
 
-  const employer_ditails =
-    "id , company_name , manager,manager_phone , email , about , avg_rating"; //Query for employer
-  const waiter_ditails =
-    "first_name,last_name,phone,birthday,email,gender,avg_rating"; //Query for waiter
-
   sqlQuerySelect(
     `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
     `${user.isAwaiter ? "waiters" : "employers"}`,
@@ -102,36 +102,14 @@ app.post("/login", (req, res) => {
         //If its a waiter loged
         //TODO login for waiter!
         //sqlQuery(``,[],(err,results)=>{if(err){}else{}})
+      } else if (results.length > 0) {
+        res.status(200).send(JSON.stringify(results[0]));
       } else {
-// TODO: need to check if there is a good results.
-
-        //If its an employer loged
-        Object.assign(response, results[0]); //It takes the response felds and put inside the response variable
-        const arr2 = [results[0].id]; //It takes the employer loged id
-        const events_ditails =
-          "e_date , e_time , length , street , suite , event_description , waiters_sum , payment , is_global , has_sleep"; //The required felds
-        sqlQuerySelect(
-          `${events_ditails}`,
-          "events",
-          ["employer_fk"],
-          "=",
-          arr2,
-          0,
-          (err, results) => {
-            if (err) {
-              console.error(316, "Error fetching data:", err);
-              res
-                .status(500)
-                .send(JSON.stringify("Error fetching data from the database"));
-            } else {
-              let eventsArray = [...results];
-              eventsArray.forEach((event) => {
-                event.e_date = cutIsoDate(event.e_date);
-              });
-              response.events = eventsArray; //Puts the events array inside the response Object
-              res.json(response);
-            }
-          }
+        res.status(500).send(
+          JSON.stringify({
+            message: "There is no account with this details",
+            succeed: false,
+          })
         );
       }
     }
@@ -142,7 +120,7 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   const user = req.body;
 
-  console.log("is A waiter: ", user.isAwaiter);
+  // console.log("is A waiter: ", user.isAwaiter);
 
   if (!user.isAwaiter) {
     sqlQuerySelect(
@@ -153,16 +131,20 @@ app.post("/register", (req, res) => {
       0,
       (err, results) => {
         if (err) {
-          res
-            .status(500)
-            .send(JSON.stringify("Error fetching data from the database"));
+          res.status(500).send(
+            JSON.stringify({
+              message: "Error fetching data from the database",
+              succeed: false,
+            })
+          );
         } else {
           if (results.length > 0) {
-            res
-              .status(500)
-              .send(
-                JSON.stringify("There is already an account with this details")
-              );
+            res.status(500).send(
+              JSON.stringify({
+                message: "There is already an account with this details",
+                succeed: false,
+              })
+            );
           } else {
             sqlQuerySelect(
               "*",
@@ -172,22 +154,23 @@ app.post("/register", (req, res) => {
               0,
               (err, results) => {
                 if (err) {
-                  res
-                    .status(500)
-                    .send(
-                      JSON.stringify("Error fetching data from the database")
-                    );
+                  res.status(500).send(
+                    JSON.stringify({
+                      message: "Error fetching data from the database",
+                      succeed: false,
+                    })
+                  );
                 } else {
                   if (results.length > 0) {
-                    res
-                      .status(500)
-                      .send(
-                        JSON.stringify(
-                          "There is already an account with this details"
-                        )
-                      );
+                    res.status(500).send(
+                      JSON.stringify({
+                        message:
+                          "There is already an account with this details",
+                        succeed: false,
+                      })
+                    );
                   } else {
-                    //register him
+                    //register employer
 
                     sqlQueryInsert(
                       "employers",
@@ -204,19 +187,20 @@ app.post("/register", (req, res) => {
                       ],
                       (err, results) => {
                         if (err) {
-                          //TODO: send it as an object {message, successed?}
-                          res
-                            .status(500)
-                            .send(
-                              JSON.stringify(
-                                "Error inserting data to the database 2"
-                              )
-                            );
+                          res.status(500).send(
+                            JSON.stringify({
+                              message:
+                                "Error inserting employer data into the database",
+                              succeed: false,
+                            })
+                          );
                         } else {
-                          //TODO: send it as an object {message, successed?}
-                          res
-                            .status(200)
-                            .send(JSON.stringify("Successfully registered"));
+                          res.status(200).send(
+                            JSON.stringify({
+                              message: "Account created successfully",
+                              succeed: true,
+                            })
+                          );
                         }
                       }
                     );
@@ -328,7 +312,7 @@ app.get("/events", (req, res) => {
 });
 //TODO:
 //app.get("/events/:email"){
-  //header isAwaiter
+//header isAwaiter
 //};
 /*-----------------set listener open on port 4000 ------------------ */
 app.listen(port, () => {
