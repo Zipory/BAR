@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 
 /**----------------Variables---------------- */
-const waitersFields = [
+const waiters_Fields_Insert = [
   "first_name",
   "last_name",
   "phone",
@@ -23,7 +23,7 @@ const waitersFields = [
   "status",
 ];
 
-const employersFields = [
+const employers_Fields_Insert = [
   "company_name",
   "manager",
   "manager_phone",
@@ -34,7 +34,7 @@ const employersFields = [
   "status",
 ];
 
-const eventsFields = [
+const eventsFieldsSelect = [
   "employer_fk",
   "e_date",
   "e_time",
@@ -48,10 +48,25 @@ const eventsFields = [
   "has_sleep",
 ];
 
-const employer_ditails =
-  "id , company_name , manager,manager_phone , email , about , avg_rating"; //Query for employer
-const waiter_ditails =
-  "first_name,last_name,phone,birthday,email,gender,avg_rating"; //Query for waiter
+const employer_Fields_Select = [
+  "id ",
+  "company_name",
+  "manager",
+  "manager_phone",
+  "email",
+  "about",
+  "avg_rating",
+]; //Query for employer
+const waiter_Fields_Select = [
+  "first_name",
+  "last_name",
+  "phone",
+  "birthday",
+  "email",
+  "gender",
+  "avg_rating",
+]; //Query for waiter
+
 app.use(
   cors({
     origin: "*",
@@ -87,7 +102,7 @@ app.post("/login", (req, res) => {
   const arr = [user.email]; //Dynamic array for query
 
   sqlQuerySelect(
-    `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
+    `${user.isAwaiter ? waiter_Fields_Select : employer_Fields_Select}`,
     `${user.isAwaiter ? "waiters" : "employers"}`,
     ["email"],
     "=",
@@ -175,7 +190,7 @@ app.post("/register", (req, res) => {
 
                     sqlQueryInsert(
                       "employers",
-                      employersFields,
+                      employers_Fields_Insert,
                       [
                         user.company_name,
                         user.manager,
@@ -235,7 +250,7 @@ app.post("/register", (req, res) => {
           } else {
             sqlQueryInsert(
               "waiters",
-              waitersFields,
+              waiters_Fields_Insert,
               [
                 user.first_name,
                 user.last_name,
@@ -275,7 +290,7 @@ app.get("/events", (req, res) => {
   //Get all events with limit - optional
   if (userToken) {
     sqlQuerySelect(
-      eventsFields,
+      eventsFieldsSelect,
       "events",
       ["e_date"],
       ">=",
@@ -308,6 +323,24 @@ app.get("/events", (req, res) => {
           res.status(200).send(JSON.stringify(resultsArray));
         }
       }
+    );
+  }
+});
+
+app.get("/events/:email", (req, res) => {
+  const userToken = req.header("Authorization") || true;
+  const isAwaiter = req.header("isAwaiter") || false;
+  const tableName = isAwaiter ? "waiters" : "employers";
+  const userEmail = req.params.email;
+  if (userToken) {
+    sqlQuerySelect(
+      "id",
+      tableName,
+      "email",
+      "=",
+      userEmail,
+      0,
+      (err, results) => {}
     );
   }
 });
