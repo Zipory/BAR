@@ -1,13 +1,14 @@
-const fs = require("fs");
-const express = require("express");
-const jwt = require("jsonwebtoken");
+import fs from "fs";
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import mysql from "mysql2";
 
-const mysql = require("mysql2");
-const cors = require("cors");
-const { log } = require("console");
+dotenv.config();
+// const { log } = require("console");
 // const bcrypt = require("bcrypt");
 const app = express();
-const SECRET_KEY = "BAR_best_project_ever";
 
 /**----------------Variables---------------- */
 const waitersFields = [
@@ -61,11 +62,11 @@ app.use(express.json());
 const port = 4000;
 
 const connection = mysql.createConnection({
-  host: "localhost",
-  port: 3306,
-  user: "root",
-  password: "123456",
-  database: "bar",
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 /*----------------create the conection to the DB and kipp it open ----------- */
 // connection.connect((err) => {
