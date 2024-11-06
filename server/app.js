@@ -100,6 +100,7 @@ app.post("/login", (req, res) => {
   const user = req.body; //catch the user
   let response = {}; //variable for response
   const arr = [user.email]; //Dynamic array for query
+  console.log("user", user);
 
   sqlQuerySelect(
     `${user.isAwaiter ? waiter_Fields_Select : employer_Fields_Select}`,
@@ -121,6 +122,7 @@ app.post("/login", (req, res) => {
       } else if (results.length > 0) {
         res.status(200).send(JSON.stringify(results[0]));
       } else {
+        console.log(122, "hi");
         res.status(500).send(
           JSON.stringify({
             message: "There is no account with this details",
@@ -394,7 +396,7 @@ function sqlQuerySelect(
       console.error(316, "Error fetching data:", err);
       callback(err, null); // Call the callback with an error
     } else {
-      // console.log(results);
+      console.log(results);
       callback(null, results); // Call the callback with results
     }
   });

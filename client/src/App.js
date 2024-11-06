@@ -9,6 +9,7 @@ import Managerdashboard from "./components/Managerdashbord.jsx";
 import "./App.css";
 import Logo from "./components/Logo";
 import Newevent from "./components/manager/Newevent.jsx";
+import Allevents from "./components/waiter/Allevents.jsx";
 
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
@@ -19,7 +20,7 @@ export const typeOfUser = createContext(null);
 export const userInfo = createContext(null);
 function App() {
   const [isAwaiter, setIsAwaiter] = useState(true);
-  const [user, setUser] = useState({name: "", catering: "", email: ""});
+  const [user, setUser] = useState(null);
   return (
     <>
       <header></header>
@@ -44,7 +45,8 @@ function App() {
         </typeOfUser.Provider>
       </main>
 
-      <Newevent/>
+      {/* <Newevent/> */}
+      {/* <Allevents/> */}
 
       <footer>
         <Footer />
