@@ -1,11 +1,14 @@
 import React, { useContext, useState } from 'react'
 import { userInfo } from '../../App'
+import { FetchIncludeHeader } from '../Fetch';
 const Futureevents = () => {
   const [user, setUser] = useContext(userInfo);
-  const [events, setEvents] = useState([user.events]);
+  const [events, setEvents] = useState([]);
+  const apiUrl = `http://localhost:4000/events/${user["email"]}`
   const percentage = (event) => {
     return (event.numberOfWaiters / event.numberOfWaitersNeeded) * 100;
   }
+  FetchIncludeHeader()
   return (
     <div className="future-events">
     <h3>אירועים עתידים:</h3>
