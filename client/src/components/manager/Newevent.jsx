@@ -3,12 +3,12 @@ import Calendar from "./Calender";
 import { FetchPost } from "../Fetch";
 import "../../style/new-event.css";
 
-const apiUrl = "http://localhost:4000/new-event"
+const apiUrl = "http://localhost:4000/events/new-event"
 
 const Newevent = () => {
   const [date, setDate] = useState(new Date());
   const [sendOk, setSendOk] = useState(false);
-  const eventInfo = {sleep : false};
+  const eventInfo = {sleep : false, description : undefined};
   function handleForm(event) {
     const { name, value, type, checked } = event.target;
     // Update the eventInfo object based on input type
@@ -30,11 +30,12 @@ const Newevent = () => {
       <h1>Create New Event</h1>
       <form className="eventForm" onChange={handleForm} onSubmit={sendForm}>
         {/* date, time, len, street, suite, description, waiters_sum, payment, is_global, has sleep */}
+        {/* TODO: check that the date dont pass */}
         <Calendar setDate={setDate} />
         <input name="date" type="date" disabled value={date} required />
         <label htmlFor="start-time">שעת התחלה:</label>
         <input name="time" type="time" id="start-time" required />
-        <input name="length" type="number" placeholder="length" min={1} required />
+        <input name="length" type="number" placeholder="length" min={1} step={0.5} disabled required />
         <input name="city" type="text" placeholder="city" required />
         <input name="street" type="text" placeholder="street" required />
         <input name="suite" type="text" placeholder="suite" required />
