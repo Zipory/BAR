@@ -4,7 +4,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import mysql from "mysql2";
-
+import { connection } from "./connection.js";
+import eventsRoutes from "./routes/eventsRoutes.js";
 dotenv.config();
 // const { log } = require("console");
 // const bcrypt = require("bcrypt");
@@ -61,13 +62,13 @@ app.use(
 app.use(express.json());
 const port = 4000;
 
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-});
+// const connection = mysql.createConnection({
+//   host: process.env.DB_HOST,
+//   port: process.env.DB_PORT,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASS,
+//   database: process.env.DB_NAME,
+// });
 /*----------------create the conection to the DB and kipp it open ----------- */
 // connection.connect((err) => {
 //   if (err) {
@@ -268,49 +269,53 @@ app.post("/register", (req, res) => {
   }
 });
 
-app.get("/events", (req, res) => {
-  // const userToken = JSON.parse(req.header("Authorization")) || true;
-  const userToken = req.header("Authorization") || true;
+app.use("/events", eventsRoutes);
 
-  //Get all events with limit - optional
-  if (userToken) {
-    sqlQuerySelect(
-      eventsFields,
-      "events",
-      ["e_date"],
-      ">=",
-      [getCurrentDate()],
-      0,
-      (err, results) => {
-        if (err) {
-          res
-            .status(500)
-            .send(JSON.stringify("Error fetching events from the database"));
-        } else {
-          // create a copy of results
-          let resultsArray = [...results];
+// app.get("/events", (req, res) => {
+//   // const userToken = JSON.parse(req.header("Authorization")) || true;
+//   const userToken = req.header("Authorization") || true;
 
-          // cut iso date
-          resultsArray.forEach((event) => {
-            event.e_date = cutIsoDate(event.e_date);
-          });
+//   //Get all events with limit - optional
+//   if (userToken) {
+//     sqlQuerySelect(
+//       eventsFields,
+//       "events",
+//       ["e_date"],
+//       ">=",
+//       [getCurrentDate()],
+//       0,
+//       (err, results) => {
+//         if (err) {
+//           res
+//             .status(500)
+//             .send(JSON.stringify("Error fetching events from the database"));
+//         } else {
+//           // create a copy of results
+//           let resultsArray = [...results];
 
-          // filter out events that have passed
-          resultsArray = resultsArray.filter((event) => {
-            return (
-              event.e_date > getCurrentDate() ||
-              (event.e_date === getCurrentDate() &&
-                event.e_time > getCurrentTime())
-            );
-          });
-          // console.log("resultsArray length: ", resultsArray.length);
+//           // cut iso date
+//           resultsArray.forEach((event) => {
+//             event.e_date = cutIsoDate(event.e_date);
+//           });
 
-          res.status(200).send(JSON.stringify(resultsArray));
-        }
-      }
-    );
-  }
-});
+//           // filter out events that have passed
+//           resultsArray = resultsArray.filter((event) => {
+//             return (
+//               event.e_date > getCurrentDate() ||
+//               (event.e_date === getCurrentDate() &&
+//                 event.e_time > getCurrentTime())
+//             );
+//           });
+//           // console.log("resultsArray length: ", resultsArray.length);
+
+//           res.status(200).send(JSON.stringify(resultsArray));
+//         }
+//       }
+//     );
+//   }
+// });
+
+/**--------------------------------------- */
 //TODO:
 //app.get("/events/:email"){
 //header isAwaiter
