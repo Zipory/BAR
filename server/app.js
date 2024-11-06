@@ -26,61 +26,7 @@ dotenv.config();
 const app = express();
 
 /**----------------Variables---------------- */
-// const waitersFields = [
-//   "first_name",
-//   "last_name",
-//   "phone",
-//   "birthday",
-//   "email",
-//   "w_password",
-//   "gender",
-//   "avg_rating",
-//   "status",
-// ];
 
-// const employersFields = [
-//   "company_name",
-//   "manager",
-//   "manager_phone",
-//   "email",
-//   "e_password",
-//   "about",
-//   "avg_rating",
-//   "status",
-// ];
-
-// const eventsFields = [
-//   "employer_fk",
-//   "e_date",
-//   "e_time",
-//   "length",
-//   "street",
-//   "suite",
-//   "event_description",
-//   "waiters_sum",
-//   "payment",
-//   "is_global",
-//   "has_sleep",
-// ];
-
-// const employer_ditails = [
-//   "id",
-//   "company_name",
-//   "manager",
-//   "manager_phone",
-//   "email",
-//   "about",
-//   "avg_rating",
-// ]; //Query for employer
-// const waiter_ditails = [
-//   "first_name",
-//   "last_name",
-//   "phone",
-//   "birthday",
-//   "email",
-//   "gender",
-//   "avg_rating",
-// ]; //Query for waiter
 app.use(
   cors({
     origin: "*",
@@ -114,9 +60,10 @@ app.post("/login", (req, res) => {
   const user = req.body; //catch the user
   let response = {}; //variable for response
   const arr = [user.email]; //Dynamic array for query
+  console.log("user", user);
 
   sqlQuerySelect(
-    `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
+    `${user.isAwaiter ? waiter_Fields_Select : employer_Fields_Select}`,
     `${user.isAwaiter ? "waiters" : "employers"}`,
     ["email"],
     "=",
@@ -135,6 +82,7 @@ app.post("/login", (req, res) => {
       } else if (results.length > 0) {
         res.status(200).send(JSON.stringify(results[0]));
       } else {
+        console.log(122, "hi");
         res.status(500).send(
           JSON.stringify({
             message: "There is no account with this details",
@@ -204,7 +152,7 @@ app.post("/register", (req, res) => {
 
                     sqlQueryInsert(
                       "employers",
-                      employersFields,
+                      employers_Fields_Insert,
                       [
                         user.company_name,
                         user.manager,
@@ -264,7 +212,7 @@ app.post("/register", (req, res) => {
           } else {
             sqlQueryInsert(
               "waiters",
-              waitersFields,
+              waiters_Fields_Insert,
               [
                 user.first_name,
                 user.last_name,
@@ -299,51 +247,25 @@ app.post("/register", (req, res) => {
 
 app.use("/events", eventsRoutes);
 
-// app.get("/events", (req, res) => {
-//   // const userToken = JSON.parse(req.header("Authorization")) || true;
-//   const userToken = req.header("Authorization") || true;
 
-//   //Get all events with limit - optional
-//   if (userToken) {
-//     sqlQuerySelect(
-//       eventsFields,
-//       "events",
-//       ["e_date"],
-//       ">=",
-//       [getCurrentDate()],
-//       0,
-//       (err, results) => {
-//         if (err) {
-//           res
-//             .status(500)
-//             .send(JSON.stringify("Error fetching events from the database"));
-//         } else {
-//           // create a copy of results
-//           let resultsArray = [...results];
 
-//           // cut iso date
-//           resultsArray.forEach((event) => {
-//             event.e_date = cutIsoDate(event.e_date);
-//           });
-
-//           // filter out events that have passed
-//           resultsArray = resultsArray.filter((event) => {
-//             return (
-//               event.e_date > getCurrentDate() ||
-//               (event.e_date === getCurrentDate() &&
-//                 event.e_time > getCurrentTime())
-//             );
-//           });
-//           // console.log("resultsArray length: ", resultsArray.length);
-
-//           res.status(200).send(JSON.stringify(resultsArray));
-//         }
-//       }
-//     );
-//   }
-// });
-
-/**--------------------------------------- */
+app.get("/events/:email", (req, res) => {
+  const userToken = req.header("Authorization") || true;
+  const isAwaiter = req.header("isAwaiter") || false;
+  const tableName = isAwaiter ? "waiters" : "employers";
+  const userEmail = req.params.email;
+  if (userToken) {
+    sqlQuerySelect(
+      "id",
+      tableName,
+      "email",
+      "=",
+      userEmail,
+      0,
+      (err, results) => {}
+    );
+  }
+});
 //TODO:
 //app.get("/events/:email"){
 //header isAwaiter
@@ -374,6 +296,7 @@ app.listen(port, () => {
 // ) {
 //   let sql = `SELECT ${selectWhat} FROM ${fromWhat}`;
 
+
 //   // Adding WHERE conditions if provided
 //   if (whereCondition.length > 0) {
 //     sql += " WHERE ";
@@ -399,6 +322,25 @@ app.listen(port, () => {
 //     }
 //   });
 // }
+// =======
+  // Adding LIMIT clause if specified
+//   if (Number(limitNum) > 0) {
+//     sql += ` LIMIT ${limitNum}`;
+//   }
+//   console.log("sql query: ", sql);
+
+//   // Executing the query
+//   connection.query(sql, comparCondition, (err, results) => {
+//     if (err) {
+//       console.error(316, "Error fetching data:", err);
+//       callback(err, null); // Call the callback with an error
+//     } else {
+//       console.log(results);
+//       callback(null, results); // Call the callback with results
+//     }
+//   });
+// }
+
 
 //to use this function you must put this arguments:
 // table name "string" - required
