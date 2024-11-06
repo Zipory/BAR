@@ -22,7 +22,49 @@ dotenv.config();
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.status(200).send("hello");
+  console.log("here");
+
+  // const userToken = JSON.parse(req.header("Authorization")) || true;
+  const userToken = req.header("Authorization") || true;
+
+  //Get all events with limit - optional
+  if (userToken) {
+    sqlQuerySelect(
+      eventsFields,
+      "events",
+      ["e_date"],
+      ">=",
+      [getCurrentDate()],
+      0,
+      (err, results) => {
+        if (err) {
+          res
+            .status(500)
+            .send(JSON.stringify("Error fetching events from the database"));
+        } else {
+          // create a copy of results
+          let resultsArray = [...results];
+
+          // cut iso date
+          resultsArray.forEach((event) => {
+            event.e_date = cutIsoDate(event.e_date);
+          });
+
+          // filter out events that have passed
+          resultsArray = resultsArray.filter((event) => {
+            return (
+              event.e_date > getCurrentDate() ||
+              (event.e_date === getCurrentDate() &&
+                event.e_time > getCurrentTime())
+            );
+          });
+          // console.log("resultsArray length: ", resultsArray.length);
+
+          res.status(200).send(JSON.stringify(resultsArray));
+        }
+      }
+    );
+  }
 });
 router.post("/new-event", (req, res) => {
   //   console.log(req.body);
