@@ -4,7 +4,7 @@ import Register from "./components/entry/Register";
 import Footer from "./components/Footer";
 import { Route, Routes } from "react-router-dom";
 import { useState, createContext } from "react";
-
+import LocatinInputs from "./components/LocationInputs.jsx";
 import Managerdashboard from "./components/Managerdashbord.jsx";
 import "./App.css";
 import Logo from "./components/Logo";
@@ -52,9 +52,8 @@ function App() {
       {/* {<GetCity city="בית שמש"/>}
       {<Getstreet city={"בית שמש"} street={"יגאל"}/>} */}
       <div >
-
-      <Test/>
-      <Teststreet/>
+      {/* <Test/>
+      <Teststreet/> */}
       </div>
       <footer>
         <Footer />
