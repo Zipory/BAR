@@ -14,7 +14,7 @@ import {
   sqlQuerySelect,
 } from "./sources/function.js";
 import {
-waiter_ditails,
+  waiter_ditails,
   employer_ditails,
   events_Fields,
   waiters_Fields_Select,
@@ -54,20 +54,26 @@ const port = 4000;
 
 /*-----------------authenticate Token----------------- */
 
+// console.log("waiter_ditails: ", waiter_ditails);
+// console.log("employer_ditails: ", employer_ditails);
+// console.log("events_Fields: ", events_Fields);
+// console.log("waiters_Fields_Select: ", waiters_Fields_Select);
+// console.log("employers_Fields_Select: ", employers_Fields_Select);
+
 /*-----------------Routes----------------------- */
 
 app.post("/login", (req, res) => {
   const user = req.body; //catch the user
   let response = {}; //variable for response
-  const arr = [user.email]; //Dynamic array for query
-  console.log("user", user);
+  const userEmail = [user.email]; //Dynamic array for query
+  console.log("user:", user);
 
   sqlQuerySelect(
-    `${user.isAwaiter ? waiter_Fields_Select : employer_Fields_Select}`,
+    `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
     `${user.isAwaiter ? "waiters" : "employers"}`,
     ["email"],
     "=",
-    arr,
+    userEmail,
     0,
     (err, results) => {
       if (err) {
@@ -82,7 +88,6 @@ app.post("/login", (req, res) => {
       } else if (results.length > 0) {
         res.status(200).send(JSON.stringify(results[0]));
       } else {
-        console.log(122, "hi");
         res.status(500).send(
           JSON.stringify({
             message: "There is no account with this details",
@@ -99,12 +104,16 @@ app.post("/register", (req, res) => {
   const user = req.body;
 
   // console.log("is A waiter: ", user.isAwaiter);
+  // console.log("user: ", user);
+  // res.status(200).json(user);
+  // return;
 
   if (!user.isAwaiter) {
     sqlQuerySelect(
       "*",
       "employers",
       ["email"],
+      "=",
       [user.email],
       0,
       (err, results) => {
@@ -117,17 +126,16 @@ app.post("/register", (req, res) => {
           );
         } else {
           if (results.length > 0) {
-            res.status(500).send(
-              JSON.stringify({
-                message: "There is already an account with this details",
-                succeed: false,
-              })
-            );
+            res.status(500).json({
+              message: "There is already an account with this details",
+              succeed: false,
+            });
           } else {
             sqlQuerySelect(
               "*",
               "employers",
               ["company_name"],
+              "=",
               [user.companyName],
               0,
               (err, results) => {
@@ -152,7 +160,7 @@ app.post("/register", (req, res) => {
 
                     sqlQueryInsert(
                       "employers",
-                      employers_Fields_Insert,
+                      employers_Fields_Select,
                       [
                         user.company_name,
                         user.manager,
@@ -195,6 +203,7 @@ app.post("/register", (req, res) => {
       "*",
       "waiters",
       ["email"],
+      "=",
       [user.email],
       0,
       (err, results) => {
@@ -212,7 +221,7 @@ app.post("/register", (req, res) => {
           } else {
             sqlQueryInsert(
               "waiters",
-              waiters_Fields_Insert,
+              waiters_Fields_Select,
               [
                 user.first_name,
                 user.last_name,
@@ -247,25 +256,7 @@ app.post("/register", (req, res) => {
 
 app.use("/events", eventsRoutes);
 
-
-
-app.get("/events/:email", (req, res) => {
-  const userToken = req.header("Authorization") || true;
-  const isAwaiter = req.header("isAwaiter") || false;
-  const tableName = isAwaiter ? "waiters" : "employers";
-  const userEmail = req.params.email;
-  if (userToken) {
-    sqlQuerySelect(
-      "id",
-      tableName,
-      "email",
-      "=",
-      userEmail,
-      0,
-      (err, results) => {}
-    );
-  }
-});
+/**--------------------------------------- */
 //TODO:
 //app.get("/events/:email"){
 //header isAwaiter
@@ -274,128 +265,3 @@ app.get("/events/:email", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
-
-/*-------------------SQL Query functions----------------*/
-//to use this function you must put this arguments:
-// what do you want to select "string" - required
-// from which table "string" - required
-// where condition [array] - optional => but put an empty array []
-// condition "string" - required
-// compar condition [array] - optional => but put an empty array []
-// limit number "number" - optional => but put 0
-// callback function - required
-
-// function sqlQuerySelect(
-//   selectWhat,
-//   fromWhat,
-//   whereCondition = [],
-//   conditionChar = "=",
-//   comparCondition = [],
-//   limitNum = 0,
-//   callback
-// ) {
-//   let sql = `SELECT ${selectWhat} FROM ${fromWhat}`;
-
-
-//   // Adding WHERE conditions if provided
-//   if (whereCondition.length > 0) {
-//     sql += " WHERE ";
-//     sql += whereCondition
-//       .map((condition) => `${condition} ${conditionChar} ?`)
-//       .join(" AND ");
-//   }
-
-//   // Adding LIMIT clause if specified
-//   if (Number(limitNum) > 0) {
-//     sql += ` LIMIT ${limitNum}`;
-//   }
-//   console.log("sql query: ", sql);
-
-//   // Executing the query
-//   connection.query(sql, comparCondition, (err, results) => {
-//     if (err) {
-//       console.error(316, "Error fetching data:", err);
-//       callback(err, null); // Call the callback with an error
-//     } else {
-//       // console.log(results);
-//       callback(null, results); // Call the callback with results
-//     }
-//   });
-// }
-// =======
-  // Adding LIMIT clause if specified
-//   if (Number(limitNum) > 0) {
-//     sql += ` LIMIT ${limitNum}`;
-//   }
-//   console.log("sql query: ", sql);
-
-//   // Executing the query
-//   connection.query(sql, comparCondition, (err, results) => {
-//     if (err) {
-//       console.error(316, "Error fetching data:", err);
-//       callback(err, null); // Call the callback with an error
-//     } else {
-//       console.log(results);
-//       callback(null, results); // Call the callback with results
-//     }
-//   });
-// }
-
-
-//to use this function you must put this arguments:
-// table name "string" - required
-// fields [array] - required
-// values [array] - required
-// callback function- required
-//returns results of sql query in [{},{}...]
-// function sqlQueryInsert(table, fields = [], values = [], callback) {
-//   const placeholders = fields.map(() => "?").join(", ");
-//   const sql = `INSERT INTO ${table} (${fields.join(
-//     ", "
-//   )}) VALUES (${placeholders})`;
-
-//   connection.query(sql, values, (err, results) => {
-//     if (err) {
-//       console.error("Error inserting data:", err);
-//       callback(err, null); // Call the callback with an error
-//     } else {
-//       callback(null, results); // Call the callback with results
-//     }
-//   });
-// }
-//to use this function you must put this arguments:
-//date in "Date" type or string
-//returns current date in "string"
-// function cutIsoDate(e_date) {
-//   if (e_date instanceof Date) {
-//     const year = e_date.getFullYear();
-//     const month = String(e_date.getMonth() + 1).padStart(2, "0");
-//     const day = String(e_date.getDate()).padStart(2, "0");
-
-//     return `${year}-${month}-${day}`;
-//   } else {
-//     console.warn("Warning: e_date is not a Date object. Value:", e_date);
-//     e_date = String(e_date);
-//     return e_date.slice(0, 10);
-//   }
-// }
-//returns current date in "string"
-// function getCurrentDate() {
-//   const date = new Date();
-
-//   const year = date.getFullYear();
-//   const month = String(date.getMonth() + 1).padStart(2, "0");
-//   const day = String(date.getDate()).padStart(2, "0");
-
-//   return `${year}-${month}-${day}`;
-// }
-// //returns current time in "string"
-//  function getCurrentTime() {
-//   const date = new Date();
-
-//   const hours = String(date.getHours()).padStart(2, "0");
-//   const minutes = String(date.getMinutes()).padStart(2, "0");
-//   const seconds = String(date.getSeconds()).padStart(2, "0");
-
-//   return `${hours}:${minutes}:${seconds}`;
-// }
