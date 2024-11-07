@@ -11,26 +11,25 @@ import {
   sqlQueryInsert,
   sqlQuerySelect,
 } from "../sources/function.js";
+
 import {
-  waitersFields,
-  employersFields,
-  eventsFields,
   waiter_ditails,
   employer_ditails,
+  events_Fields,
+  waiters_Fields_Select,
+  employers_Fields_Select,
 } from "../sources/variables.js";
 dotenv.config();
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  console.log("here");
-
   // const userToken = JSON.parse(req.header("Authorization")) || true;
   const userToken = req.header("Authorization") || true;
 
   //Get all events with limit - optional
   if (userToken) {
     sqlQuerySelect(
-      eventsFields,
+      events_Fields,
       "events",
       ["e_date"],
       ">=",
@@ -66,6 +65,7 @@ router.get("/", (req, res) => {
     );
   }
 });
+
 router.post("/new-event", (req, res) => {
   //   console.log(req.body);
   const newEvent = req.body;
@@ -101,7 +101,7 @@ router.post("/new-event", (req, res) => {
           eventsArray.unshift(Number(results[0].id));
           sqlQueryInsert(
             "events",
-            eventsFields,
+            events_Fields,
             eventsArray,
             (err, results) => {
               if (err) {
