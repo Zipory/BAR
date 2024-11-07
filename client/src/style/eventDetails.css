@@ -1,0 +1,25 @@
+.event-details {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 400px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  .event-details h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #007BFF;
+  }
+  
+  .event-details p {
+    margin: 10px 0;
+    line-height: 1.6;
+  }
+  
+  .event-details p strong {
+    color: #555;
+  }
