@@ -10,6 +10,9 @@ import "./App.css";
 import Logo from "./components/Logo";
 import Newevent from "./components/manager/Newevent.jsx";
 import Allevents from "./components/waiter/Allevents.jsx";
+import {Getstreet, GetCity} from "./components/extra/Getstreet.jsx";
+import Test from "./components/extra/Test.jsx"
+import Teststreet from "./components/extra/Teststreet.jsx"
 
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
@@ -31,7 +34,6 @@ function App() {
           <h2>
             <u>בר</u>, הפלטפורמה שמחברת בין מעסיקים למלצרים!
           </h2>
-          {/* {(isAwaiter && <h2>הוא מלצר</h2>) || <h2>הוא מעסיק</h2>} */}
         </div>
         <typeOfUser.Provider value={[isAwaiter, setIsAwaiter]}>
           <userInfo.Provider value={[user, setUser]}>
@@ -47,7 +49,13 @@ function App() {
 
       {/* <Newevent/> */}
       {/* <Allevents/> */}
+      {/* {<GetCity city="בית שמש"/>}
+      {<Getstreet city={"בית שמש"} street={"יגאל"}/>} */}
+      <div >
 
+      <Test/>
+      <Teststreet/>
+      </div>
       <footer>
         <Footer />
       </footer>
