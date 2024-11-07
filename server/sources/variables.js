@@ -1,4 +1,4 @@
-const waitersFields = [
+const waiters_Fields_Select = [
   "first_name",
   "last_name",
   "phone",
@@ -10,7 +10,7 @@ const waitersFields = [
   "status",
 ];
 
-const employersFields = [
+const employers_Fields_Select = [
   "company_name",
   "manager",
   "manager_phone",
@@ -21,7 +21,7 @@ const employersFields = [
   "status",
 ];
 
-const eventsFields = [
+const events_Fields = [
   "employer_fk",
   "e_date",
   "e_time",
@@ -54,9 +54,9 @@ const employer_ditails = [
 ]; //Query for employer
 
 export {
-  waitersFields,
-  employersFields,
-  eventsFields,
   waiter_ditails,
   employer_ditails,
+  events_Fields,
+  waiters_Fields_Select,
+  employers_Fields_Select,
 };
