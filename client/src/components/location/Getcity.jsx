@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-const CitySelector = () => {
+const CitySelector = (props) => {
   const [inputValue, setInputValue] = useState('');
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [options, setOptions] = useState([]);
-  const [city, setCity] = useState("ירושלים");
-  const resourceStreetID = "a7296d1a-f8c9-4b70-96c2-6ebb4352f8e3";
-  let streetUrl = `https://data.gov.il/api/3/action/datastore_search?resource_id=${resourceStreetID}&q=${city}`;
-   useEffect(() => {
-  fetch(streetUrl  ).then((response) => response.json())
+
+  const resourceCityID = "5c78e9fa-c2e2-4771-93ff-7f400a12f7ba";
+  let cityUrl = `https://data.gov.il/api/3/action/datastore_search?resource_id=${resourceCityID}`;
+  useEffect(() => {
+  fetch(cityUrl ).then((response) => response.json())
   .then((data) => {
     let res = [...data.result.records];
-    console.log(res);    
-    setOptions(()=>(res.map((item) => item["שם_רחוב"])));
+    setOptions(()=>(res.map((item) => item["שם_ישוב"])));
     
 });
 }, []);
@@ -39,9 +38,8 @@ const CitySelector = () => {
   const handleOptionClick = (option) => {
     setInputValue(option);  // Set input to the selected option
     setShowDropdown(false); // Hide dropdown
-  };
-
-  let noCity = (city.length) < 1;
+    props.setCity(option);  
+};
 
   return (
     <div style={{ position: 'relative', width: '200px' }}>
@@ -50,8 +48,7 @@ const CitySelector = () => {
         value={inputValue}
         onChange={handleInputChange}
         onFocus={() => setShowDropdown(filteredOptions.length > 0)}
-        placeholder="Search for a street..."
-        // disabled={noCity}
+        placeholder="Search for a city..."
       />
 
       {showDropdown && (
