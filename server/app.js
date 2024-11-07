@@ -14,11 +14,11 @@ import {
   sqlQuerySelect,
 } from "./sources/function.js";
 import {
-  waitersFields,
-  employersFields,
-  eventsFields,
-  waiter_ditails,
+waiter_ditails,
   employer_ditails,
+  events_Fields,
+  waiters_Fields_Select,
+  employers_Fields_Select,
 } from "./sources/variables.js";
 dotenv.config();
 // const { log } = require("console");
