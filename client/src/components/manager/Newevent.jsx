@@ -3,6 +3,7 @@ import Calendar from "./Calender";
 import { FetchPost } from "../Fetch";
 import "../../style/new-event.css";
 import { GetCity, Getstreet } from "../extra/Getstreet";
+import LocatinInputs from "../LocationInputs";
 
 const apiUrl = "http://localhost:4000/events/new-event"
 
@@ -37,11 +38,12 @@ const Newevent = () => {
         <label htmlFor="start-time">שעת התחלה:</label>
         <input name="time" type="time" id="start-time" required />
         <input name="length" type="number" placeholder="length" min={1} step={0.5} disabled required />
-        <select name="city" type="select" placeholder="city" required >
+        {/* <select name="city" type="select" placeholder="city" required >
         {<GetCity city="בית שמש"/>}
         </select>
         <input name="street" type="text" placeholder="street" required />
-        {<Getstreet city={"בית שמש"} street={"יגאל"}/>}
+        {<Getstreet city={"בית שמש"} street={"יגאל"}/>} */}
+        <LocatinInputs/>
         <input name="suite" type="text" placeholder="suite" required />
         <textarea name="description" placeholder="description about the event" />
         <input name="waitersSum" type="number" placeholder="how much waiters" required />

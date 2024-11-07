@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
-const CitySelector = () => {
+const CitySelector = (props) => {
   const [inputValue, setInputValue] = useState('');
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [options, setOptions] = useState([]);
   const [city, setCity] = useState("ירושלים");
   const resourceStreetID = "a7296d1a-f8c9-4b70-96c2-6ebb4352f8e3";
-  let streetUrl = `https://data.gov.il/api/3/action/datastore_search?resource_id=${resourceStreetID}&q=${city}`;
+  let streetUrl = `https://data.gov.il/api/3/action/datastore_search?resource_id=${resourceStreetID}`;
    useEffect(() => {
-  fetch(streetUrl  ).then((response) => response.json())
+  fetch(streetUrl +`&q=${props.city}`).then((response) => response.json())
   .then((data) => {
-    let res = [...data.result.records];
-    console.log(res);    
-    setOptions(()=>(res.map((item) => item["שם_רחוב"])));
-    
+    let res = [...data.result.records];   
+    setOptions(()=>(res.map((item) => item["שם_רחוב"]))); 
 });
-}, []);
+}, [props.city]);
 
   // Update input and filter options
   const handleInputChange = (e) => {
@@ -41,7 +39,7 @@ const CitySelector = () => {
     setShowDropdown(false); // Hide dropdown
   };
 
-  let noCity = (city.length) < 1;
+  let noCity = (props.city.length) < 1;
 
   return (
     <div style={{ position: 'relative', width: '200px' }}>
