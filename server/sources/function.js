@@ -34,6 +34,14 @@ function cutIsoDate(e_date) {
   }
 }
 /**-----------------SQL Query functions------------------ */
+
+//to use this function you must put this arguments:
+// table name "string" - required
+// fields [array] - required
+// values [array] - required
+// callback function- required
+//returns results of sql query in [{},{}...]
+
 function sqlQueryInsert(table, fields = [], values = [], callback) {
   const placeholders = fields.map(() => "?").join(", ");
   const sql = `INSERT INTO ${table} (${fields.join(
@@ -50,6 +58,14 @@ function sqlQueryInsert(table, fields = [], values = [], callback) {
   });
 }
 
+//to use this function you must put this arguments:
+// what do you want to select "string" - required
+// from which table "string" - required
+// where condition [array] - optional => but put an empty array []
+// condition "string" - required
+// compar condition [array] - optional => but put an empty array []
+// limit number "number" - optional => but put 0
+// callback function - required
 function sqlQuerySelect(
   selectWhat,
   fromWhat,
@@ -81,6 +97,33 @@ function sqlQuerySelect(
       console.error(316, "Error fetching data:", err);
       callback(err, null); // Call the callback with an error
     } else {
+      callback(null, results); // Call the callback with results
+    }
+  });
+}
+
+function sqlQueryDelete(
+  tableName,
+  whereCondition = [],
+  conditionChar = "=",
+  comparCondition = [],
+  callback
+) {
+  let sql = `DELETE FROM ${tableName} WHERE `;
+
+  // Adding WHERE conditions if provided
+  if (whereCondition.length > 0) {
+    sql += whereCondition
+      .map((condition) => `${condition} ${conditionChar} ?`)
+      .join(" AND ");
+  }
+
+  // Executing the query
+  connection.query(sql, comparCondition, (err, results) => {
+    if (err) {
+      console.error(316, "Error deleting data:", err);
+      callback(err, null); // Call the callback with an error
+    } else {
       // console.log(results);
       callback(null, results); // Call the callback with results
     }
@@ -93,4 +136,5 @@ export {
   cutIsoDate,
   sqlQueryInsert,
   sqlQuerySelect,
+  sqlQueryDelete,
 };
