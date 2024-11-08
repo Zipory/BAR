@@ -11,6 +11,7 @@ import {
   sqlQueryInsert,
   sqlQuerySelect,
   sqlQueryDelete,
+  sqlQueryUpdate,
 } from "../sources/function.js";
 
 import {
@@ -64,6 +65,8 @@ router.get("/", (req, res) => {
         }
       }
     );
+  } else {
+    res.status(401).send("Unauthorized");
   }
 });
 
@@ -141,10 +144,6 @@ router.delete("/delete-event", (req, res) => {
             succeed: false,
           });
         } else {
-          // console.log("Number(event.id): ", Number(event.id));
-          // console.log("Number(results[0].id): ", Number(results[0].id));
-          // return;
-
           sqlQueryDelete(
             "events",
             ["id", "employer_fk"],
@@ -186,5 +185,80 @@ router.delete("/delete-event", (req, res) => {
     });
   }
 });
+router.put("/update-event", (req, res) => {
+  const userToken = req.header("Authorization") || true;
+  // const userEmail = req.header("email");
+  const event = req.body;
+  const [arrayField, arrayContent] = arrayToSet(event);
+  if (userToken) {
+    sqlQueryUpdate(
+      "events",
+      arrayField,
+      arrayContent,
+      ["id", "employer_fk"],
+      "=",
+      [event.eventID, event.employerID],
+      (err, results) => {
+        if (err) {
+          res
+            .status(500)
+            .json({ message: "Error during updateing event", succeed: false });
+        } else {
+          res
+            .status(200)
+            .json({ message: "Event updated successfully", succeed: true });
+        }
+      }
+    );
+  } else {
+    res.status(401).send("Unauthorized");
+  }
+});
 
 export default router;
+
+function arrayToSet(event) {
+  let arrayField = [];
+  let arrayContent = [];
+  if (event.e_date && event.e_date >= getCurrentDate()) {
+    arrayField.push("e_date");
+    arrayContent.push(event.e_date);
+  }
+  if (event.e_time && event.e_time > getCurrentTime()) {
+    arrayField.push("e_time");
+    arrayContent.push(event.e_time);
+  }
+  if (event.length > 0) {
+    arrayField.push("length");
+    arrayContent.push(Number(event.length));
+  }
+  if (event.street) {
+    arrayField.push("street");
+    arrayContent.push(event.street);
+  }
+  if (event.suite) {
+    arrayField.push("suite");
+    arrayContent.push(event.suite);
+  }
+  if (event.event_description) {
+    arrayField.push("event_description");
+    arrayContent.push(event.event_description);
+  }
+  if (event.waiters_sum > 0) {
+    arrayField.push("waiters_sum");
+    arrayContent.push(Number(event.waiters_sum));
+  }
+  if (event.payment > 0) {
+    arrayField.push("payment");
+    arrayContent.push(Number(event.payment));
+  }
+  if (event.is_global) {
+    arrayField.push("is_global");
+    arrayContent.push(event.is_global);
+  }
+  if (event.has_sleep) {
+    arrayField.push("has_sleep");
+    arrayContent.push(event.has_sleep);
+  }
+  return [arrayField, arrayContent];
+}
