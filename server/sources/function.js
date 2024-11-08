@@ -129,7 +129,7 @@ function sqlQueryDelete(
     }
   });
 }
-//new. maybe its not done yet
+//new update function. maybe its not done yet
 function sqlQueryUpdate(
   tableName,
   setFields = [],
@@ -169,4 +169,5 @@ export {
   sqlQueryInsert,
   sqlQuerySelect,
   sqlQueryDelete,
+  sqlQueryUpdate,
 };
