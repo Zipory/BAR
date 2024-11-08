@@ -129,6 +129,38 @@ function sqlQueryDelete(
     }
   });
 }
+//new. maybe its not done yet
+function sqlQueryUpdate(
+  tableName,
+  setFields = [],
+  newContents = [],
+  whereCondition = [],
+  charCondition = "=",
+  comparCondition = [],
+  callback
+) {
+  let sql = `UPDATE ${tableName} SET ${setFields.join(", ")} `;
+  if (whereCondition.length > 0) {
+    sql += `WHERE ${whereCondition
+      .map((condition) => `${condition} ${charCondition} ?`)
+      .join(" AND ")}`;
+  }
+
+  connection.query(
+    sql,
+    [...newContents, ...comparCondition],
+    (err, results) => {
+      if (err) {
+        console.error(316, "Error updating data:", err);
+        callback(err, null); // Call the callback with an error
+      } else {
+        callback(null, results); // Call the callback with results
+      }
+    }
+  );
+
+  console.log();
+}
 /**-----------------export functions---------------- */
 export {
   getCurrentDate,
