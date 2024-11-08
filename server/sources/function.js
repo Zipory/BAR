@@ -129,7 +129,7 @@ function sqlQueryDelete(
     }
   });
 }
-
+//new. maybe its not done yet
 function sqlQueryUpdate(
   tableName,
   setFields = [],
