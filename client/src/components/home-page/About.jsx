@@ -10,7 +10,6 @@ const About = () => {
         </div>
       </div>
       <div className="left">
-        {" "}
         <div className=" about-us ">
           <h2>הידעת ש...</h2>
           <p>
@@ -21,7 +20,6 @@ const About = () => {
         </div>
       </div>
       <div className="right">
-        {" "}
         <div className=" about-us ">
           <h2>איך זה עובד:</h2>
           <p>
