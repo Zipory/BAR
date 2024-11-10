@@ -190,6 +190,8 @@ router.put("/update-event", (req, res) => {
   // const userEmail = req.header("email");
   const event = req.body;
   const [arrayField, arrayContent] = arrayToSet(event);
+  console.log("event: ", event);
+
   if (userToken) {
     sqlQueryUpdate(
       "events",
@@ -202,7 +204,7 @@ router.put("/update-event", (req, res) => {
         if (err) {
           res
             .status(500)
-            .json({ message: "Error during updateing event", succeed: false });
+            .json({ message: "Error during updating event", succeed: false });
         } else {
           res
             .status(200)
@@ -260,5 +262,8 @@ function arrayToSet(event) {
     arrayField.push("has_sleep");
     arrayContent.push(event.has_sleep);
   }
+  console.log("arrayField: ", arrayField);
+  console.log("arrayContent: ", arrayContent);
+
   return [arrayField, arrayContent];
 }
