@@ -134,17 +134,32 @@ function sqlQueryUpdate(
   tableName,
   setFields = [],
   newContents = [],
-  whereCondition = [],
+  whereConditions = [],
   charCondition = "=",
   comparCondition = [],
   callback
 ) {
-  let sql = `UPDATE ${tableName} SET ${setFields.join(", ")} `;
-  if (whereCondition.length > 0) {
-    sql += `WHERE ${whereCondition
+  // const setFieldsString = setFields.map((field) => `${field} = ?`).join(", ");
+  // console.log("setFieldsString: ", setFieldsString);
+  // let combinedArray = setFields.map(
+  //   (item, index) => `${item} ${charCondition} ?`
+  // );
+
+  let sql = `UPDATE ${tableName} SET ${setFields
+    .map((item) => `${item} ${charCondition} ?`)
+    .join(", ")} `;
+
+  // console.log("sql query123: ", sql);
+
+  //
+  if (whereConditions.length > 0) {
+    sql += `WHERE ${whereConditions
       .map((condition) => `${condition} ${charCondition} ?`)
-      .join(" AND ")}`;
+      .join(" AND ")};`;
   }
+  console.log("sql query: ", sql);
+  console.log("comparCondition: ", comparCondition);
+  console.log("newContents: ", newContents);
 
   connection.query(
     sql,
