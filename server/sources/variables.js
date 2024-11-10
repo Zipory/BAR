@@ -22,15 +22,15 @@ const employers_Fields_Select = [
 ];
 
 const events_Fields = [
-  "employer_fk",
+  "company_id",
   "e_date",
   "e_time",
-  "length",
-  "street",
+  "e_duration",
+  "location",
   "suite",
   "event_description",
-  "waiters_sum",
-  "payment",
+  "waiters_amount",
+  "salary",
   "is_global",
   "has_sleep",
 ];

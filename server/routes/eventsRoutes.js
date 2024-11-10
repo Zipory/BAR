@@ -79,11 +79,11 @@ router.post("/new-event", (req, res) => {
     newEvent.date,
     newEvent.time,
     Number(newEvent.len),
-    newEvent.street,
+    newEvent.location,
     newEvent.suite,
     newEvent.description,
-    Number(newEvent.waiters_sum),
-    Number(newEvent.payment),
+    Number(newEvent.waiters_amount),
+    Number(newEvent.salary),
     newEvent.is_global,
     newEvent.has_sleep,
   ];
@@ -92,7 +92,7 @@ router.post("/new-event", (req, res) => {
   if (userToken) {
     sqlQuerySelect(
       "id",
-      "employers",
+      "companies",
       ["email"],
       "=",
       [userEmail],
@@ -132,7 +132,7 @@ router.delete("/delete-event", (req, res) => {
   if (userToken) {
     sqlQuerySelect(
       "id",
-      "employers",
+      "companies",
       ["email"],
       "=",
       [event.email],
@@ -146,7 +146,7 @@ router.delete("/delete-event", (req, res) => {
         } else {
           sqlQueryDelete(
             "events",
-            ["id", "employer_fk"],
+            ["id", "company_id"],
             "=",
             [Number(event.id), Number(results[0].id)],
             (err, results) => {
@@ -157,7 +157,7 @@ router.delete("/delete-event", (req, res) => {
               } else {
                 sqlQueryDelete(
                   "requests",
-                  ["event_fk"],
+                  ["event_id"],
                   "=",
                   [Number(event.id)],
                   (err, results) => {
@@ -190,19 +190,21 @@ router.put("/update-event", (req, res) => {
   // const userEmail = req.header("email");
   const event = req.body;
   const [arrayField, arrayContent] = arrayToSet(event);
+  console.log("event: ", event);
+
   if (userToken) {
     sqlQueryUpdate(
       "events",
       arrayField,
       arrayContent,
-      ["id", "employer_fk"],
+      ["id", "company_id"],
       "=",
       [event.eventID, event.employerID],
       (err, results) => {
         if (err) {
           res
             .status(500)
-            .json({ message: "Error during updateing event", succeed: false });
+            .json({ message: "Error during updating event", succeed: false });
         } else {
           res
             .status(200)
@@ -228,13 +230,13 @@ function arrayToSet(event) {
     arrayField.push("e_time");
     arrayContent.push(event.e_time);
   }
-  if (event.length > 0) {
-    arrayField.push("length");
-    arrayContent.push(Number(event.length));
+  if (event.e_duration > 0) {
+    arrayField.push("e_duration");
+    arrayContent.push(Number(event.e_duration));
   }
-  if (event.street) {
-    arrayField.push("street");
-    arrayContent.push(event.street);
+  if (event.location) {
+    arrayField.push("location");
+    arrayContent.push(event.location);
   }
   if (event.suite) {
     arrayField.push("suite");
@@ -244,13 +246,13 @@ function arrayToSet(event) {
     arrayField.push("event_description");
     arrayContent.push(event.event_description);
   }
-  if (event.waiters_sum > 0) {
-    arrayField.push("waiters_sum");
-    arrayContent.push(Number(event.waiters_sum));
+  if (event.waiters_amount > 0) {
+    arrayField.push("waiters_amount");
+    arrayContent.push(Number(event.waiters_amount));
   }
-  if (event.payment > 0) {
-    arrayField.push("payment");
-    arrayContent.push(Number(event.payment));
+  if (event.salary > 0) {
+    arrayField.push("salary");
+    arrayContent.push(Number(event.salary));
   }
   if (event.is_global) {
     arrayField.push("is_global");
@@ -260,5 +262,8 @@ function arrayToSet(event) {
     arrayField.push("has_sleep");
     arrayContent.push(event.has_sleep);
   }
+  console.log("arrayField: ", arrayField);
+  console.log("arrayContent: ", arrayContent);
+
   return [arrayField, arrayContent];
 }

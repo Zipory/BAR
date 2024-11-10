@@ -70,7 +70,7 @@ app.post("/login", (req, res) => {
 
   sqlQuerySelect(
     `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
-    `${user.isAwaiter ? "waiters" : "employers"}`,
+    `${user.isAwaiter ? "waiters" : "companys"}`,
     ["email"],
     "=",
     userEmail,
@@ -111,7 +111,7 @@ app.post("/register", (req, res) => {
   if (!user.isAwaiter) {
     sqlQuerySelect(
       "*",
-      "employers",
+      "companies",
       ["email"],
       "=",
       [user.email],
@@ -133,7 +133,7 @@ app.post("/register", (req, res) => {
           } else {
             sqlQuerySelect(
               "*",
-              "employers",
+              "companies",
               ["company_name"],
               "=",
               [user.companyName],
@@ -159,7 +159,7 @@ app.post("/register", (req, res) => {
                     //register employer
 
                     sqlQueryInsert(
-                      "employers",
+                      "companies",
                       employers_Fields_Select,
                       [
                         user.company_name,
