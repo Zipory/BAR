@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 
-function useUserEffect(user, navigate) {
+function useUserEffect(state, navigate, navTo) {
   useEffect(() => {
-    // Your effect logic here
-    console.log("User has changed:", user);
-    if (user !== null) navigate("/events-manager");
-    // This effect will run only when 'user' changes
-  }, [user]);
+  
+    console.log("State has changed:", state);
+    if (state !== null && state !== false) navigate(navTo);
+    // This effect will run only when 'state' changes
+  }, [state]);
 }
 
 export default useUserEffect;

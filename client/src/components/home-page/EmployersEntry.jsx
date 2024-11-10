@@ -19,7 +19,6 @@ const EmployersEntry = () => {
           alt="employer "
           onClick={() => {
             setIsAwaiter(false);
-            <Link to="/login" />;
           }}
         />
       </Link>
@@ -32,8 +31,7 @@ const EmployersEntry = () => {
         <Link
           to={"/register"}
           style={{ textDecoration: "none", color: "inherit" }}>
-          {" "}
-          לא רשום? הירשם עכשיו!{" "}
+          לא רשום? הירשם עכשיו!
         </Link>
       </p>
     </div>
