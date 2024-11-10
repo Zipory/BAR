@@ -23,7 +23,7 @@ const ManagerDashboard = () => {
       <Info />
 
       {/* Create New Event Button */}
-      <button className="big-button" onClick={() => alert("Create New Event")}>
+      <button className="big-button" onClick={() => alert("")}>
         ליצירת אירוע חדש
       </button>
 
