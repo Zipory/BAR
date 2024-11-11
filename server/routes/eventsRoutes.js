@@ -69,16 +69,19 @@ router.get("/", (req, res) => {
     res.status(401).send("Unauthorized");
   }
 });
+router.get("/:email", (req, res) => {});
 
 router.post("/new-event", (req, res) => {
   //   console.log(req.body);
+  console.log("req.body: ", req.body);
+
   const newEvent = req.body;
   const userToken = req.header("Authorization") || true;
   const userEmail = req.header("email");
   const eventsArray = [
     newEvent.date,
     newEvent.time,
-    Number(newEvent.len),
+    Number(newEvent.duration),
     newEvent.location,
     newEvent.suite,
     newEvent.description,
@@ -185,6 +188,7 @@ router.delete("/delete-event", (req, res) => {
     });
   }
 });
+
 router.put("/update-event", (req, res) => {
   const userToken = req.header("Authorization") || true;
   // const userEmail = req.header("email");
@@ -222,6 +226,10 @@ export default router;
 function arrayToSet(event) {
   let arrayField = [];
   let arrayContent = [];
+  if (event.duration > 0) {
+    arrayField.push("duration");
+    arrayContent.push(Number(event.duration));
+  }
   if (event.e_date && event.e_date >= getCurrentDate()) {
     arrayField.push("e_date");
     arrayContent.push(event.e_date);
