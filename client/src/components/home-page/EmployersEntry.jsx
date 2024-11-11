@@ -9,7 +9,9 @@ const EmployersEntry = () => {
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
 
   return (
-    <div className="Employers entry left">
+    <div className="Employers entry left"  onClick={() => {
+      setIsAwaiter(false);
+    }}>
       <Link to={"/login"} style={{ textDecoration: "none", color: "inherit" }}>
         <h1 className="subject">כניסת מעסיקים</h1>
       </Link>
@@ -17,9 +19,6 @@ const EmployersEntry = () => {
         <img
           src={employer}
           alt="employer "
-          onClick={() => {
-            setIsAwaiter(false);
-          }}
         />
       </Link>
 
