@@ -13,7 +13,7 @@ import Allevents from "./components/waiter/Allevents.jsx";
 import {Getstreet, GetCity} from "./components/extra/Getstreet.jsx";
 import Test from "./components/extra/Test.jsx"
 import Teststreet from "./components/extra/Teststreet.jsx"
-
+import EventFormModal from "./components/extra/Newform.jsx";
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
   "יש לך זמן פנוי שאתה רוצה לעבוד בו?",

@@ -28,9 +28,9 @@ const Newevent = () => {
     FetchPost(apiUrl, eventInfo,);
   }
   return (
-    <div>
+    <div className="overlayStyle">
       <h1>Create New Event</h1>
-      <form className="eventForm" onChange={handleForm} onSubmit={sendForm}>
+      <form className="eventForm modalStyle" onChange={handleForm} onSubmit={sendForm}>
         {/* date, time, len, street, suite, description, waiters_sum, payment, is_global, has sleep */}
         {/* TODO: check that the date dont pass */}
         <Calendar setDate={setDate} />
