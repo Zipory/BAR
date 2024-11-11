@@ -3,12 +3,13 @@ import "../style/ManagerDashboard.css";
 import Info from "./manager/Info";
 import Futureevents from "./manager/Futureevents.jsx";
 import History from "./manager/History.jsx";
-import { FetchPost } from "./Fetch.js";
+import { FetchIncludeHeader, FetchPost } from "./Fetch.js";
 import { userInfo } from "../App";
 import Newevent from "./manager/Newevent.jsx";
-const serverUrl = "http://localhost:4000/";
+
 const ManagerDashboard = () => {
   const [user, setUser] = useContext(userInfo);
+  const serverUrl = `http://localhost:4000/events/${user?.email}`;
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -19,7 +20,7 @@ const ManagerDashboard = () => {
     }
   }, [history]);
   const getHistory = () => {
-    FetchPost(serverUrl, { email: user.email }, setHistory);
+    FetchIncludeHeader(serverUrl, { email: user?.email }, setHistory);
   };
 
   useEffect(() => {
@@ -33,7 +34,7 @@ const ManagerDashboard = () => {
 
   const handleClickOutside = (event) => {
     if (divRef.current && !divRef.current.contains(event.target)) {
-      console.log(27, "hi");
+      // console.log(27, "hi");
       setShowModal(false);
     }
   }
