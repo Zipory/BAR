@@ -226,6 +226,10 @@ export default router;
 function arrayToSet(event) {
   let arrayField = [];
   let arrayContent = [];
+  if (event.duration > 0) {
+    arrayField.push("duration");
+    arrayContent.push(Number(event.duration));
+  }
   if (event.e_date && event.e_date >= getCurrentDate()) {
     arrayField.push("e_date");
     arrayContent.push(event.e_date);
