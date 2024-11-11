@@ -45,10 +45,12 @@ const CitySelector = (props) => {
     <div style={{ position: 'relative', width: '200px' }}>
       <input
         type="text"
+        name='city'
         value={inputValue}
         onChange={handleInputChange}
         onFocus={() => setShowDropdown(filteredOptions.length > 0)}
-        placeholder="Search for a city..."
+        placeholder="חפש שם העיר"
+        required 
       />
 
       {showDropdown && (

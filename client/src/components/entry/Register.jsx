@@ -1,9 +1,14 @@
-// Register.js
 import React, { useState, useRef, useContext } from "react";
 import "../../style/Login.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { typeOfUser } from "../../App";
+import { FetchPost } from "../Fetch";
+import { useNavigate } from "react-router-dom";
+import useUserEffect from "../../hooks/useUserEffect";
 
+const postUrl = "http://localhost:4000/register"
+
+/*function to create a new event-manager or a waiter. */
 function Register(props) {
   /**general ref's*/
   let email = useRef("");
@@ -21,25 +26,49 @@ function Register(props) {
   /** hooks*/
   const [showPassword, setShowPassword] = useState(false);
   const [showCorenfinPassword, setShowCorenfinPassword] = useState(false);
-  /** */
+  const [singupOk, setSingupOk] = useState(false);
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
+  const [title, setTitle] = useState(isAwaiter ? "מלצר": "מנהל אירועים");
+  /** */
+  /* nav to login after singup. */
+  let navigate = useNavigate();
+  useUserEffect(singupOk, navigate, "/login");
 
-  //   const handleRegister = (e) => {};
-  const checkRegister = (event) => {
+  /*for events-manager: create the post request, and set singup  */
+  const managerRegister = (event) => {
     document.querySelector(".myForm").checkVisibility();
     event.preventDefault();
-    let isTrue = email && password && confirmPassword;
-    //TODO
-    if (isAwaiter) {
+    console.log(email.current.value, companyName, password);
+    let allInputs = {
+      email: email.current.value,
+      password: password.current.value,
+      companyName: companyName.current.value,
+      contactPersonName: contactPersonName.current.value,
+      contactPersonPhone: contactPersonPhone.current.value,
+      isAwaiter: isAwaiter
     }
+    FetchPost(postUrl, allInputs, setSingupOk, allInputs["email"])
+  }
 
-  };
-
+   /*for waiter: create the post request, and set singup  */
+  const waiterRegister = (event) => {
+    document.querySelector(".myForm").checkVisibility();
+    event.preventDefault();
+    console.log(email.current.value);
+    let allInputs = {
+      email: email.current.value, 
+      firstName: firstName.current.value, 
+      lastName: lastName.current.value,
+      phoneNumber: phoneNumber.current.value,
+      waiterAge: waiterAge.current.value,
+      isAwaiter: isAwaiter
+    }
+    FetchPost(postUrl, allInputs, setSingupOk, allInputs["email"]);
+  }
   return (
     <div className="auth-container">
-      <h2>הרשמה</h2>
+      <h2>הרשמה כ{title}</h2>
       <form className="myForm"
-      //    onSubmit={handleRegister}
       >
         {!isAwaiter && (
           <input type="text" placeholder="שם חברה" ref={companyName} required />
@@ -111,13 +140,15 @@ function Register(props) {
           </div>
         </div>
 
-        <button type="submit" className="register-btn" onClick={!isAwaiter ? checkRegister : undefined}>
+        <button type="submit" className="register-btn" onClick={!isAwaiter ? managerRegister : waiterRegister}>
           התחברות
         </button>
       </form>
+      {/* trying to create a popup if singup successed or not. */}
+      {singupOk && <h1>new user created.</h1> && setTimeout(() => {
+      }, 3000)}
     </div>
   );
 }
 
 export default Register;
-

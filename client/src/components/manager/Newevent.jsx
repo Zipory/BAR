@@ -43,7 +43,7 @@ const Newevent = () => {
         </select>
         <input name="street" type="text" placeholder="street" required />
         {<Getstreet city={"בית שמש"} street={"יגאל"}/>} */}
-        <LocatinInputs/>
+        <LocatinInputs />
         <input name="suite" type="text" placeholder="suite" required />
         <textarea name="description" placeholder="description about the event" />
         <input name="waitersSum" type="number" placeholder="how much waiters" required />

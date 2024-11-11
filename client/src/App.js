@@ -47,15 +47,6 @@ function App() {
         </typeOfUser.Provider>
       </main>
 
-      {/* <Newevent/> */}
-      {/* <Allevents/> */}
-      {/* {<GetCity city="בית שמש"/>}
-      {<Getstreet city={"בית שמש"} street={"יגאל"}/>} */}
-      <div >
-      {/* <Test/>
-      <Teststreet/> */}
-      <EventFormModal/>
-      </div>
       <footer>
         <Footer />
       </footer>
