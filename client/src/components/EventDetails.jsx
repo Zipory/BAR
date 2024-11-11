@@ -1,8 +1,13 @@
 import React from "react";
 import "../style/eventDetails.css"
-const EventDetails = ({ eventInfo }) => {
+import { FetchDelete } from "./Fetch";
+import Newevent from "./manager/Newevent";
+const EventDetails = ({ eventInfo , company}) => {
+  const urlDelete = "events/delete-event"
   return (
     <div className="event-details">
+      <button onClick={<Newevent/>}>Edit</button>
+      <button onClick={() =>FetchDelete(urlDelete, company?.email, eventInfo)}>Delete</button>
       <h2>Event Details</h2>
       <p><strong>תאריך:</strong> {eventInfo.e_date}</p>
       <p><strong>זמן התחלה:</strong> {eventInfo.e_time}</p>
