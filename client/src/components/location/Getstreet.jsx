@@ -45,11 +45,13 @@ const CitySelector = (props) => {
     <div style={{ position: 'relative', width: '200px' }}>
       <input
         type="text"
+        name='street'
         value={inputValue}
         onChange={handleInputChange}
         onFocus={() => setShowDropdown(filteredOptions.length > 0)}
-        placeholder="Search for a street..."
+        placeholder="חפש שם הרחוב"
         // disabled={noCity}
+        required 
       />
 
       {showDropdown && (
