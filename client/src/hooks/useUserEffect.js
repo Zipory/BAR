@@ -6,6 +6,7 @@ function useUserEffect(state, navigate, navTo) {
     console.log("State has changed:", state);
     if (state !== null && state !== false) navigate(navTo);
     // This effect will run only when 'state' changes
+    
   }, [state]);
 }
 

@@ -25,7 +25,9 @@ export async function FetchIncludeHeader(url, email, setState) {
 }
 
 export async function FetchPost(url, data, setState, userEmail) {
-  console.log(13, "hi");
+  console.log(28, "data", data);
+  console.log(29, "url", url);
+
   fetch(url, {
     method: "POST",
     headers: {

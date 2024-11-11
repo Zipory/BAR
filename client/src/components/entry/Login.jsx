@@ -7,7 +7,7 @@ import { FetchPost } from "../Fetch";
 import { userInfo } from "../../App";
 import useUserEffect from "../../hooks/useUserEffect";
 const serverUrl = "http://localhost:4000/login";
-let demo_login_email = 'roi@joyhall.com';
+let demo_login_email = "roi@joyhall.com";
 /*Components that show the login page, and handle with it. */
 function Login() {
   const [email, setEmail] = useState("");
@@ -16,7 +16,7 @@ function Login() {
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
   const [user, setUser] = useContext(userInfo);
   // let title = isAwaiter ? "מלצר": "מנהל אירועים";
-  const [title, setTitle] = useState(isAwaiter ? "מלצר": "מנהל אירועים");
+  const [title, setTitle] = useState(isAwaiter ? "מלצר" : "מנהל אירועים");
   let navigate = useNavigate();
   const handleLogin = (event) => {
     document.querySelector(".myForm").checkVisibility();
@@ -24,6 +24,7 @@ function Login() {
     console.log("Logging in with:", { email, password });
     FetchPost(serverUrl, { email, password, isAwaiter }, setUser);
   };
+  
   /*A good way to use navaget in if statement. */
   useUserEffect(user, navigate, "/events-manager");
   return (
