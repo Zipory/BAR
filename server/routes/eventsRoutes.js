@@ -69,7 +69,75 @@ router.get("/", (req, res) => {
     res.status(401).send("Unauthorized");
   }
 });
-router.get("/:email", (req, res) => {});
+router.get("/:email", (req, res) => {
+  //user details
+  const userToken = req.header("Authorization") || true;
+  const userEmail = req.params.email;
+  const isAwaiter = req.header("isAwaiter") || false;
+  //if user is logged
+  if (userToken) {
+    //if user is an awaiter
+    if (isAwaiter) {
+      //TODO : implement awaiter case
+
+      res
+        .status(404)
+        .json({ message: "Didn't support awaiter case", succeed: false });
+    } else {
+      // if user is an employer
+      //find employer id
+      sqlQuerySelect(
+        "id",
+        "companies",
+        ["email"],
+        "=",
+        [userEmail],
+        0,
+        (err, results) => {
+          if (err) {
+            res.status(500).json({
+              message: "Error finding employer ID inside database",
+              succeed: false,
+            });
+          } else {
+            //find events of employer with employer id
+            sqlQuerySelect(
+              "*",
+              "events",
+              ["company_id"],
+              "=",
+              [results[0].id],
+              0,
+              (err, results) => {
+                if (err) {
+                  res.status(500).json({
+                    message: "Error finding events inside database",
+                    succeed: false,
+                  });
+                } else {
+                  let resultsArray = [...results];
+
+                  // cut iso date
+                  resultsArray.forEach((event) => {
+                    event.e_date = cutIsoDate(event.e_date);
+                  });
+
+                  res.status(200).json({
+                    message: "Events found successfully",
+                    succeed: true,
+                    data: resultsArray,
+                  });
+                }
+              }
+            );
+          }
+        }
+      );
+    }
+  } else {
+    res.status(401).json({ message: "Unauthorized", succeed: false });
+  }
+});
 
 router.post("/new-event", (req, res) => {
   //   console.log(req.body);
@@ -81,7 +149,7 @@ router.post("/new-event", (req, res) => {
   const eventsArray = [
     newEvent.date,
     newEvent.time,
-    Number(newEvent.duration),
+    Number(newEvent.e_duration),
     newEvent.location,
     newEvent.suite,
     newEvent.description,
@@ -226,10 +294,7 @@ export default router;
 function arrayToSet(event) {
   let arrayField = [];
   let arrayContent = [];
-  if (event.duration > 0) {
-    arrayField.push("duration");
-    arrayContent.push(Number(event.duration));
-  }
+
   if (event.e_date && event.e_date >= getCurrentDate()) {
     arrayField.push("e_date");
     arrayContent.push(event.e_date);
