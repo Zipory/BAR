@@ -1,33 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Calendar from "./Calender";
 import { FetchPost } from "../Fetch";
 import "../../style/new-event.css";
 import { GetCity, Getstreet } from "../extra/Getstreet";
 import LocatinInputs from "../LocationInputs";
-
+import { userInfo } from "../../App";
 const apiUrl = "http://localhost:4000/events/new-event";
 
 const Newevent = () => {
+  const [user, setUser] = useContext(userInfo);
   const [date, setDate] = useState(new Date());
   const [sendOk, setSendOk] = useState(false);
-  const eventInfo = { sleep: false, description: undefined };
+  const eventInfo = { has_sleep: false, description: undefined };
   function handleForm(event) {
     const { name, value, type, checked } = event.target;
     // Update the eventInfo object based on input type
     eventInfo[name] = type === "checkbox" ? checked : value;
     eventInfo["date"] = date;
     if (name === "city") {
-      console.log(event.target);
+      // console.log(event.target);
     }
-    console.log(eventInfo); // Log the updated eventInfo to verify changes
+    // console.log(eventInfo); // Log the updated eventInfo to verify changes
     // console.log(event.target.name);
   }
   function sendForm(e) {
     e.preventDefault();
-    eventInfo["street"] = eventInfo["city"] + " " + eventInfo["street"];
-    console.log(eventInfo);
+    eventInfo["location"] = eventInfo["city"] + " " + eventInfo["street"];
+    // console.log(eventInfo);
 
-    FetchPost(apiUrl, eventInfo);
+    FetchPost(apiUrl, eventInfo, null, user["email"]);
   }
   return (
     <div className="overlayStyle">

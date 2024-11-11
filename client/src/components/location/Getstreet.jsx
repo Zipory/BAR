@@ -21,7 +21,7 @@ const CitySelector = (props) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    console.log(value);
+    // console.log(value);
 
     if (value) {
       const newFilteredOptions = options.filter((option) =>

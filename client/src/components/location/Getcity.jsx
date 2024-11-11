@@ -21,7 +21,7 @@ const CitySelector = (props) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    console.log(value);
+    // console.log(value);
 
     if (value) {
       const newFilteredOptions = options.filter((option) =>
@@ -46,6 +46,7 @@ const CitySelector = (props) => {
       <input
         type="text"
         value={inputValue}
+        name="city"
         onChange={handleInputChange}
         onFocus={() => setShowDropdown(filteredOptions.length > 0)}
         placeholder="חפש שם העיר"
@@ -71,12 +72,10 @@ const CitySelector = (props) => {
           {filteredOptions.map((option, index) => (
             <li
               key={index}
-              name="city"
               onClick={() => handleOptionClick(option)}
               style={{
                 padding: "5px",
                 cursor: "pointer",
-                zIndex: 1000
               }}
             >
               {option}
