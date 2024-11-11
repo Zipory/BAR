@@ -1,14 +1,16 @@
 export async function Fetch(url, setState) {
+  console.log("url", url);
   fetch(url)
     .then((res) => res.json())
     .then((json) => {
       setState(json);
-      console.log(json);
+      console.log("json", json);
     });
-  console.log(url);
 }
 
 export async function FetchIncludeHeader(url, email, setState) {
+  console.log("url", url);
+  console.log("email", email);
   fetch(url, {
     method: "GET",
     headers: {
@@ -19,13 +21,15 @@ export async function FetchIncludeHeader(url, email, setState) {
     .then((res) => res.json())
     .then((json) => {
       setState(json);
-      console.log(json);
+      console.log("json", json);
     });
-  console.log(url);
 }
 
 export async function FetchPost(url, data, setState, userEmail) {
-  console.log(13, "hi");
+  console.log(28, "data", data);
+  console.log(29, "url", url);
+  console.log("email", userEmail);
+
   fetch(url, {
     method: "POST",
     headers: {
@@ -45,11 +49,42 @@ export async function FetchPost(url, data, setState, userEmail) {
     })
     .then((json) => {
       if (json) {
+        console.log("json", json);
         if (setState) {
           setState(json);
           console.log(35, "hi");
         } else {
           console.log("There is no setState");
+        }
+      }
+    });
+}
+
+export async function FetchDelete(url, email, eventID, setState) {
+  console.log(29, "url", url);
+  console.log("email", email);
+  console.log("eventID", eventID);
+  fetch(url, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      email: email,
+      eventID: eventID,
+    },
+  })
+    .then((res) => {
+      if (res.ok) {
+        console.log("deleted");
+        return res.json();
+      } else {
+        console.error("Failed to delete");
+      }
+    })
+    .then((json) => {
+      if (json) {
+        console.log(json);
+        if (setState) {
+          setState(json);
         }
       }
     });

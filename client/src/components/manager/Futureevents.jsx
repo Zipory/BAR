@@ -7,7 +7,7 @@ const Futureevents = () => {
   const [events, setEvents] = useState([]);
 
   /* api to get the future event. */
-  const apiUrl = `http://localhost:4000/events/${user["email"]}`;
+  const apiUrl = `http://localhost:4000/events/${user?.email}`;
 
   /* function that return the precentage (%) of the progress bar. */
   const percentage = (event) => {
@@ -16,7 +16,7 @@ const Futureevents = () => {
 
   /*start with fetching to set the events array. */
   useEffect(() => {
-    FetchIncludeHeader(apiUrl, user["email"], setEvents);
+    FetchIncludeHeader(apiUrl, user?.email, setEvents);
   }, []);
   return (
     <div className="future-events">
