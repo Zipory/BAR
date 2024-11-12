@@ -1,16 +1,18 @@
 export async function Fetch(url, setState) {
-  console.log("url", url);
+  console.log("url:", url);
   fetch(url)
     .then((res) => res.json())
     .then((json) => {
       setState(json);
-      console.log("json", json);
+      console.log("json:", json);
     });
 }
 
 export async function FetchIncludeHeader(url, email, setState, isAwaiter) {
-  console.log("url", url);
-  console.log("email", email);
+  console.log("url:", url);
+  console.log("email:", email);
+  console.log("waiter?", isAwaiter);
+  
   fetch(url, {
     method: "GET",
     headers: {
@@ -22,14 +24,14 @@ export async function FetchIncludeHeader(url, email, setState, isAwaiter) {
     .then((res) => res.json())
     .then((json) => {
       setState(json);
-      console.log("json", json);
+      console.log("json:", json);
     });
 }
 
 export async function FetchPost(url, data, setState, userEmail) {
-  console.log(28, "data", data);
-  console.log(29, "url", url);
-  console.log("email", userEmail);
+  console.log(28, "data:", data);
+  console.log(29, "url:", url);
+  console.log("email:", userEmail);
 
   fetch(url, {
     method: "POST",
@@ -50,7 +52,7 @@ export async function FetchPost(url, data, setState, userEmail) {
     })
     .then((json) => {
       if (json) {
-        console.log("json", json);
+        console.log("json:", json);
         if (setState) {
           setState(json);
           console.log(35, "hi");
@@ -62,9 +64,9 @@ export async function FetchPost(url, data, setState, userEmail) {
 }
 
 export async function FetchDelete(url, email, eventID, setState) {
-  console.log(29, "url", url);
-  console.log("email", email);
-  console.log("eventID", eventID);
+  console.log(29, "url:", url);
+  console.log("email:", email);
+  console.log("eventID:", eventID);
   fetch(url, {
     method: "DELETE",
     headers: {
@@ -83,7 +85,7 @@ export async function FetchDelete(url, email, eventID, setState) {
     })
     .then((json) => {
       if (json) {
-        console.log(json);
+        console.log("json:", json);
         if (setState) {
           setState(json);
         }

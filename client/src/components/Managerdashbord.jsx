@@ -48,10 +48,10 @@ const ManagerDashboard = () => {
       <button className="big-button" onClick={() =>setShowModal(true)}>
         ליצירת אירוע חדש
       </button>
-      <div ref={divRef}> {showModal && <Newevent/>}</div>
+      <div ref={divRef}> {showModal && <Newevent setShowModal={setShowModal}/>}</div>
      
       {/* Future Events Window */}
-      {/* <Futureevents /> */}
+      <Futureevents />
 
       {/* View History Button */}
       <button className="medium-button" onClick={() => getHistory()}>

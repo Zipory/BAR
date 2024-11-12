@@ -7,7 +7,7 @@ import LocatinInputs from "../LocationInputs";
 import { userInfo } from "../../App";
 const apiUrl = "http://localhost:4000/events/new-event";
 
-const Newevent = () => {
+const Newevent = ({setShowModal}) => {
   const [user, setUser] = useContext(userInfo);
   const [date, setDate] = useState(new Date());
   const [sendOk, setSendOk] = useState(false);
@@ -23,12 +23,12 @@ const Newevent = () => {
     // console.log(eventInfo); // Log the updated eventInfo to verify changes
     // console.log(event.target.name);
   }
-  function sendForm(e) {
+  async function sendForm(e) {
     e.preventDefault();
     eventInfo["location"] = eventInfo["city"] + " " + eventInfo["street"];
     // console.log(eventInfo);
 
-    FetchPost(apiUrl, eventInfo, null, user["email"]);
+    FetchPost(apiUrl, eventInfo, setSendOk, user["email"]).then(() => setShowModal(false));
   }
   return (
     <div className="overlayStyle">
