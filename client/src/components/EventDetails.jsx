@@ -3,7 +3,7 @@ import "../style/eventDetails.css"
 import { FetchDelete } from "./Fetch";
 import Newevent from "./manager/Newevent";
 const EventDetails = ({ eventInfo , company}) => {
-  const urlDelete = "events/delete-event"
+  const urlDelete = "http://localhost:4000/events/delete-event"
   return (
     <div className="event-details">
       <button >Edit</button>
