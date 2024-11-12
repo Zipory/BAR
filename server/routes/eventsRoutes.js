@@ -39,9 +39,10 @@ router.get("/", (req, res) => {
       0,
       (err, results) => {
         if (err) {
-          res
-            .status(500)
-            .send(JSON.stringify("Error fetching events from the database"));
+          res.status(500).json({
+            message: "Error fetching data from the database",
+            succeed: false,
+          });
         } else {
           // create a copy of results
           let resultsArray = [...results];
@@ -61,12 +62,16 @@ router.get("/", (req, res) => {
           });
           // console.log("resultsArray length: ", resultsArray.length);
 
-          res.status(200).send(JSON.stringify(resultsArray));
+          res.status(200).json({
+            message: "Events fetched successfully",
+            succeed: true,
+            resultsArray,
+          });
         }
       }
     );
   } else {
-    res.status(401).send("Unauthorized");
+    res.status(401).send({ message: "Unauthorized", succeed: false });
   }
 });
 router.get("/:email", (req, res) => {
@@ -79,6 +84,30 @@ router.get("/:email", (req, res) => {
     //if user is an awaiter
     if (isAwaiter) {
       //TODO : implement awaiter case
+      sqlQuerySelect(
+        "id",
+        "waiters",
+        ["email"],
+        "=",
+        [userEmail],
+        0,
+        (err, results) => {
+          if (err) {
+            res.status(500).json({
+              message: "Error finding waiter ID inside database",
+              succeed: false,
+            });
+          } else {
+            console.log("im here");
+
+            //     SELECT events.*
+            // FROM requests
+            // JOIN events ON requests.event_id = events.id
+            // WHERE requests.waiter_id = 2
+            //   AND requests.status = 'Approved';
+          }
+        }
+      );
 
       res
         .status(404)
@@ -170,7 +199,10 @@ router.post("/new-event", (req, res) => {
       0,
       (err, results) => {
         if (err) {
-          res.status(500).json("Error finding employer ID inside database");
+          res.status(500).json({
+            message: "Error finding employer ID inside database",
+            succeed: false,
+          });
         } else {
           //   res.status(200).send(JSON.stringify(results[0].id));
           eventsArray.unshift(Number(results[0].id));
@@ -182,9 +214,12 @@ router.post("/new-event", (req, res) => {
               if (err) {
                 res
                   .status(500)
-                  .json("Error inserting new event into the database");
+                  .json({ message: "Error creating event", succeed: false });
               } else {
-                res.status(200).json("Event created successfully");
+                res.status(200).json({
+                  message: "Event created successfully",
+                  succeed: true,
+                });
               }
             }
           );
@@ -192,12 +227,13 @@ router.post("/new-event", (req, res) => {
       }
     );
   } else {
-    res.status(401).send("Unauthorized");
+    res.status(401).send({ message: "Unauthorized", succeed: false });
   }
 });
 
 router.delete("/delete-event", (req, res) => {
   const userToken = req.header("Authorization") || true;
+  const userEmail = req.header("email");
   const event = req.body;
 
   if (userToken) {
@@ -206,7 +242,7 @@ router.delete("/delete-event", (req, res) => {
       "companies",
       ["email"],
       "=",
-      [event.email],
+      [userEmail],
       0,
       (err, results) => {
         if (err) {
@@ -259,28 +295,47 @@ router.delete("/delete-event", (req, res) => {
 
 router.put("/update-event", (req, res) => {
   const userToken = req.header("Authorization") || true;
-  // const userEmail = req.header("email");
+  const userEmail = req.header("email");
   const event = req.body;
   const [arrayField, arrayContent] = arrayToSet(event);
-  console.log("event: ", event);
+  // console.log("event: ", event);
 
   if (userToken) {
-    sqlQueryUpdate(
-      "events",
-      arrayField,
-      arrayContent,
-      ["id", "company_id"],
+    sqlQuerySelect(
+      "id",
+      "companies",
+      "email",
       "=",
-      [event.eventID, event.employerID],
+      [userEmail],
+      0,
       (err, results) => {
         if (err) {
-          res
-            .status(500)
-            .json({ message: "Error during updating event", succeed: false });
+          res.status(500).json({
+            message: "Error finding employer ID inside database",
+            succeed: false,
+          });
         } else {
-          res
-            .status(200)
-            .json({ message: "Event updated successfully", succeed: true });
+          sqlQueryUpdate(
+            "events",
+            arrayField,
+            arrayContent,
+            ["id", "company_id"],
+            "=",
+            [event.event_id, results[0].id],
+            (err, results) => {
+              if (err) {
+                res.status(500).json({
+                  message: "Error during updating event",
+                  succeed: false,
+                });
+              } else {
+                res.status(200).json({
+                  message: "Event updated successfully",
+                  succeed: true,
+                });
+              }
+            }
+          );
         }
       }
     );
@@ -295,13 +350,13 @@ function arrayToSet(event) {
   let arrayField = [];
   let arrayContent = [];
 
-  if (event.e_date && event.e_date >= getCurrentDate()) {
+  if (event.date && event.date >= getCurrentDate()) {
     arrayField.push("e_date");
-    arrayContent.push(event.e_date);
+    arrayContent.push(event.date);
   }
-  if (event.e_time && event.e_time > getCurrentTime()) {
+  if (event.time && event.time > getCurrentTime()) {
     arrayField.push("e_time");
-    arrayContent.push(event.e_time);
+    arrayContent.push(event.time);
   }
   if (event.e_duration > 0) {
     arrayField.push("e_duration");
@@ -315,9 +370,9 @@ function arrayToSet(event) {
     arrayField.push("suite");
     arrayContent.push(event.suite);
   }
-  if (event.event_description) {
+  if (event.description) {
     arrayField.push("event_description");
-    arrayContent.push(event.event_description);
+    arrayContent.push(event.description);
   }
   if (event.waiters_amount > 0) {
     arrayField.push("waiters_amount");

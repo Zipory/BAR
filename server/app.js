@@ -19,6 +19,8 @@ import {
   events_Fields,
   waiters_Fields_Select,
   employers_Fields_Select,
+  company_insert,
+  waiter_insert,
 } from "./sources/variables.js";
 dotenv.config();
 // const { log } = require("console");
@@ -53,12 +55,6 @@ const port = 4000;
 // });
 
 /*-----------------authenticate Token----------------- */
-
-// console.log("waiter_ditails: ", waiter_ditails);
-// console.log("employer_ditails: ", employer_ditails);
-// console.log("events_Fields: ", events_Fields);
-// console.log("waiters_Fields_Select: ", waiters_Fields_Select);
-// console.log("employers_Fields_Select: ", employers_Fields_Select);
 
 /*-----------------Routes----------------------- */
 
@@ -118,12 +114,10 @@ app.post("/register", (req, res) => {
       0,
       (err, results) => {
         if (err) {
-          res.status(500).send(
-            JSON.stringify({
-              message: "Error fetching data from the database",
-              succeed: false,
-            })
-          );
+          res.status(500).json({
+            message: "Error fetching data from the database",
+            succeed: false,
+          });
         } else {
           if (results.length > 0) {
             res.status(500).json({
@@ -136,57 +130,47 @@ app.post("/register", (req, res) => {
               "companies",
               ["company_name"],
               "=",
-              [user.companyName],
+              [user.company_name],
               0,
               (err, results) => {
                 if (err) {
-                  res.status(500).send(
-                    JSON.stringify({
-                      message: "Error fetching data from the database",
-                      succeed: false,
-                    })
-                  );
+                  res.status(500).json({
+                    message: "Error fetching data from the database",
+                    succeed: false,
+                  });
                 } else {
                   if (results.length > 0) {
-                    res.status(500).send(
-                      JSON.stringify({
-                        message:
-                          "There is already an account with this details",
-                        succeed: false,
-                      })
-                    );
+                    res.status(500).json({
+                      message: "There is already an account with this details",
+                      succeed: false,
+                    });
                   } else {
                     //register employer
 
                     sqlQueryInsert(
                       "companies",
-                      employers_Fields_Select,
+                      company_insert,
                       [
                         user.company_name,
                         user.manager,
                         user.manager_phone,
                         user.email,
-                        user.e_password,
+                        user.password,
                         user.about,
-                        user.avg_rating,
                         "active",
                       ],
                       (err, results) => {
                         if (err) {
-                          res.status(500).send(
-                            JSON.stringify({
-                              message:
-                                "Error inserting employer data into the database",
-                              succeed: false,
-                            })
-                          );
+                          res.status(500).json({
+                            message:
+                              "Error inserting employer data into the database",
+                            succeed: false,
+                          });
                         } else {
-                          res.status(200).send(
-                            JSON.stringify({
-                              message: "Account created successfully",
-                              succeed: true,
-                            })
-                          );
+                          res.status(200).json({
+                            message: "Account created successfully",
+                            succeed: true,
+                          });
                         }
                       }
                     );
@@ -208,20 +192,20 @@ app.post("/register", (req, res) => {
       0,
       (err, results) => {
         if (err) {
-          res
-            .status(500)
-            .send(JSON.stringify("Error fetching data from the database"));
+          res.status(500).json({
+            message: "Error fetching data from the database",
+            succeed: false,
+          });
         } else {
           if (results.length > 0) {
-            res
-              .status(500)
-              .send(
-                JSON.stringify("There is already an account with this details")
-              );
+            res.status(500).json({
+              message: "There is already an account with this details",
+              succeed: false,
+            });
           } else {
             sqlQueryInsert(
               "waiters",
-              waiters_Fields_Select,
+              waiter_insert,
               [
                 user.first_name,
                 user.last_name,
@@ -230,20 +214,19 @@ app.post("/register", (req, res) => {
                 user.email,
                 user.password,
                 user.gender,
-                user.avg_rating,
                 "active",
               ],
               (err, results) => {
                 if (err) {
-                  res
-                    .status(500)
-                    .send(
-                      JSON.stringify("Error inserting data to the database 1")
-                    );
+                  res.status(500).json({
+                    message: "Error inserting waiter data into the database",
+                    succeed: false,
+                  });
                 } else {
-                  res
-                    .status(200)
-                    .send(JSON.stringify("Successfully registered"));
+                  res.status(200).json({
+                    message: "Successfully registered",
+                    succeed: true,
+                  });
                 }
               }
             );
@@ -256,11 +239,6 @@ app.post("/register", (req, res) => {
 
 app.use("/events", eventsRoutes);
 
-/**--------------------------------------- */
-//TODO:
-//app.get("/events/:email"){
-//header isAwaiter
-//};
 /*-----------------set listener open on port 4000 ------------------ */
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
