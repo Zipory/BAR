@@ -78,7 +78,9 @@ router.get("/:email", (req, res) => {
   //user details
   const userToken = req.header("Authorization") || true;
   const userEmail = req.params.email;
-  const isAwaiter = req.header("isAwaiter") || false;
+  const isAwaiter = req.header("isAwaiter");
+  console.log("isAwaiter: ", isAwaiter);
+
   //if user is logged
   if (userToken) {
     //if user is an awaiter
@@ -98,20 +100,38 @@ router.get("/:email", (req, res) => {
               succeed: false,
             });
           } else {
-            console.log("im here");
+            connection.query(
+              `      SELECT events.*
+            FROM requests
+            JOIN events ON requests.event_id = events.id
+            WHERE requests.waiter_id =?
+              AND requests.status = 'Approved';`,
+              [results[0].id],
+              (err, results) => {
+                if (err) {
+                  res.status(500).json({
+                    message: "Error finding waiter events inside database",
+                    succeed: false,
+                  });
+                } else {
+                  let resultsArray = [...results];
 
-            //     SELECT events.*
-            // FROM requests
-            // JOIN events ON requests.event_id = events.id
-            // WHERE requests.waiter_id = 2
-            //   AND requests.status = 'Approved';
+                  // cut iso date
+                  resultsArray.forEach((event) => {
+                    event.e_date = cutIsoDate(event.e_date);
+                  });
+
+                  res.status(200).json({
+                    message: "Events fetched successfully",
+                    succeed: true,
+                    data: resultsArray,
+                  });
+                }
+              }
+            );
           }
         }
       );
-
-      res
-        .status(404)
-        .json({ message: "Didn't support awaiter case", succeed: false });
     } else {
       // if user is an employer
       //find employer id
