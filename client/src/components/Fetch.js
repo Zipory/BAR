@@ -40,7 +40,7 @@ export async function FetchPost(url, data, setState, userEmail) {
   })
     .then((res) => {
       if (res.ok) {
-        console.log("created");
+        console.log(43, "post created");
 
         return res.json();
       } else {
