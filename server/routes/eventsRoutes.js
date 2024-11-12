@@ -304,7 +304,7 @@ router.put("/update-event", (req, res) => {
     sqlQuerySelect(
       "id",
       "companies",
-      "email",
+      ["email"],
       "=",
       [userEmail],
       0,
