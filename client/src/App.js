@@ -46,7 +46,7 @@ function App() {
           </userInfo.Provider>
         </typeOfUser.Provider>
       </main>
-<Allevents/>
+{/* <Allevents/> */}
       <footer>
         <Footer />
       </footer>

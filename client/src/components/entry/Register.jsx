@@ -5,6 +5,7 @@ import { typeOfUser } from "../../App";
 import { FetchPost } from "../Fetch";
 import { useNavigate } from "react-router-dom";
 import useUserEffect from "../../hooks/useUserEffect";
+import About from "../home-page/About";
 
 const postUrl = "http://localhost:4000/register"
 
@@ -42,9 +43,10 @@ function Register(props) {
     let allInputs = {
       email: email.current.value,
       password: password.current.value,
-      companyName: companyName.current.value,
-      contactPersonName: contactPersonName.current.value,
-      contactPersonPhone: contactPersonPhone.current.value,
+      company_name: companyName.current.value,
+      manager: contactPersonName.current.value,
+      manager_phone: contactPersonPhone.current.value,
+      about : "about",
       isAwaiter: isAwaiter
     }
     FetchPost(postUrl, allInputs, setSingupOk, allInputs["email"])

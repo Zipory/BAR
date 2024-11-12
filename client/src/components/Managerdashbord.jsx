@@ -5,6 +5,7 @@ import Futureevents from "./manager/Futureevents.jsx";
 import History from "./manager/History.jsx";
 import { FetchIncludeHeader, FetchPost } from "./Fetch.js";
 import { userInfo } from "../App";
+import { typeOfUser } from "../App.js";
 import Newevent from "./manager/Newevent.jsx";
 
 const ManagerDashboard = () => {
@@ -13,6 +14,7 @@ const ManagerDashboard = () => {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
   const divRef = useRef(null);
   useEffect(() => {
     if (history.length > 0) {
@@ -20,7 +22,7 @@ const ManagerDashboard = () => {
     }
   }, [history]);
   const getHistory = () => {
-    FetchIncludeHeader(serverUrl, { email: user?.email }, setHistory);
+    FetchIncludeHeader(serverUrl, user?.email, setHistory, isAwaiter);
   };
 
   useEffect(() => {
