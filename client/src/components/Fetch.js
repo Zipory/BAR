@@ -8,14 +8,15 @@ export async function Fetch(url, setState) {
     });
 }
 
-export async function FetchIncludeHeader(url, email, setState) {
+export async function FetchIncludeHeader(url, email, setState, isAwaiter) {
   console.log("url", url);
   console.log("email", email);
   fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      email: `${email}`,
+      email: email,
+      isAwaiter : isAwaiter
     },
   })
     .then((res) => res.json())

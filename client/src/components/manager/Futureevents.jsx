@@ -27,7 +27,7 @@ const Futureevents = () => {
         <li>אירוע 3: רמדה רנסאנס ירושלים - 01/04/25 == 2/10 מלצרים</li>
         {/* <progress value="37" max="100"></progress> */}
         {/* <meter value={events.numberOfWaiters} max={events.numberOfWaitersNeeded}>{percentage(events[0])}%</meter> */}
-        {events.map((event, index) => (
+        {events?.map((event, index) => (
         <li>אירוע: <EventDetails/></li>
       ))}
       </ul>
