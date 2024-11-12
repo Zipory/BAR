@@ -53,10 +53,31 @@ const employer_ditails = [
   "avg_rating",
 ]; //Query for employer
 
+const company_insert = [
+  "company_name",
+  "manager",
+  "manager_phone",
+  "email",
+  "e_password",
+  "about",
+  "status",
+];
+const waiter_insert = [
+  "first_name",
+  "last_name",
+  "phone",
+  "birthday",
+  "email",
+  "w_password",
+  "gender",
+  "status",
+];
 export {
   waiter_ditails,
   employer_ditails,
   events_Fields,
   waiters_Fields_Select,
   employers_Fields_Select,
+  company_insert,
+  waiter_insert,
 };
