@@ -70,14 +70,14 @@ app.post("/login", (req, res) => {
 
   sqlQuerySelect(
     `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
-    `${user.isAwaiter ? "waiters" : "companys"}`,
+    `${user.isAwaiter ? "waiters" : "companies"}`,
     ["email"],
     "=",
     userEmail,
     0,
     (err, results) => {
       if (err) {
-        console.error(316, "Error fetching data:", err);
+        console.error(80, "Error fetching data:", err);
         res
           .status(500)
           .send(JSON.stringify("Error fetching data from the database"));

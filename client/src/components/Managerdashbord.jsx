@@ -51,7 +51,7 @@ const ManagerDashboard = () => {
       <div ref={divRef}> {showModal && <Newevent/>}</div>
      
       {/* Future Events Window */}
-      <Futureevents />
+      {/* <Futureevents /> */}
 
       {/* View History Button */}
       <button className="medium-button" onClick={() => getHistory()}>
