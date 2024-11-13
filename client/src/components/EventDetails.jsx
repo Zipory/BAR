@@ -1,13 +1,17 @@
-import React from "react";
+import React, {useContext} from "react";
 import "../style/eventDetails.css"
 import { FetchDelete } from "./Fetch";
 import Newevent from "./manager/Newevent";
+import { userInfo } from "../App";
+import { typeOfUser } from "../App";
 const EventDetails = ({ eventInfo , company}) => {
-  const urlDelete = "http://localhost:4000/events/delete-event"
+  const urlDelete = "http://localhost:4000/events/delete-event";
+  const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
+  const [user, setUser] = useContext(userInfo);
   return (
     <div className="event-details">
       <button >Edit</button>
-      <button onClick={() =>FetchDelete(urlDelete, company?.email, eventInfo)}>Delete</button>
+      {!isAwaiter && <button onClick={() =>FetchDelete(urlDelete, user.email, eventInfo)}>Delete</button>}
       <h2>Event Details</h2>
       <p><strong>תאריך:</strong> {eventInfo.e_date}</p>
       <p><strong>זמן התחלה:</strong> {eventInfo.e_time}</p>
