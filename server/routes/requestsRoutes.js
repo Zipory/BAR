@@ -66,5 +66,35 @@ router.post("/new-request", (req, res) => {
     }
   );
 });
+router.delete("/delete-request", (req, res) => {
+  const userToken = req.header("Authorization") || true;
+  const userEmail = req.header("email");
+  const request = req.body;
+  if (userToken) {
+    sqlQuerySelect(
+      "id",
+      "waiters",
+      ["email"],
+      "=",
+      [userEmail],
+      0,
+      (err, results) => {
+        if (err) {
+          res.status(500).json({
+            message: "Error finding waiter ID inside database 1",
+            succeed: false,
+          });
+        } else if (
+          results.length > 0 &&
+          typeof Number(request.event_id) === "number"
+        ) {
+          //need to add transaction
+        }
+      }
+    );
+  } else {
+    res.status(401).json({ message: "Unauthorized", succeed: false });
+  }
+});
 
 export default router;
