@@ -66,7 +66,7 @@ app.post("/login", (req, res) => {
 
   sqlQuerySelect(
     `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
-    `${user.isAwaiter ? "waiters" : "companys"}`,
+    `${user.isAwaiter ? "waiters" : "companies"}`,
     ["email"],
     "=",
     userEmail,
@@ -77,10 +77,8 @@ app.post("/login", (req, res) => {
         res
           .status(500)
           .send(JSON.stringify("Error fetching data from the database"));
-      } else if (user.isAwaiter) {
-        //If its a waiter loged
-        //TODO login for waiter!
-        //sqlQuery(``,[],(err,results)=>{if(err){}else{}})
+      } else if (user.isAwaiter && results.length > 0) {
+        res.status(200).send(JSON.stringify(results[0]));
       } else if (results.length > 0) {
         res.status(200).send(JSON.stringify(results[0]));
       } else {

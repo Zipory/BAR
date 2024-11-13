@@ -78,8 +78,10 @@ router.get("/:email", (req, res) => {
   //user details
   const userToken = req.header("Authorization") || true;
   const userEmail = req.params.email;
-  const isAwaiter = req.header("isAwaiter");
+  const isAwaiter = req.header("isAwaiter") === "true";
   console.log("isAwaiter: ", isAwaiter);
+
+  console.log("userEmail: ", userEmail);
 
   //if user is logged
   if (userToken) {
@@ -149,6 +151,8 @@ router.get("/:email", (req, res) => {
               succeed: false,
             });
           } else {
+            console.log("results[0].id: ", results[0].id);
+
             //find events of employer with employer id
             sqlQuerySelect(
               "*",
