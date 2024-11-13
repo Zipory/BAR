@@ -97,11 +97,6 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   const user = req.body;
 
-  // console.log("is A waiter: ", user.isAwaiter);
-  // console.log("user: ", user);
-  // res.status(200).json(user);
-  // return;
-
   if (!user.isAwaiter) {
     sqlQuerySelect(
       "*",

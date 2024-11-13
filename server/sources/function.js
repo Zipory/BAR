@@ -33,6 +33,10 @@ function cutIsoDate(e_date) {
     return e_date.slice(0, 10);
   }
 }
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 /**-----------------SQL Query functions------------------ */
 
 //to use this function you must put this arguments:
@@ -185,4 +189,5 @@ export {
   sqlQuerySelect,
   sqlQueryDelete,
   sqlQueryUpdate,
+  capitalizeFirstLetter,
 };
