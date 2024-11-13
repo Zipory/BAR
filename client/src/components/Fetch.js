@@ -1,3 +1,4 @@
+/**----------Fetch get---------------- */
 export async function Fetch(url, setState) {
   console.log("welcom to Fetch");
   
@@ -12,6 +13,7 @@ export async function Fetch(url, setState) {
     });
 }
 
+/**----------Fetch get + header ---------------- */
 export async function FetchIncludeHeader(url, email, setState, isAwaiter) {
   console.log("welcom to FetchIncludeHeader");
 
@@ -29,22 +31,26 @@ export async function FetchIncludeHeader(url, email, setState, isAwaiter) {
   })
     .then((res) => res.json())
     .then((json) => {
-      setState(json);
+      if (json.succeed) {
+        setState(json.data);
+      }
       console.log("json:", json);
     });
 }
 
-export async function FetchPost(url, data, setState, userEmail) {
+
+/**----------Fetch post---------------- */
+export async function FetchPost(url, data, setState, email) {
   console.log("welcom to FetchPost");
   console.log(28, "data:", data);
   console.log(29, "url:", url);
-  console.log("email:", userEmail);
+  console.log("email:", email);
 
   fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      email: `${userEmail}`,
+      email: `${email}`,
     },
     body: JSON.stringify(data),
   })
@@ -70,21 +76,53 @@ export async function FetchPost(url, data, setState, userEmail) {
     });
 }
 
+/**----------Fetch put---------------- */
+export async function FetchPut(url, data, setState, email) {
+  console.log("welcom to FetchPut");
+  console.log(28, "data:", data);
+  console.log(29, "url:", url);
+  console.log("email:", email);
+  fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      email : email
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      if (res.ok) {
+        console.log("updated");
+        return res.json();
+      } else {
+        console.error("Failed to update");
+      }
+    })
+    .then((json) => {
+      if (json) {
+        console.log("json", json);
+        if (setState) {
+          setState(json);
+        }
+      }
+    });
+}
+
+/**----------Fetch delete---------------- */
 export async function FetchDelete(url, email, event) {
   console.log("welcom to FetchDelete");
 
   console.log(76, "url:", url);
   console.log("email:", email);
-  console.log("event:", event);
+  console.log("event.id:", event.id);
   fetch(url, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      email: email
+      "email": email
     },
-    body : {
-      event : event
-    }
+    body : JSON.stringify({id : event.id}),
+    
   })
     .then((res) => {
       if (res.ok) {
