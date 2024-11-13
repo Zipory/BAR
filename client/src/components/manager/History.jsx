@@ -1,12 +1,14 @@
 import React from 'react'
+import EventDetails from "../EventDetails";
 
 const History = (props) => {
   return (
     <div>
-        {props.history.map((event, index) => (
-            <li>אירוע {index+1}: {event.city} - {event.date} </li>
-        ))}
-        <h1>סה"כ מלצרים: </h1>
+      {props.history.map((val, indx) => (
+        <li className="li-event" event={val[0]} key={indx}>
+          אירוע {indx+1}:<EventDetails eventInfo={val} />
+        </li>
+      ))}
     </div>
   )
 }
