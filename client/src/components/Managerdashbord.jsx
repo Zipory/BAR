@@ -8,6 +8,7 @@ import { userInfo } from "../App";
 import { typeOfUser } from "../App.js";
 import Newevent from "./manager/Newevent.jsx";
 import Allevents from "./waiter/Allevents.jsx";
+import EventDetails from "./EventDetails.jsx";
 
 const ManagerDashboard = () => {
   const [user, setUser] = useContext(userInfo);
@@ -49,7 +50,7 @@ const ManagerDashboard = () => {
       <button className="big-button" onClick={() =>setShowModal(true)}>
         ליצירת אירוע חדש
       </button>
-      <div ref={divRef}> {showModal && <Newevent setShowModal={setShowModal}/>}</div>
+      <div ref={divRef}> {showModal && <Newevent setShowModal={setShowModal} eventStatus={"new-event"}/>}</div>
      
       {/* Future Events Window */}
       {/* <Futureevents /> */}
@@ -58,7 +59,8 @@ const ManagerDashboard = () => {
       <button className="medium-button" onClick={() => getHistory()}>
         היסטורית אירועים
       </button>
-      {showHistory && <History history={history} />}
+     <History history={history} />
+     {/* <EventDetails eventInfo={history}/> */}
       <div className="meter" dir="ltr">
         <div className="inner-meter">4 / 6</div>
        
@@ -69,3 +71,6 @@ const ManagerDashboard = () => {
 };
 
 export default ManagerDashboard;
+
+
+/** {showHistory && } */

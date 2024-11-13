@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import useUserEffect from "../../hooks/useUserEffect";
 import About from "../home-page/About";
 
-const postUrl = "http://localhost:4000/register"
+const postUrl = "http://localhost:4000/register";
 
 /*function to create a new event-manager or a waiter. */
 function Register(props) {
@@ -19,6 +19,8 @@ function Register(props) {
   let companyName = useRef("");
   let contactPersonName = useRef("");
   let contactPersonPhone = useRef("");
+  // about
+  let  about = useRef("");
   /**waiter ref's*/
   let firstName = useRef("");
   let lastName = useRef("");
@@ -29,7 +31,7 @@ function Register(props) {
   const [showCorenfinPassword, setShowCorenfinPassword] = useState(false);
   const [singupOk, setSingupOk] = useState(false);
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
-  const [title, setTitle] = useState(isAwaiter ? "מלצר": "מנהל אירועים");
+  const [title, setTitle] = useState(isAwaiter ? "מלצר" : "מנהל אירועים");
   /** */
   /* nav to login after singup. */
   let navigate = useNavigate();
@@ -39,39 +41,37 @@ function Register(props) {
   const managerRegister = (event) => {
     document.querySelector(".myForm").checkVisibility();
     event.preventDefault();
-    console.log(email.current.value, companyName, password);
     let allInputs = {
       email: email.current.value,
       password: password.current.value,
       company_name: companyName.current.value,
       manager: contactPersonName.current.value,
       manager_phone: contactPersonPhone.current.value,
-      about : "about",
-      isAwaiter: isAwaiter
-    }
-    FetchPost(postUrl, allInputs, setSingupOk, allInputs["email"])
-  }
+      about: about.current.value,
+      isAwaiter: isAwaiter,
+    };
+    FetchPost(postUrl, allInputs, setSingupOk, allInputs["email"]);
+  };
 
-   /*for waiter: create the post request, and set singup  */
+  /*for waiter: create the post request, and set singup  */
   const waiterRegister = (event) => {
     document.querySelector(".myForm").checkVisibility();
     event.preventDefault();
     console.log(email.current.value);
     let allInputs = {
-      email: email.current.value, 
-      firstName: firstName.current.value, 
+      email: email.current.value,
+      firstName: firstName.current.value,
       lastName: lastName.current.value,
       phoneNumber: phoneNumber.current.value,
       waiterAge: waiterAge.current.value,
-      isAwaiter: isAwaiter
-    }
+      isAwaiter: isAwaiter,
+    };
     FetchPost(postUrl, allInputs, setSingupOk, allInputs["email"]);
-  }
+  };
   return (
     <div className="auth-container">
       <h2>הרשמה כ{title}</h2>
-      <form className="myForm"
-      >
+      <form className="myForm">
         {!isAwaiter && (
           <input type="text" placeholder="שם חברה" ref={companyName} required />
         )}
@@ -86,9 +86,20 @@ function Register(props) {
         {!isAwaiter && (
           <input
             type="text"
-            placeholder="מספר של איש הקשר"
+            placeholder="מספר פלאפון של איש הקשר"
             ref={contactPersonPhone}
             required
+          />
+        )}
+        {!isAwaiter && (
+          <textarea
+            // rows="2"
+            // cols="20"
+            // wrap="hard"
+            ref={about}
+            name="about"
+            placeholder="קצת על החברה"
+            maxLength={100}
           />
         )}
         {isAwaiter && (
@@ -102,7 +113,8 @@ function Register(props) {
             dir="rtl"
             type="tel"
             placeholder="פלאפון"
-            ref={phoneNumber}></input>
+            ref={phoneNumber}
+          ></input>
         )}
         {isAwaiter && (
           <input type="date" placeholder="גיל" ref={waiterAge}></input>
@@ -123,7 +135,8 @@ function Register(props) {
           />
           <div
             className="eyeClick"
-            onClick={() => setShowPassword(!showPassword)}>
+            onClick={() => setShowPassword(!showPassword)}
+          >
             {(showPassword && <FaEyeSlash />) || <FaEye />}
           </div>
         </div>
@@ -137,18 +150,22 @@ function Register(props) {
           />
           <div
             className="eyeClick"
-            onClick={() => setShowCorenfinPassword(!showCorenfinPassword)}>
+            onClick={() => setShowCorenfinPassword(!showCorenfinPassword)}
+          >
             {(showCorenfinPassword && <FaEyeSlash />) || <FaEye />}
           </div>
         </div>
 
-        <button type="submit" className="register-btn" onClick={!isAwaiter ? managerRegister : waiterRegister}>
+        <button
+          type="submit"
+          className="register-btn"
+          onClick={!isAwaiter ? managerRegister : waiterRegister}
+        >
           התחברות
         </button>
       </form>
       {/* trying to create a popup if singup successed or not. */}
-      {singupOk && <h1>new user created.</h1> && setTimeout(() => {
-      }, 3000)}
+      {singupOk && <h1>new user created.</h1> && setTimeout(() => {}, 3000)}
     </div>
   );
 }
