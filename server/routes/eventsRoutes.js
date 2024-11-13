@@ -8,6 +8,7 @@ import {
   getCurrentDate,
   getCurrentTime,
   cutIsoDate,
+  capitalizeFirstLetter,
   sqlQueryInsert,
   sqlQuerySelect,
   sqlQueryDelete,
@@ -74,14 +75,17 @@ router.get("/", (req, res) => {
     res.status(401).send({ message: "Unauthorized", succeed: false });
   }
 });
-router.get("/:email", (req, res) => {
+router.get("/:email/:status", (req, res) => {
   //user details
   const userToken = req.header("Authorization") || true;
-  const userEmail = req.params.email;
-  const isAwaiter = req.header("isAwaiter") === "true";
-  console.log("isAwaiter: ", isAwaiter);
 
-  console.log("userEmail: ", userEmail);
+  const isAwaiter = req.header("isAwaiter") === "true";
+  const userEmail = req.params.email;
+  const status = capitalizeFirstLetter(req.params.status);
+  let stage = status === "Pending" ? "Pending" : "Approved";
+  // console.log("isAwaiter: ", isAwaiter);
+
+  // console.log("userEmail: ", userEmail);
 
   //if user is logged
   if (userToken) {
@@ -107,8 +111,14 @@ router.get("/:email", (req, res) => {
             FROM requests
             JOIN events ON requests.event_id = events.id
             WHERE requests.waiter_id =?
-              AND requests.status = 'Approved';`,
-              [results[0].id],
+              AND requests.status =? ${
+                status === "Future"
+                  ? `AND events.e_date >=${getCurrentDate()}`
+                  : status === "Past"
+                  ? `AND events.e_date <${getCurrentDate()}`
+                  : ""
+              };`,
+              [results[0].id, stage],
               (err, results) => {
                 if (err) {
                   res.status(500).json({
@@ -135,8 +145,8 @@ router.get("/:email", (req, res) => {
         }
       );
     } else {
-      // if user is an employer
-      //find employer id
+      // if user is an company
+      //find company id
       sqlQuerySelect(
         "id",
         "companies",
@@ -150,10 +160,10 @@ router.get("/:email", (req, res) => {
               message: "Error finding employer ID inside database",
               succeed: false,
             });
-          } else {
+          } else if (results.length > 0) {
             console.log("results[0].id: ", results[0].id);
 
-            //find events of employer with employer id
+            //find events of company with company id
             sqlQuerySelect(
               "*",
               "events",
@@ -174,6 +184,15 @@ router.get("/:email", (req, res) => {
                   resultsArray.forEach((event) => {
                     event.e_date = cutIsoDate(event.e_date);
                   });
+                  if (status === "Future") {
+                    resultsArray = resultsArray.filter((event) => {
+                      return event.e_date >= getCurrentDate();
+                    });
+                  } else {
+                    resultsArray = resultsArray.filter((event) => {
+                      return event.e_date < getCurrentDate();
+                    });
+                  }
 
                   res.status(200).json({
                     message: "Events found successfully",
@@ -183,6 +202,11 @@ router.get("/:email", (req, res) => {
                 }
               }
             );
+          } else {
+            res.status(200).json({
+              message: "There is no company with this email",
+              succeed: false,
+            });
           }
         }
       );
@@ -227,7 +251,7 @@ router.post("/new-event", (req, res) => {
             message: "Error finding employer ID inside database",
             succeed: false,
           });
-        } else {
+        } else if (results.length > 0) {
           //   res.status(200).send(JSON.stringify(results[0].id));
           eventsArray.unshift(Number(results[0].id));
           sqlQueryInsert(
@@ -247,6 +271,11 @@ router.post("/new-event", (req, res) => {
               }
             }
           );
+        } else {
+          res.status(200).json({
+            message: "There is no company with this email",
+            succeed: false,
+          });
         }
       }
     );
