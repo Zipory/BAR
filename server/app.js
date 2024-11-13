@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import mysql from "mysql2";
 import { connection } from "./connection.js";
 import eventsRoutes from "./routes/eventsRoutes.js";
+import requestsRoutes from "./routes/requestsRoutes.js";
 import {
   getCurrentDate,
   getCurrentTime,
@@ -231,7 +232,7 @@ app.post("/register", (req, res) => {
 });
 
 app.use("/events", eventsRoutes);
-
+app.use("/requests", requestsRoutes);
 /*-----------------set listener open on port 4000 ------------------ */
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
