@@ -5,7 +5,9 @@ import Futureevents from "./manager/Futureevents.jsx";
 import History from "./manager/History.jsx";
 import { FetchIncludeHeader, FetchPost } from "./Fetch.js";
 import { userInfo } from "../App";
+import { typeOfUser } from "../App.js";
 import Newevent from "./manager/Newevent.jsx";
+import Allevents from "./waiter/Allevents.jsx";
 
 const ManagerDashboard = () => {
   const [user, setUser] = useContext(userInfo);
@@ -13,6 +15,7 @@ const ManagerDashboard = () => {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
   const divRef = useRef(null);
   useEffect(() => {
     if (history.length > 0) {
@@ -20,7 +23,7 @@ const ManagerDashboard = () => {
     }
   }, [history]);
   const getHistory = () => {
-    FetchIncludeHeader(serverUrl, { email: user?.email }, setHistory);
+    FetchIncludeHeader(serverUrl, user?.email, setHistory, isAwaiter);
   };
 
   useEffect(() => {
@@ -41,15 +44,15 @@ const ManagerDashboard = () => {
   return (
     <div className="manager-dashboard">
       <Info />
-
+     
       {/* Create New Event Button */}
       <button className="big-button" onClick={() =>setShowModal(true)}>
         ליצירת אירוע חדש
       </button>
-      <div ref={divRef}> {showModal && <Newevent/>}</div>
+      <div ref={divRef}> {showModal && <Newevent setShowModal={setShowModal}/>}</div>
      
       {/* Future Events Window */}
-      <Futureevents />
+      {/* <Futureevents /> */}
 
       {/* View History Button */}
       <button className="medium-button" onClick={() => getHistory()}>
@@ -58,7 +61,9 @@ const ManagerDashboard = () => {
       {showHistory && <History history={history} />}
       <div className="meter" dir="ltr">
         <div className="inner-meter">4 / 6</div>
+       
       </div>
+      {/* <Allevents/> */}
     </div>
   );
 };

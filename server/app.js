@@ -73,7 +73,7 @@ app.post("/login", (req, res) => {
     0,
     (err, results) => {
       if (err) {
-        console.error(316, "Error fetching data:", err);
+        console.error(80, "Error fetching data:", err);
         res
           .status(500)
           .send(JSON.stringify("Error fetching data from the database"));

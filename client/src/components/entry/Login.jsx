@@ -22,7 +22,7 @@ function Login() {
     document.querySelector(".myForm").checkVisibility();
     event.preventDefault();
     console.log("Logging in with:", { email, password });
-    FetchPost(serverUrl, { email, password, isAwaiter }, setUser);
+    FetchPost(serverUrl, { email, password, isAwaiter }, setUser, email);
   };
   
   /*A good way to use navaget in if statement. */
