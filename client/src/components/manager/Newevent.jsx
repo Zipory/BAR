@@ -1,13 +1,14 @@
 import React, { useState, useContext } from "react";
 import Calendar from "./Calender";
-import { FetchPost } from "../Fetch";
+import { FetchPost, FetchPut } from "../Fetch";
 import "../../style/new-event.css";
 import { GetCity, Getstreet } from "../extra/Getstreet";
 import LocatinInputs from "../LocationInputs";
 import { userInfo } from "../../App";
-const apiUrl = "http://localhost:4000/events/new-event";
 
-const Newevent = ({setShowModal}) => {
+const Newevent = ({setShowModal, eventStatus}) => {
+  const apiUrl = `http://localhost:4000/events/${eventStatus}`;
+  const urlEdit = "http://localhost:4000/events/update-event";
   const [user, setUser] = useContext(userInfo);
   const [date, setDate] = useState(new Date());
   const [sendOk, setSendOk] = useState(false);
@@ -17,9 +18,10 @@ const Newevent = ({setShowModal}) => {
     // Update the eventInfo object based on input type
     eventInfo[name] = type === "checkbox" ? checked : value;
     eventInfo["date"] = date;
-    if (name === "city") {
-      // console.log(event.target);
-    }
+    // change the value from string to boolean.
+      if (name == "is_global") {
+        eventInfo[name] = value === "true" ? true : false;
+      }
     // console.log(eventInfo); // Log the updated eventInfo to verify changes
     // console.log(event.target.name);
   }
@@ -27,8 +29,12 @@ const Newevent = ({setShowModal}) => {
     e.preventDefault();
     eventInfo["location"] = eventInfo["city"] + " " + eventInfo["street"];
     // console.log(eventInfo);
-
+    if (eventStatus === "new-event") {
     FetchPost(apiUrl, eventInfo, setSendOk, user["email"]).then(() => setShowModal(false));
+  }
+    if (eventStatus === "update-event") {
+      FetchPut(urlEdit, undefined, undefined, user.email)
+    }
   }
   return (
     <div className="overlayStyle">
