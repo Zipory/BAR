@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { userInfo } from "../../App";
 import { FetchIncludeHeader } from "../Fetch";
 import EventDetails from "../EventDetails";
+import { typeOfUser } from "../../App";
 const Futureevents = () => {
   const [user, setUser] = useContext(userInfo);
   const [events, setEvents] = useState([]);
-
+  const [onlyFutureEvents, setOnlyFutureEvents] = useState([]);
+  const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
   /* api to get the future event. */
   const apiUrl = `http://localhost:4000/events/${user?.email}`;
 
@@ -14,9 +16,11 @@ const Futureevents = () => {
     return (event.numberOfWaiters / event.numberOfWaitersNeeded) * 100;
   };
 
+
+
   /*start with fetching to set the events array. */
   useEffect(() => {
-    FetchIncludeHeader(apiUrl, user?.email, setEvents);
+    FetchIncludeHeader(apiUrl, user?.email, setEvents, isAwaiter);
   }, []);
   return (
     <div className="future-events">
@@ -27,7 +31,7 @@ const Futureevents = () => {
         <li>אירוע 3: רמדה רנסאנס ירושלים - 01/04/25 == 2/10 מלצרים</li>
         {/* <progress value="37" max="100"></progress> */}
         {/* <meter value={events.numberOfWaiters} max={events.numberOfWaitersNeeded}>{percentage(events[0])}%</meter> */}
-        {events.map((event, index) => (
+        {events.succeed && events.map((event, index) => (
         <li>אירוע: <EventDetails/></li>
       ))}
       </ul>
