@@ -6,7 +6,7 @@ import { GetCity, Getstreet } from "../extra/Getstreet";
 import LocatinInputs from "../LocationInputs";
 import { userInfo } from "../../App";
 
-const Newevent = ({setShowModal, eventStatus}) => {
+const Newevent = ({ setShowModal, eventStatus }) => {
   const apiUrl = `http://localhost:4000/events/${eventStatus}`;
   const urlEdit = "http://localhost:4000/events/update-event";
   const [user, setUser] = useContext(userInfo);
@@ -19,9 +19,9 @@ const Newevent = ({setShowModal, eventStatus}) => {
     eventInfo[name] = type === "checkbox" ? checked : value;
     eventInfo["date"] = date;
     // change the value from string to boolean.
-      if (name == "is_global") {
-        eventInfo[name] = value === "true" ? true : false;
-      }
+    if (name == "is_global") {
+      eventInfo[name] = value === "true" ? true : false;
+    }
     // console.log(eventInfo); // Log the updated eventInfo to verify changes
     // console.log(event.target.name);
   }
@@ -30,10 +30,12 @@ const Newevent = ({setShowModal, eventStatus}) => {
     eventInfo["location"] = eventInfo["city"] + " " + eventInfo["street"];
     // console.log(eventInfo);
     if (eventStatus === "new-event") {
-    FetchPost(apiUrl, eventInfo, setSendOk, user["email"]).then(() => setShowModal(false));
-  }
+      FetchPost(apiUrl, eventInfo, setSendOk, user["email"]).then(() =>
+        setShowModal(false)
+      );
+    }
     if (eventStatus === "update-event") {
-      FetchPut(urlEdit, undefined, undefined, user.email)
+      FetchPut(urlEdit, undefined, undefined, user.email);
     }
   }
   return (
