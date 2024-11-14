@@ -1,13 +1,14 @@
+import Logo from "./components/Logo";
 import Home from "./components/Home";
 import Login from "./components/entry/Login";
 import Register from "./components/entry/Register";
 import Footer from "./components/Footer";
 import { Route, Routes } from "react-router-dom";
 import { useState, createContext } from "react";
-import LocatinInputs from "./components/LocationInputs.jsx";
 import Managerdashboard from "./components/Managerdashbord.jsx";
+import WaiterDashboard from "./components/WaiterDashboard.jsx";
 import "./App.css";
-import Logo from "./components/Logo";
+import LocatinInputs from "./components/LocationInputs.jsx";
 import Newevent from "./components/manager/Newevent.jsx";
 import Allevents from "./components/waiter/Allevents.jsx";
 import {Getstreet, GetCity} from "./components/extra/Getstreet.jsx";
@@ -39,9 +40,10 @@ function App() {
           <userInfo.Provider value={[user, setUser]}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/events-manager" element={<Managerdashboard />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/events-manager" element={<Managerdashboard />} />
+              <Route path="/waiter" element={<WaiterDashboard/>}/>
             </Routes>
           </userInfo.Provider>
         </typeOfUser.Provider>
