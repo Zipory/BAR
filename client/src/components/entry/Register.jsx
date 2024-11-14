@@ -20,12 +20,13 @@ function Register(props) {
   let contactPersonName = useRef("");
   let contactPersonPhone = useRef("");
   // about
-  let  about = useRef("");
+  let about = useRef("");
   /**waiter ref's*/
   let firstName = useRef("");
   let lastName = useRef("");
   let phoneNumber = useRef("");
   let waiterAge = useRef("");
+  let [gender, setGender] = useState("");
   /** hooks*/
   const [showPassword, setShowPassword] = useState(false);
   const [showCorenfinPassword, setShowCorenfinPassword] = useState(false);
@@ -60,13 +61,18 @@ function Register(props) {
     console.log(email.current.value);
     let allInputs = {
       email: email.current.value,
-      firstName: firstName.current.value,
-      lastName: lastName.current.value,
-      phoneNumber: phoneNumber.current.value,
-      waiterAge: waiterAge.current.value,
+      first_name: firstName.current.value,
+      last_name: lastName.current.value,
+      password: password.current.value,
+      phone: phoneNumber.current.value,
+      birthday: waiterAge.current.value,
       isAwaiter: isAwaiter,
+      gender : gender
     };
     FetchPost(postUrl, allInputs, setSingupOk, allInputs["email"]);
+  };
+  const handleRadio = (event) => {
+    setGender(() => event.target.value);
   };
   return (
     <div className="auth-container">
@@ -125,8 +131,37 @@ function Register(props) {
           ref={email}
           required
         />
+        {/* --------- gender -------------- */}
+        <div className="gender">
+          <label htmlFor="gender">זכר</label>
+          <input
+            type="radio"
+            value="Male"
+            onChange={handleRadio}
+         
+            name="gender"
+            required
+          />
+          <label htmlFor="gender">נקבה</label>
+          <input
+            type="radio"
+            onChange={handleRadio}
+          
+            value="Female"
+            name="gender"
+            required
+          />
+          <label htmlFor="gender">רובוט</label>
+          <input
+            type="radio"
+            onChange={handleRadio}
+            // checked={gender === "Robot"}
+            value="Other"
+            name="gender"
+            required
+          />
+        </div>
         <div className="password-class">
-          {" "}
           <input
             type={showPassword ? "text" : "password"}
             placeholder="סיסמא"

@@ -17,6 +17,7 @@ function Login() {
   const [user, setUser] = useContext(userInfo);
   // let title = isAwaiter ? "מלצר": "מנהל אירועים";
   const [title, setTitle] = useState(isAwaiter ? "מלצר" : "מנהל אירועים");
+  const navagetTo = {manager:  "/events-manager", waiter: "/waiter"};
   let navigate = useNavigate();
   const handleLogin = (event) => {
     document.querySelector(".myForm").checkVisibility();
@@ -26,7 +27,7 @@ function Login() {
   };
   
   /*A good way to use navaget in if statement. */
-  useUserEffect(user, navigate, "/events-manager");
+  useUserEffect(user, navigate, navagetTo);
   return (
     <div className="auth-container">
       <h2>התחברות כ{title}</h2>
