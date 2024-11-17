@@ -66,7 +66,7 @@ const Newevent = ({ setShowModal, eventStatus }) => {
         <input name="street" type="text" placeholder="street" required />
         {<Getstreet city={"בית שמש"} street={"יגאל"}/>} */}
         <LocatinInputs />
-        <input name="suite" type="text" placeholder="suite" required />
+        <input name="suite" type="text" placeholder="מספר בית" required />
         <textarea
           name="description"
           placeholder="description about the event"
@@ -74,7 +74,7 @@ const Newevent = ({ setShowModal, eventStatus }) => {
         <input
           name="waiters_amount"
           type="number"
-          placeholder="how much waiters"
+          placeholder="כמות מלצרים"
           required
         />
         <br />
