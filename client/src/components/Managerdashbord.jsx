@@ -9,6 +9,7 @@ import { typeOfUser } from "../App.js";
 import Newevent from "./manager/Newevent.jsx";
 import Allevents from "./waiter/Allevents.jsx";
 import EventDetails from "./EventDetails.jsx";
+import { useNavigate } from "react-router-dom";
 
 const ManagerDashboard = () => {
   const [user, setUser] = useContext(userInfo);
@@ -17,7 +18,15 @@ const ManagerDashboard = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
+  const navigate = useNavigate();
+  let isAwaiter2 = JSON.parse(window.localStorage.getItem("isWaiter"));
   const divRef = useRef(null);
+  useEffect(() => {
+    if (isAwaiter2) {
+      console.log("a waiter");
+      navigate("/home");
+    }
+  }, []);
   useEffect(() => {
     if (history.length > 0) {
       setShowHistory(true);
@@ -29,10 +38,10 @@ const ManagerDashboard = () => {
 
   useEffect(() => {
     // Attach event listener on component mount
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       // Clean up event listener on component unmount
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -41,17 +50,22 @@ const ManagerDashboard = () => {
       // console.log(27, "hi");
       setShowModal(false);
     }
-  }
+  };
   return (
     <div className="manager-dashboard">
       <Info />
-     
+
       {/* Create New Event Button */}
-      <button className="big-button" onClick={() =>setShowModal(true)}>
+      <button className="big-button" onClick={() => setShowModal(true)}>
         ליצירת אירוע חדש
       </button>
-      <div ref={divRef}> {showModal && <Newevent setShowModal={setShowModal} eventStatus={"new-event"}/>}</div>
-     
+      <div ref={divRef}>
+        {" "}
+        {showModal && (
+          <Newevent setShowModal={setShowModal} eventStatus={"new-event"} />
+        )}
+      </div>
+
       {/* Future Events Window */}
       {/* <Futureevents /> */}
 
@@ -59,11 +73,10 @@ const ManagerDashboard = () => {
       <button className="medium-button" onClick={() => getHistory()}>
         היסטורית אירועים
       </button>
-     <History history={history} />
-     {/* <EventDetails eventInfo={history}/> */}
+      <History history={history} />
+      {/* <EventDetails eventInfo={history}/> */}
       <div className="meter" dir="ltr">
         <div className="inner-meter">4 / 6</div>
-       
       </div>
       {/* <Allevents/> */}
     </div>
@@ -71,6 +84,5 @@ const ManagerDashboard = () => {
 };
 
 export default ManagerDashboard;
-
 
 /** {showHistory && } */

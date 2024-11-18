@@ -10,18 +10,14 @@ import WaiterDashboard from "./components/WaiterDashboard.jsx";
 import "./App.css";
 import CheckToken from "./components/entry/CheckToken.js";
 import TokenTest from "./components/extra/tokenTest.jsx";
+import GetUserInfo from "./components/entry/GetUserInfo.jsx";
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
   "יש לך זמן פנוי שאתה רוצה לעבוד בו?",
   "שובר את הראש בגיוס מלצרים בכל אירוע מחדש?",
 ];
 export const typeOfUser = createContext(null);
-export const userInfo = createContext(null);
-
-// async function checkFunction ()  {
-//   CheckToken();
-//   return true; // Return true to allow, false to block.
-// };
+export const userInfo = createContext([null]);
 
 // Custom Route Component
 const ProtectedRoute = ({ children }) => {
@@ -29,8 +25,7 @@ const ProtectedRoute = ({ children }) => {
     return children; // Render the child component if the check passes.
   } else {
     console.log("not-allowed");
-    
-    return <Navigate to="/not-allowed" />; // Redirect if the check fails.
+    return <Navigate to="/home" />; // Redirect if the check fails.
   }
 };
 
@@ -52,9 +47,9 @@ function App() {
         </div>
         <typeOfUser.Provider value={[isAwaiter, setIsAwaiter]}>
           <userInfo.Provider value={[user, setUser]}>
+            < GetUserInfo/>
             <Routes>
-              {/* <Route path="/" element={<CheckToken />} /> */}
-              <Route path="home" element={<Home />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/events-manager"
@@ -74,7 +69,7 @@ function App() {
           </userInfo.Provider>
         </typeOfUser.Provider>
       </main>
-      <TokenTest />
+      
       <footer>
         <Footer />
       </footer>
