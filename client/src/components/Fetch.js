@@ -1,7 +1,7 @@
 /**----------Fetch get---------------- */
 export async function Fetch(url, setState) {
   console.log("welcom to Fetch");
-  
+
   console.log("url:", url);
   fetch(url)
     .then((res) => res.json())
@@ -10,6 +10,29 @@ export async function Fetch(url, setState) {
         setState(json.resultsArray);
       }
       console.log("json:", json.resultsArray);
+    });
+}
+/**---------------Fetch for token -------------- */
+export async function FetchToken(url, Token, setState) {
+  console.log("welcom to FetchToken");
+
+  console.log("url:", url);
+  console.log("Token:", Token[0]);
+  console.log("waiter?", JSON.parse(Token[1]));
+  fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Token: Token[0],
+      isAwaiter: Token[1],
+    },
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      if (json.succeed) {
+        setState(json.data);
+      }
+      console.log("json:", json);
     });
 }
 
@@ -37,7 +60,6 @@ export async function FetchIncludeHeader(url, email, setState, isAwaiter) {
       console.log("json:", json);
     });
 }
-
 
 /**----------Fetch post---------------- */
 export async function FetchPost(url, data, setState, email) {
@@ -69,6 +91,7 @@ export async function FetchPost(url, data, setState, email) {
         if (setState) {
           setState(json);
           console.log(35, "hi");
+          return json;
         } else {
           console.log("There is no setState");
         }
@@ -86,7 +109,7 @@ export async function FetchPut(url, data, setState, email) {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      email : email
+      email: email,
     },
     body: JSON.stringify(data),
   })
@@ -119,10 +142,9 @@ export async function FetchDelete(url, email, event) {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      "email": email
+      email: email,
     },
-    body : JSON.stringify({id : event.id}),
-    
+    body: JSON.stringify({ id: event.id }),
   })
     .then((res) => {
       if (res.ok) {
