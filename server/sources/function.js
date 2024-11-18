@@ -200,13 +200,21 @@ function authenticateToken(req, res, next) {
   jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
     if (err)
       return res.status(403).json({ message: "Invalid token", succeed: false });
-    console.log("user in token: ", user);
+    // console.log("user in token: ", user);
 
     req.user = user;
     next();
   });
 }
+async function extractingUserDetails(token) {
+  let userDe;
+  await jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    console.log("user in function : ", user);
+    userDe = user;
+  });
 
+  return userDe;
+}
 /**-----------------export functions---------------- */
 export {
   getCurrentDate,
@@ -219,4 +227,5 @@ export {
   capitalizeFirstLetter,
   generateToken,
   authenticateToken,
+  extractingUserDetails,
 };
