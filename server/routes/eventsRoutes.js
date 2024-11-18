@@ -1,6 +1,5 @@
 import e, { Router } from "express";
 import mysql from "mysql2";
-
 import express from "express";
 import { connection, pool } from "../connection.js";
 import dotenv from "dotenv";
