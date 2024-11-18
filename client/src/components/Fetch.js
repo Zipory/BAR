@@ -52,7 +52,10 @@ export async function FetchIncludeHeader(url, email, setState, isAwaiter) {
       isAwaiter: isAwaiter,
     },
   })
-    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+      res.json();
+    })
     .then((json) => {
       if (json.succeed) {
         setState(json.data);
@@ -89,7 +92,7 @@ export async function FetchPost(url, data, setState, email) {
       if (json) {
         console.log("json:", json);
         if (setState) {
-          setState(json);
+          setState(json); // todo: replace with json.data
           console.log(35, "hi");
           return json;
         } else {
