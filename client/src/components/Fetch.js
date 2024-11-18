@@ -23,7 +23,7 @@ export async function FetchToken(url, Token, setState) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Token: Token[0],
+      authorization: Token[0],
       isAwaiter: Token[1],
     },
   })
@@ -92,8 +92,12 @@ export async function FetchPost(url, data, setState, email) {
       if (json) {
         console.log("json:", json);
         if (setState) {
-          setState(json); // todo: replace with json.data
-          console.log(35, "hi");
+          setState(json.data); // todo: replace with json.data
+          if(json.data.token) {
+                
+    window.localStorage.setItem("bar", json.data.token)
+    window.localStorage.setItem("isWaiter", JSON.stringify(data.isAwaiter))
+          }
           return json;
         } else {
           console.log("There is no setState");

@@ -24,8 +24,6 @@ function Login() {
     event.preventDefault();
     console.log("Logging in with:", { email, password });
     let res = FetchPost(serverUrl, { email, password, isAwaiter }, setUser, email);
-    window.localStorage.setItem("bar", res.token)
-    window.localStorage.setItem("isWaiter", JSON.stringify(isAwaiter))
   };
   
   /*A good way to use navaget in if statement. */
@@ -37,7 +35,7 @@ function Login() {
         <input
           type="email"
           placeholder="כתובת דואר אלקטרוני"
-          value={email}
+          value={email || "uri@gourmetcatering.com"}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="on"
           required
@@ -46,7 +44,7 @@ function Login() {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="סיסמא"
-            value={password}
+            value={password || "gourmetPass123"}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
