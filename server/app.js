@@ -7,6 +7,7 @@ import mysql from "mysql2";
 import { connection, pool } from "./connection.js";
 import eventsRoutes from "./routes/eventsRoutes.js";
 import requestsRoutes from "./routes/requestsRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import {
   getCurrentDate,
   getCurrentTime,
@@ -262,11 +263,13 @@ app.post("/register", (req, res) => {
     );
   }
 });
-app.get("/protected", authenticateToken, (req, res) => {
-  res.status(200).json({ message: "Protected route", succeed: true, data: {} });
-});
+// app.get("/protected", authenticateToken, (req, res) => {
+//   res.status(200).json({ message: "Protected route", succeed: true, data: {} });
+// });
+
 app.use("/events", eventsRoutes);
 app.use("/requests", requestsRoutes);
+app.use("/user", userRoutes);
 /*-----------------set listener open on port 4000 ------------------ */
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
