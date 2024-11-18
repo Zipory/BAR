@@ -209,7 +209,7 @@ function authenticateToken(req, res, next) {
 async function extractingUserDetails(token) {
   let userDe;
   await jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-    console.log("user in function : ", user);
+    // console.log("user in function : ", user);
     userDe = user;
   });
 
