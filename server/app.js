@@ -4,7 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import mysql from "mysql2";
-import { connection } from "./connection.js";
+import { connection, pool } from "./connection.js";
 import eventsRoutes from "./routes/eventsRoutes.js";
 import requestsRoutes from "./routes/requestsRoutes.js";
 import {
@@ -22,6 +22,8 @@ import {
   employers_Fields_Select,
   company_insert,
   waiter_insert,
+  waiter_Fields_Select,
+  company_Fields_Select,
 } from "./sources/variables.js";
 dotenv.config();
 // const { log } = require("console");
@@ -59,40 +61,67 @@ const port = 4000;
 
 /*-----------------Routes----------------------- */
 
-app.post("/login", (req, res) => {
-  const user = req.body; //catch the user
-  let response = {}; //variable for response
-  const userEmail = [user.email]; //Dynamic array for query
-  console.log("user:", user);
+/**-----------------login----------------- */
+//async Login function
 
-  sqlQuerySelect(
-    `${user.isAwaiter ? waiter_ditails : employer_ditails}`,
-    `${user.isAwaiter ? "waiters" : "companies"}`,
-    ["email"],
-    "=",
-    userEmail,
-    0,
-    (err, results) => {
-      if (err) {
-        console.error(80, "Error fetching data:", err);
-        res
-          .status(500)
-          .send(JSON.stringify("Error fetching data from the database"));
-      } else if (user.isAwaiter && results.length > 0) {
-        res.status(200).send(JSON.stringify(results[0]));
-      } else if (results.length > 0) {
-        res.status(200).send(JSON.stringify(results[0]));
-      } else {
-        res.status(500).send(
-          JSON.stringify({
-            message: "There is no account with this details",
-            succeed: false,
-          })
-        );
-      }
+async function loginFunction(req, res) {
+  try {
+    const user = req.body;
+
+    //check if the user enter email and password
+    if (!user.email || !user.password) {
+      res.status(500).json({
+        message: "Please enter your email and password",
+        succeed: false,
+      });
     }
-  );
-});
+
+    //check if the user exist
+    let results = await pool.query(
+      `SELECT ${
+        user.isAwaiter ? waiter_Fields_Select : company_Fields_Select
+      } FROM ${user.isAwaiter ? "waiters" : "companies"} WHERE email = ? AND ${
+        user.isAwaiter ? " w_password" : " e_password"
+      } = ? AND status = 'active';`,
+      [user.email, user.password]
+    );
+    //if the user exist
+    if (results[0].length > 0) {
+      //generate token
+      const name = (await user.isAwaiter)
+        ? results[0][0].first_name + "" + results[0][0].last_name
+        : results[0][0].company_name;
+      const userToken = await generateToken({
+        id: results[0][0].id,
+        name: name,
+        isAwaiter: user.isAwaiter,
+      });
+      //send response
+      let response = await { ...results[0][0], token: userToken };
+
+      res
+        .status(200)
+        .send({ message: "Login successful", succeed: true, data: response });
+    } else {
+      //if the user not exist
+      //send response
+      res.status(500).json({
+        message: "There is no account with this details",
+        succeed: false,
+        data: { token: null },
+      });
+    }
+  } catch {
+    //if there is an error
+    res.status(500).json({
+      message: "Error fetching data from the database",
+      succeed: false,
+      data: { token: null },
+    });
+  }
+}
+//login
+app.post("/login", loginFunction);
 
 //register
 app.post("/register", (req, res) => {
@@ -237,3 +266,13 @@ app.use("/requests", requestsRoutes);
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+function generateToken(user) {
+  console.log("user details: ", user);
+
+  return jwt.sign(
+    { id: user.id, isAwaiter: user.isAwaiter, name: user.name },
+    process.env.SECRET_KEY,
+    { expiresIn: "30d" }
+  );
+}

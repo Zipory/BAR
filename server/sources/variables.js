@@ -9,6 +9,16 @@ const waiters_Fields_Select = [
   "avg_rating",
   "status",
 ];
+const waiter_Fields_Select = [
+  "id",
+  "first_name",
+  "last_name",
+  "phone",
+  "birthday",
+  "email",
+  "gender",
+  "avg_rating",
+];
 
 const employers_Fields_Select = [
   "company_name",
@@ -19,6 +29,16 @@ const employers_Fields_Select = [
   "about",
   "avg_rating",
   "status",
+];
+
+const company_Fields_Select = [
+  "id",
+  "company_name",
+  "manager",
+  "manager_phone",
+  "email",
+  "about",
+  "avg_rating",
 ];
 
 const events_Fields = [
@@ -80,4 +100,6 @@ export {
   employers_Fields_Select,
   company_insert,
   waiter_insert,
+  waiter_Fields_Select,
+  company_Fields_Select,
 };
