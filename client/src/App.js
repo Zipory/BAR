@@ -15,6 +15,7 @@ import {Getstreet, GetCity} from "./components/extra/Getstreet.jsx";
 import Test from "./components/extra/Test.jsx"
 import Teststreet from "./components/extra/Teststreet.jsx"
 import EventFormModal from "./components/extra/Newform.jsx";
+import CheckToken from "./components/entry/CheckToken.js";
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
   "יש לך זמן פנוי שאתה רוצה לעבוד בו?",
@@ -39,11 +40,13 @@ function App() {
         <typeOfUser.Provider value={[isAwaiter, setIsAwaiter]}>
           <userInfo.Provider value={[user, setUser]}>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<CheckToken/>}/>
+              <Route path="home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/events-manager" element={<Managerdashboard />} />
               <Route path="/waiter" element={<WaiterDashboard/>}/>
+             
             </Routes>
           </userInfo.Provider>
         </typeOfUser.Provider>
