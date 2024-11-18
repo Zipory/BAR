@@ -26,6 +26,9 @@ async function getUser(req, res) {
 router.get("/info", authenticateToken, getUser);
 
 //update user
+// async function updateUser(req, res) {
+
+// }
 // router.put("/update", authenticateToken, updateUser);
 
 export default router;
