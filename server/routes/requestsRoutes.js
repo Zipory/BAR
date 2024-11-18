@@ -10,13 +10,13 @@ import {
   sqlQueryDelete,
   sqlQueryUpdate,
   capitalizeFirstLetter,
+  authenticateToken,
 } from "../sources/function.js";
 import e from "express";
 dotenv.config();
 const router = express.Router();
 
 async function newRequest(req, res) {
-  const userToken = req.header("Authorization") || true;
   const userEmail = req.header("email");
   const isAwaiter = req.header("isAwaiter") === "true";
   const request = req.body;
@@ -71,6 +71,6 @@ async function newRequest(req, res) {
   }
 }
 
-router.post("/new-request", newRequest);
+router.post("/new-request", authenticateToken, newRequest);
 
 export default router;

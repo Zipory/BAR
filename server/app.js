@@ -13,6 +13,8 @@ import {
   cutIsoDate,
   sqlQueryInsert,
   sqlQuerySelect,
+  generateToken,
+  authenticateToken,
 } from "./sources/function.js";
 import {
   waiter_ditails,
@@ -123,6 +125,7 @@ async function loginFunction(req, res) {
 //login
 app.post("/login", loginFunction);
 
+/**-----------------register----------------- */
 //register
 app.post("/register", (req, res) => {
   const user = req.body;
@@ -259,7 +262,9 @@ app.post("/register", (req, res) => {
     );
   }
 });
-
+app.get("/protected", authenticateToken, (req, res) => {
+  res.status(200).json({ message: "Protected route", succeed: true, data: {} });
+});
 app.use("/events", eventsRoutes);
 app.use("/requests", requestsRoutes);
 /*-----------------set listener open on port 4000 ------------------ */
@@ -267,12 +272,28 @@ app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-function generateToken(user) {
-  console.log("user details: ", user);
+// function generateToken(user) {
+//   console.log("user details: ", user);
 
-  return jwt.sign(
-    { id: user.id, isAwaiter: user.isAwaiter, name: user.name },
-    process.env.SECRET_KEY,
-    { expiresIn: "30d" }
-  );
-}
+//   return jwt.sign(
+//     { id: user.id, isAwaiter: user.isAwaiter, name: user.name },
+//     process.env.SECRET_KEY,
+//     { expiresIn: "30d" }
+//   );
+// }
+
+// function authenticateToken(req, res, next) {
+//   const token = req.headers["authorization"];
+
+//   if (!token)
+//     return res.status(401).json({ message: "Access denied", succeed: false });
+
+//   jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+//     if (err)
+//       return res.status(403).json({ message: "Invalid token", succeed: false });
+//     console.log("user in token: ", user);
+
+//     req.user = user;
+//     next();
+//   });
+// }

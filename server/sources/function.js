@@ -1,4 +1,5 @@
 import { connection } from "../connection.js";
+import jwt from "jsonwebtoken";
 
 function getCurrentDate() {
   const date = new Date();
@@ -177,9 +178,35 @@ function sqlQueryUpdate(
       }
     }
   );
-
-  console.log();
 }
+/**-----------------JWT functions------------------ */
+//generate token
+function generateToken(user) {
+  console.log("user details: ", user);
+
+  return jwt.sign(
+    { id: user.id, isAwaiter: user.isAwaiter, name: user.name },
+    process.env.SECRET_KEY,
+    { expiresIn: "30d" }
+  );
+}
+//authenticate token
+function authenticateToken(req, res, next) {
+  const token = req.headers["authorization"];
+
+  if (!token)
+    return res.status(401).json({ message: "Access denied", succeed: false });
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    if (err)
+      return res.status(403).json({ message: "Invalid token", succeed: false });
+    console.log("user in token: ", user);
+
+    req.user = user;
+    next();
+  });
+}
+
 /**-----------------export functions---------------- */
 export {
   getCurrentDate,
@@ -190,4 +217,6 @@ export {
   sqlQueryDelete,
   sqlQueryUpdate,
   capitalizeFirstLetter,
+  generateToken,
+  authenticateToken,
 };
