@@ -1,8 +1,8 @@
-import { Router } from "express";
+import e, { Router } from "express";
 import mysql from "mysql2";
 
 import express from "express";
-import { connection } from "../connection.js";
+import { connection, pool } from "../connection.js";
 import dotenv from "dotenv";
 import {
   getCurrentDate,
@@ -91,7 +91,6 @@ router.get("/:email/:status", (req, res) => {
   if (userToken) {
     //if user is an awaiter
     if (isAwaiter) {
-      //TODO : implement awaiter case
       sqlQuerySelect(
         "id",
         "waiters",
@@ -284,67 +283,62 @@ router.post("/new-event", (req, res) => {
   }
 });
 
-router.delete("/delete-event", (req, res) => {
-  const userToken = req.header("Authorization") || true;
-  const userEmail = req.header("email");
-  const event = req.body;
+/**---------------------------------------------------------- */
+async function deleteEvent(req, res) {
+  let connection;
 
-  if (userToken) {
-    sqlQuerySelect(
-      "id",
-      "companies",
-      ["email"],
-      "=",
-      [userEmail],
-      0,
-      (err, results) => {
-        if (err) {
-          res.status(500).json({
-            message: "Error finding employer ID inside database",
-            succeed: false,
-          });
-        } else {
-          sqlQueryDelete(
-            "events",
-            ["id", "company_id"],
-            "=",
-            [Number(event.id), Number(results[0].id)],
-            (err, results) => {
-              if (err) {
-                res.status(500).json({
-                  message: "Error deleting event from the database",
-                });
-              } else {
-                sqlQueryDelete(
-                  "requests",
-                  ["event_id"],
-                  "=",
-                  [Number(event.id)],
-                  (err, results) => {
-                    if (err) {
-                      res.status(500).json({
-                        message: "Error deleting requests from the database",
-                      });
-                    } else {
-                      res.status(200).json({
-                        message: "Event & requests deleted successfully",
-                      });
-                    }
-                  }
-                );
-              }
-            }
-          );
-        }
-      }
+  try {
+    const userToken = req.header("Authorization") || true;
+    const userEmail = req.header("email");
+    const isAwaiter = req.header("isAwaiter") === "true";
+    const event = req.body;
+
+    if (!(userEmail && event.event_id)) {
+      return res.status(401).send({ message: "Unauthorized", succeed: false });
+    }
+    if (isAwaiter || !userToken) {
+      return res.status(401).send({
+        message: "You are not allowed to delete this event",
+        succeed: false,
+      });
+    }
+    connection = await pool.getConnection();
+
+    await connection.beginTransaction();
+    let company_id = await connection.query(
+      `SELECT id FROM companies WHERE email = ? LIMIT 1`,
+      [userEmail]
     );
-  } else {
-    res.status(401).send({
-      message: "Unauthorized",
-      succeed: false,
-    });
+
+    company_id = company_id[0][0].id;
+
+    await connection.query(
+      `UPDATE events SET status = 'Canceled' WHERE id = ? AND company_id = ?`,
+      [event.event_id, company_id]
+    );
+
+    await connection.query(
+      `UPDATE requests SET status = 'Rejected' WHERE event_id = ?`,
+      [event.event_id]
+    );
+
+    await connection.commit();
+    res
+      .status(200)
+      .json({ message: "Event deleted successfully", succeed: true });
+  } catch (error) {
+    if (connection) {
+      await connection.rollback();
+    }
+    res.status(500).json({ message: "Error deleting event", succeed: false });
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
-});
+}
+
+router.delete("/delete-event", deleteEvent);
 
 router.put("/update-event", (req, res) => {
   const userToken = req.header("Authorization") || true;
