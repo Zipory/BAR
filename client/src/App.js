@@ -3,19 +3,13 @@ import Home from "./components/Home";
 import Login from "./components/entry/Login";
 import Register from "./components/entry/Register";
 import Footer from "./components/Footer";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { useState, createContext } from "react";
 import Managerdashboard from "./components/Managerdashbord.jsx";
 import WaiterDashboard from "./components/WaiterDashboard.jsx";
 import "./App.css";
-import LocatinInputs from "./components/LocationInputs.jsx";
-import Newevent from "./components/manager/Newevent.jsx";
-import Allevents from "./components/waiter/Allevents.jsx";
-import {Getstreet, GetCity} from "./components/extra/Getstreet.jsx";
-import Test from "./components/extra/Test.jsx"
-import Teststreet from "./components/extra/Teststreet.jsx"
-import EventFormModal from "./components/extra/Newform.jsx";
 import CheckToken from "./components/entry/CheckToken.js";
+import TokenTest from "./components/extra/tokenTest.jsx";
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
   "יש לך זמן פנוי שאתה רוצה לעבוד בו?",
@@ -23,6 +17,25 @@ const slogan = [
 ];
 export const typeOfUser = createContext(null);
 export const userInfo = createContext(null);
+
+// async function checkFunction ()  {
+//   CheckToken();
+//   return true; // Return true to allow, false to block.
+// };
+
+// Custom Route Component
+const ProtectedRoute = ({ children }) => {
+  if (CheckToken()) {
+    return children; // Render the child component if the check passes.
+  } else {
+    console.log("not-allowed");
+    
+    return <Navigate to="/not-allowed" />; // Redirect if the check fails.
+  }
+};
+
+const NotAllowed = () => <div>Access Denied</div>;
+
 function App() {
   const [isAwaiter, setIsAwaiter] = useState(true);
   const [user, setUser] = useState(null);
@@ -40,18 +53,28 @@ function App() {
         <typeOfUser.Provider value={[isAwaiter, setIsAwaiter]}>
           <userInfo.Provider value={[user, setUser]}>
             <Routes>
-              <Route path="/" element={<CheckToken/>}/>
+              {/* <Route path="/" element={<CheckToken />} /> */}
               <Route path="home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/events-manager" element={<Managerdashboard />} />
-              <Route path="/waiter" element={<WaiterDashboard/>}/>
-             
+              <Route path="/events-manager"
+                element={
+                  <ProtectedRoute>
+                    <Managerdashboard />
+                  </ProtectedRoute>
+                }  />
+              <Route path="/waiter"
+                element={
+                  <ProtectedRoute>
+                    <WaiterDashboard />
+                  </ProtectedRoute>
+                } />
+              <Route path="/not-allowed" element={<NotAllowed />} />
             </Routes>
           </userInfo.Provider>
         </typeOfUser.Provider>
       </main>
-{/* <Allevents/> */}
+      <TokenTest />
       <footer>
         <Footer />
       </footer>
