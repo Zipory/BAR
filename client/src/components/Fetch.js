@@ -1,9 +1,17 @@
 /**----------Fetch get---------------- */
-export async function Fetch(url, setState) {
+export async function Fetch(url, token, setState) {
   console.log("welcom to Fetch");
 
   console.log("url:", url);
-  fetch(url)
+  // fetch(url)
+  fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: token[0],
+      isAwaiter: token[1],
+    },
+  })
     .then((res) => res.json())
     .then((json) => {
       if (json.succeed) {
@@ -13,18 +21,18 @@ export async function Fetch(url, setState) {
     });
 }
 /**---------------Fetch for token -------------- */
-export async function FetchToken(url, Token, setState) {
+export async function FetchToken(url, token, setState) {
   console.log("welcom to FetchToken");
 
   console.log("url:", url);
-  console.log("Token:", Token[0]);
-  console.log("waiter?", JSON.parse(Token[1]));
+  console.log("Token:", token[0]);
+  console.log("waiter?", JSON.parse(token[1]));
   fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      authorization: Token[0],
-      isAwaiter: Token[1],
+      authorization: token[0],
+      isAwaiter: token[1],
     },
   })
     .then((res) => res.json())
@@ -37,19 +45,21 @@ export async function FetchToken(url, Token, setState) {
 }
 
 /**----------Fetch get + header ---------------- */
-export async function FetchIncludeHeader(url, email, setState, isAwaiter) {
+export async function FetchIncludeHeader(url, email, setState, token) {
   console.log("welcom to FetchIncludeHeader");
 
   console.log("url:", url);
   console.log("email:", email);
-  console.log("waiter?", isAwaiter);
+  console.log("waiter?", token[1]);
+  console.log("token", token[0]);
 
   fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       email: email,
-      isAwaiter: isAwaiter,
+      isAwaiter: token[1],
+      authorization: token[0],
     },
   })
     .then((res) => {
@@ -64,7 +74,7 @@ export async function FetchIncludeHeader(url, email, setState, isAwaiter) {
     });
 }
 
-/**----------Fetch post---------------- */
+/**----------Fetch post for register/login---------------- */
 export async function FetchPost(url, data, setState, email) {
   console.log("welcom to FetchPost");
   console.log(28, "data:", data);
@@ -106,8 +116,53 @@ export async function FetchPost(url, data, setState, email) {
     });
 }
 
+/**----------Fetch post for new event -------------- */
+export async function FetchNewEvent(url, data, setState, email, token) {
+  console.log("welcom to FetchPost");
+  console.log(28, "data:", data);
+  console.log(29, "url:", url);
+  console.log("email:", email);
+  console.log("token:", token[0]);
+
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      email: `${email}`,
+      isAwaiter: token[1],
+      authorization: token[0],
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      if (res.ok) {
+        console.log(43, "post created");
+
+        return res.json();
+      } else {
+        console.error("Failed to create");
+      }
+    })
+    .then((json) => {
+      if (json) {
+        console.log("json:", json);
+        if (setState) {
+          setState(json.data); // todo: replace with json.data
+          if(json.data.token) {
+                
+    window.localStorage.setItem("bar", json.data.token)
+    window.localStorage.setItem("isWaiter", JSON.stringify(data.isAwaiter))
+          }
+          return json;
+        } else {
+          console.log("There is no setState");
+        }
+      }
+    });
+}
+
 /**----------Fetch put---------------- */
-export async function FetchPut(url, data, setState, email) {
+export async function FetchPut(url, data, setState, email, token) {
   console.log("welcom to FetchPut");
   console.log(28, "data:", data);
   console.log(29, "url:", url);
@@ -117,6 +172,8 @@ export async function FetchPut(url, data, setState, email) {
     headers: {
       "Content-Type": "application/json",
       email: email,
+      isAwaiter: token[1],
+      authorization: token[0],
     },
     body: JSON.stringify(data),
   })
@@ -139,7 +196,7 @@ export async function FetchPut(url, data, setState, email) {
 }
 
 /**----------Fetch delete---------------- */
-export async function FetchDelete(url, email, event) {
+export async function FetchDelete(url, email, event, token) {
   console.log("welcom to FetchDelete");
 
   console.log(76, "url:", url);
@@ -150,6 +207,8 @@ export async function FetchDelete(url, email, event) {
     headers: {
       "Content-Type": "application/json",
       email: email,
+      isAwaiter: token[1],
+      authorization: token[0],
     },
     body: JSON.stringify({ id: event.id }),
   })

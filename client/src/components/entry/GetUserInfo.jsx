@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import CheckToken, { getToken } from '../entry/CheckToken'
+import {CheckToken,  getToken } from '../entry/CheckToken'
 import { userInfo } from "../../App";
 import { FetchToken } from '../Fetch';
 
