@@ -18,7 +18,7 @@ async function getUser(req, res) {
     `SELECT * FROM ${user.isAwaiter ? "waiters" : "companies"} WHERE id = ?`,
     [user.id]
   );
-  res
+  return res
     .status(200)
     .json({ message: "User details", succeed: true, data: results[0][0] });
 }
