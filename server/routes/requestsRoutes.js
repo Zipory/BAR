@@ -25,8 +25,11 @@ async function getRequests(req, res) {
     const status = capitalizeFirstLetter(req.params.status);
     //if the status is not pending or approved, return an error
     if (status !== "Pending" && status !== "Approved") {
-      res.status(500).json({ message: "Invalid status", succeed: false });
+      return res
+        .status(500)
+        .json({ message: "Invalid status", succeed: false });
     }
+    //if the user is not a company, return an error
     let results = await pool.query(
       `SELECT * FROM events WHERE id = ? AND company_id = ?`,
       [req.params.event_id, user.id]
@@ -44,9 +47,11 @@ async function getRequests(req, res) {
       console.log("results: ", results);
 
       if (results[0].length === 0) {
-        res.status(200).json({ message: "Requests", succeed: true, data: [] });
+        return res
+          .status(200)
+          .json({ message: "Requests", succeed: true, data: [] });
       } else {
-        res
+        return res
           .status(200)
           .json({ message: "Requests", succeed: true, data: results[0] });
       }
@@ -60,6 +65,60 @@ async function getRequests(req, res) {
 }
 router.get("/get-requests/:status/:event_id", authenticateToken, getRequests);
 
+/** -----------------Aprove request---------------- */
+//approve request - company
+async function approveRequest(req, res) {
+  try {
+    const user = await extractingUserDetails(req.headers["authorization"]);
+    const request = req.body;
+    if (user.isAwaiter) {
+      return res.status(401).send({
+        message: "You are not allowed to approve this request",
+        succeed: false,
+      });
+    }
+    if (!request.waiter_id || !request.event_id) {
+      return res.status(401).send({
+        message: "Please provide waiter_id and event_id",
+        succeed: false,
+      });
+    }
+    let results = await pool.query(
+      `SELECT id from events WHERE id = ? AND company_id = ?`,
+      [request.event_id, user.id]
+    );
+    if (results[0].length === 0) {
+      return res.status(401).send({
+        message: "You are not allowed to approve this request",
+        succeed: false,
+      });
+    }
+    results = await pool.query(
+      `SELECT waiters_amount,approved_waiters FROM events WHERE id = ? AND company_id = ?`,
+      [request.event_id, user.id]
+    );
+    if (results[0][0].waiters_amount === results[0][0].approved_waiters) {
+      return res.status(401).send({
+        message: "All waiters have already been approved for this event",
+        succeed: false,
+      });
+    }
+
+    pool.query(
+      `UPDATE requests SET status = 'Approved' WHERE waiter_id = ? AND event_id = ?`,
+      [request.waiter_id, request.event_id]
+    );
+    res.status(200).json({ message: "Request approved", succeed: true });
+  } catch {
+    res.status(500).json({
+      message: "Error fetching data from the database",
+      succeed: false,
+    });
+  }
+}
+router.post("/approve-request", authenticateToken, approveRequest);
+
+/**--------------------------new request---------------- */
 //new request - waiter
 async function newRequest(req, res) {
   const user = await extractingUserDetails(req.headers["authorization"]);
@@ -87,13 +146,13 @@ async function newRequest(req, res) {
     const waiter_id = user.id;
 
     let results_request_id = await connection.query(
-      `SELECT id FROM requests WHERE waiter_id = ? AND event_id = ? LIMIT 1`,
+      `SELECT id,status FROM requests WHERE waiter_id = ? AND event_id = ? LIMIT 1`,
       [waiter_id, request.event_id]
     );
     results_request_id = results_request_id[0][0];
     if (results_request_id.length > 0) {
-      res.status(200).json({
-        message: "You have already made a request for this event",
+      return res.status(200).json({
+        message: `Your request is already ${results_request_id.status}`,
         succeed: false,
       });
     }
@@ -114,6 +173,7 @@ async function newRequest(req, res) {
 }
 
 router.post("/new-request", authenticateToken, newRequest);
+/**------------------------cancel request---------------- */
 //cancel request - waiter
 async function cancelRequest(req, res) {
   const user = await extractingUserDetails(req.headers["authorization"]);
@@ -136,7 +196,7 @@ async function cancelRequest(req, res) {
       `UPDATE requests SET status = 'Canceled' WHERE waiter_id = ? AND event_id = ?`,
       [user.id, request.event_id]
     );
-    res.status(200).json({ message: "Request canceled", succeed: true });
+    return res.status(200).json({ message: "Request canceled", succeed: true });
   } catch {
     res
       .status(500)
