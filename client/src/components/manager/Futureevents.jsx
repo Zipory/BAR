@@ -3,6 +3,7 @@ import { userInfo } from "../../App";
 import { FetchIncludeHeader } from "../Fetch";
 import EventDetails from "../EventDetails";
 import { typeOfUser } from "../../App";
+import { getToken } from "../entry/CheckToken";
 const Futureevents = () => {
   const [user, setUser] = useContext(userInfo);
   const [events, setEvents] = useState([]);
@@ -20,7 +21,7 @@ const Futureevents = () => {
 
   /*start with fetching to set the events array. */
   useEffect(() => {
-    FetchIncludeHeader(apiUrl, user?.email, setEvents, isAwaiter);
+    FetchIncludeHeader(apiUrl, user?.email, setEvents, getToken());
   }, []);
   return (
     <div className="future-events">

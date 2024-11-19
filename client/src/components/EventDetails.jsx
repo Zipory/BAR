@@ -4,6 +4,7 @@ import { FetchDelete, FetchPut } from "./Fetch";
 import Newevent from "./manager/Newevent";
 import { userInfo } from "../App";
 import { typeOfUser } from "../App";
+import { getToken } from "./entry/CheckToken";
 const EventDetails = ({ eventInfo, company }) => {
   const urlDelete = "http://localhost:4000/events/delete-event";
   const [showModal, setShowModal] = useState(false);
@@ -35,7 +36,7 @@ const handleClickOutside = (event) => {
       {!isAwaiter && 
       <button  onClick={() =>setShowModal(true)}>ערוך מחדש</button>}
       {!isAwaiter && (
-      <button onClick={() => FetchDelete(urlDelete, user.email, eventInfo)}> מחיקה </button> )}
+      <button onClick={() => FetchDelete(urlDelete, user.email, eventInfo, getToken())}> מחיקה </button> )}
         <div ref={divRef}> {showModal && <Newevent setShowModal={setShowModal} eventStatus={"update-event"}/>}</div>
       <h2>פרטי האירוע</h2>
       <p>
