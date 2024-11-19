@@ -1,7 +1,7 @@
 /**----------Fetch get---------------- */
 export async function Fetch(url, token, setState) {
   console.log("welcom to Fetch");
-
+  console.log(token);
   console.log("url:", url);
   // fetch(url)
   fetch(url, {
@@ -20,7 +20,9 @@ export async function Fetch(url, token, setState) {
       console.log("json:", json.resultsArray);
     });
 }
-/**---------------Fetch for token -------------- */
+
+/**--Fetch send token in header, 
+ * and set the state with the data respons-- */
 export async function FetchToken(url, token, setState) {
   console.log("welcom to FetchToken");
 
@@ -37,7 +39,7 @@ export async function FetchToken(url, token, setState) {
   })
     .then((res) => res.json())
     .then((json) => {
-      if (json.succeed) {
+      if (json?.succeed) {
         setState(json.data);
       }
       console.log("json:", json);
@@ -67,7 +69,7 @@ export async function FetchIncludeHeader(url, email, setState, token) {
       res.json();
     })
     .then((json) => {
-      if (json.succeed) {
+      if (json?.succeed) {
         setState(json.data);
       }
       console.log("json:", json);
@@ -102,11 +104,13 @@ export async function FetchPost(url, data, setState, email) {
       if (json) {
         console.log("json:", json);
         if (setState) {
-          setState(json.data); // todo: replace with json.data
-          if(json.data.token) {
-                
-    window.localStorage.setItem("bar", json.data.token)
-    window.localStorage.setItem("isWaiter", JSON.stringify(data.isAwaiter))
+          setState(json.data);
+          if (json.data.token) {
+            window.localStorage.setItem("bar", json.data.token);
+            window.localStorage.setItem(
+              "isWaiter",
+              JSON.stringify(data.isAwaiter)
+            );
           }
           return json;
         } else {
@@ -118,7 +122,7 @@ export async function FetchPost(url, data, setState, email) {
 
 /**----------Fetch post for new event -------------- */
 export async function FetchNewEvent(url, data, setState, email, token) {
-  console.log("welcom to FetchPost");
+  console.log("welcom to FetchNewEvent");
   console.log(28, "data:", data);
   console.log(29, "url:", url);
   console.log("email:", email);
@@ -148,10 +152,12 @@ export async function FetchNewEvent(url, data, setState, email, token) {
         console.log("json:", json);
         if (setState) {
           setState(json.data); // todo: replace with json.data
-          if(json.data.token) {
-                
-    window.localStorage.setItem("bar", json.data.token)
-    window.localStorage.setItem("isWaiter", JSON.stringify(data.isAwaiter))
+          if (json.data.token) {
+            window.localStorage.setItem("bar", json.data.token);
+            window.localStorage.setItem(
+              "isWaiter",
+              JSON.stringify(data.isAwaiter)
+            );
           }
           return json;
         } else {

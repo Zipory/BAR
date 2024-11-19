@@ -14,7 +14,8 @@ import { getToken } from "./entry/CheckToken.js";
 
 const ManagerDashboard = () => {
   const [user, setUser] = useContext(userInfo);
-  const serverUrl = `http://localhost:4000/events/${user?.email}`;
+  let status = "aproved";
+  const serverUrl = `http://localhost:4000/events/my-events/${status}`;
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -34,6 +35,9 @@ const ManagerDashboard = () => {
     }
   }, [history]);
   const getHistory = () => {
+    status = "past";
+    const serverUrl = `http://localhost:4000/events/my-events/${status}`;
+    
     FetchIncludeHeader(serverUrl, user?.email, setHistory, getToken());
   };
 

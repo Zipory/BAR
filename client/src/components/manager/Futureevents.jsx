@@ -9,8 +9,9 @@ const Futureevents = () => {
   const [events, setEvents] = useState([]);
   const [onlyFutureEvents, setOnlyFutureEvents] = useState([]);
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
+  let status = "aproved";
   /* api to get the future event. */
-  const apiUrl = `http://localhost:4000/events/${user?.email}`;
+  const apiUrl = `http://localhost:4000/events/my-events/${status}`;
 
   /* function that return the precentage (%) of the progress bar. */
   const percentage = (event) => {

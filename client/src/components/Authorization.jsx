@@ -5,6 +5,8 @@ import { userInfo } from "../App";
 import useUserEffect from "../hooks/useUserEffect";
 // import { userInfo } from "../../App";
 import "../style/HomePage.css";
+
+/**that component not needed and not in used. */
 const Authorization = () => {
   const serverUrl = "http://localhost:4000/user-info";
   const [user, setUser] = useContext(userInfo);
