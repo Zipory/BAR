@@ -1,4 +1,5 @@
 import fs from "fs";
+import { sendMail } from "./Gmail sender/send.js";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -263,9 +264,16 @@ app.post("/register", (req, res) => {
     );
   }
 });
-// app.get("/protected", authenticateToken, (req, res) => {
-//   res.status(200).json({ message: "Protected route", succeed: true, data: {} });
-// });
+app.get("/protected", authenticateToken, (req, res) => {
+  sendMail(
+    "beni0548472300@gmail.com",
+    "hello",
+    false,
+    "<h1>protected route mail</h1>"
+  );
+
+  res.status(200).json({ message: "Protected route", succeed: true, data: {} });
+});
 
 app.use("/events", eventsRoutes);
 app.use("/requests", requestsRoutes);
