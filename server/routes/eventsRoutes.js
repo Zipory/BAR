@@ -173,6 +173,7 @@ router.get("/:email/:status", authenticateToken, (req, res) => {
         } else {
           connection.query(
             `SELECT events.*
+
             FROM requests
             JOIN events ON requests.event_id = events.id
             WHERE requests.waiter_id =?
