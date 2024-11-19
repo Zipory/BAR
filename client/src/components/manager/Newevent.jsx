@@ -1,11 +1,11 @@
 import React, { useState, useContext } from "react";
 import Calendar from "./Calender";
-import { FetchPost, FetchPut } from "../Fetch";
+import { FetchNewEvent, FetchPut } from "../Fetch";
 import "../../style/new-event.css";
 import { GetCity, Getstreet } from "../extra/Getstreet";
 import LocatinInputs from "../LocationInputs";
 import { userInfo } from "../../App";
-
+import { getToken } from "../entry/CheckToken";
 const Newevent = ({ setShowModal, eventStatus }) => {
   const apiUrl = `http://localhost:4000/events/${eventStatus}`;
   const urlEdit = "http://localhost:4000/events/update-event";
@@ -30,12 +30,12 @@ const Newevent = ({ setShowModal, eventStatus }) => {
     eventInfo["location"] = eventInfo["city"] + " " + eventInfo["street"];
     // console.log(eventInfo);
     if (eventStatus === "new-event") {
-      FetchPost(apiUrl, eventInfo, setSendOk, user["email"]).then(() =>
+      FetchNewEvent(apiUrl, eventInfo, setSendOk, user["email"], getToken()).then(() =>
         setShowModal(false)
       );
     }
     if (eventStatus === "update-event") {
-      FetchPut(urlEdit, undefined, undefined, user.email);
+      FetchPut(urlEdit, undefined, undefined, user.email, getToken());
     }
   }
   return (

@@ -10,6 +10,7 @@ import Newevent from "./manager/Newevent.jsx";
 import Allevents from "./waiter/Allevents.jsx";
 import EventDetails from "./EventDetails.jsx";
 import { useNavigate } from "react-router-dom";
+import { getToken } from "./entry/CheckToken.js";
 
 const ManagerDashboard = () => {
   const [user, setUser] = useContext(userInfo);
@@ -33,7 +34,7 @@ const ManagerDashboard = () => {
     }
   }, [history]);
   const getHistory = () => {
-    FetchIncludeHeader(serverUrl, user?.email, setHistory, isAwaiter);
+    FetchIncludeHeader(serverUrl, user?.email, setHistory, getToken());
   };
 
   useEffect(() => {

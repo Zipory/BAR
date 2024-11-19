@@ -8,9 +8,11 @@ import { useState, createContext } from "react";
 import Managerdashboard from "./components/Managerdashbord.jsx";
 import WaiterDashboard from "./components/WaiterDashboard.jsx";
 import "./App.css";
-import CheckToken from "./components/entry/CheckToken.js";
+import { CheckToken } from "./components/entry/CheckToken.js";
 import TokenTest from "./components/extra/tokenTest.jsx";
 import GetUserInfo from "./components/entry/GetUserInfo.jsx";
+import FirstNav from "./components/entry/FirstNav.jsx";
+import Logout from "./components/entry/Logout.jsx";
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
   "יש לך זמן פנוי שאתה רוצה לעבוד בו?",
@@ -21,6 +23,8 @@ export const userInfo = createContext([null]);
 
 // Custom Route Component
 const ProtectedRoute = ({ children }) => {
+  console.log("inside protected");
+
   if (CheckToken()) {
     return children; // Render the child component if the check passes.
   } else {
@@ -29,8 +33,8 @@ const ProtectedRoute = ({ children }) => {
   }
 };
 
-const NotAllowed = () => <div>Access Denied</div>;
-
+// const NotAllowed = () => <div>Access Denied</div>;
+/**The main component that get all childrens, and create the user useState */
 function App() {
   const [isAwaiter, setIsAwaiter] = useState(true);
   const [user, setUser] = useState(null);
@@ -47,29 +51,36 @@ function App() {
         </div>
         <typeOfUser.Provider value={[isAwaiter, setIsAwaiter]}>
           <userInfo.Provider value={[user, setUser]}>
-            < GetUserInfo/>
+            <GetUserInfo />
             <Routes>
+              <Route path="/" element={<FirstNav/>}/>
               <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/events-manager"
+              <Route
+                path="/events-manager"
                 element={
                   <ProtectedRoute>
+                     <Logout/>
                     <Managerdashboard />
                   </ProtectedRoute>
-                }  />
-              <Route path="/waiter"
+                }
+              />
+              <Route
+                path="/waiter"
                 element={
                   <ProtectedRoute>
+                     <Logout/>
                     <WaiterDashboard />
                   </ProtectedRoute>
-                } />
-              <Route path="/not-allowed" element={<NotAllowed />} />
+                }
+              />
+              {/* <Route path="/not-allowed" element={<NotAllowed />} /> */}
             </Routes>
           </userInfo.Provider>
         </typeOfUser.Provider>
       </main>
-      
+
       <footer>
         <Footer />
       </footer>
