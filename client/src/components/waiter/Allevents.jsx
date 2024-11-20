@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Fetch } from "../Fetch";
 import FutureeEvent from "./FutureeEvent";
 import EventDetails from "../EventDetails";
+import { getToken } from "../entry/CheckToken";
 
 const Allevents = () => {
   const [events, setEvents] = useState([]);
   useEffect(() => {
-    Fetch(apiUrl, setEvents);
+    Fetch(apiUrl, getToken(),  setEvents);
   }, []);
   const apiUrl = "http://localhost:4000/events";
 
