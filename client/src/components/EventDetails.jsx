@@ -1,4 +1,4 @@
-import React, {  useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import "../style/eventDetails.css";
 import { FetchDelete, FetchPut } from "./Fetch";
 import Newevent from "./manager/Newevent";
@@ -7,44 +7,49 @@ import { typeOfUser } from "../App";
 import { getToken } from "./entry/CheckToken";
 
 import ReqButton from "./extra/ReqButton";
-import canBut from "./extra/canBut";
+import CanBut from "./extra/CanBut";
 const EventDetails = ({ eventInfo, company }) => {
   const urlDelete = "http://localhost:4000/events/delete-event";
   const [showModal, setShowModal] = useState(false);
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
   const [user, setUser] = useContext(userInfo);
   const divRef = useRef(null);
-function edit() {
+  function edit() {}
 
-}
+  useEffect(() => {
+    // Attach event listener on component mount
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Clean up event listener on component unmount
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-useEffect(() => {
-  // Attach event listener on component mount
-  document.addEventListener('mousedown', handleClickOutside);
-  return () => {
-    // Clean up event listener on component unmount
-    document.removeEventListener('mousedown', handleClickOutside);
+  const handleClickOutside = (event) => {
+    if (divRef.current && !divRef.current.contains(event.target)) {
+      // console.log(27, "hi");
+      setShowModal(false);
+    }
   };
-}, []);
-
-const handleClickOutside = (event) => {
-  if (divRef.current && !divRef.current.contains(event.target)) {
-    // console.log(27, "hi");
-    setShowModal(false);
-  }
-}
 
   return (
     <div className="event-details">
-      {!isAwaiter && 
-      <button  onClick={() =>setShowModal(true)}>ערוך מחדש</button>}
       {!isAwaiter && (
-      <button onClick={() => FetchDelete(urlDelete, user.email, eventInfo, getToken())}> מחיקה </button> )}
-        <div ref={divRef}> {showModal && <Newevent setShowModal={setShowModal} eventStatus={"update-event"}/>}</div>
-        {isAwaiter && 
-      <ReqButton eventID={eventInfo.id}/>}
-        {isAwaiter && 
-      <canBut eventID={eventInfo.id}/>}
+        <button onClick={() => setShowModal(true)}>ערוך מחדש</button>
+      )}
+      {!isAwaiter && (
+        <button
+          onClick={() =>
+            FetchDelete(urlDelete, user.email, eventInfo, getToken())
+          }>מחיקה</button>
+      )}
+      <div ref={divRef}>
+        {showModal && (
+          <Newevent setShowModal={setShowModal} eventStatus={"update-event"} />
+        )}
+      </div>
+      {isAwaiter && <ReqButton eventID={eventInfo.id} />}
+      {isAwaiter && <CanBut eventID={eventInfo.id} />}
       <h2>פרטי האירוע</h2>
       <p>
         <strong>תאריך:</strong> {eventInfo.e_date}

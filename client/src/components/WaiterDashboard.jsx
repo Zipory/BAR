@@ -22,7 +22,7 @@ const WaiterDashboard = () => {
     <div>
       <h2><UserInfo/></h2>
       <section>אירועים עתידיים כלליים:
-        {/* <Allevents/> */}
+        <Allevents/>
       </section>
       {/* <section>אירועים עתידיים פרטיים:
         <Futureevents/>
@@ -31,7 +31,7 @@ const WaiterDashboard = () => {
         {/* <Pastevents/>
         <PendingEvents/>
        */}
-         <FutureEvents/>
+         {/* <FutureEvents/> */}
       </section>
     </div>
   );

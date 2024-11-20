@@ -267,3 +267,38 @@ export async function FetchDelete(url, email, event, token) {
       }
     });
 }
+
+
+/**---------Fetch new delete ---------- */
+export async function FetchDD(url, data, token) {
+  console.log("welcom to FetchNewDelete");
+  console.log(29, "url:", url);
+  console.log(28, "data:",  JSON.stringify(data), typeof data);
+    console.log("token:", token[0]);
+
+  fetch(url, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+            authorization: token[0],
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      console.log(res);
+      
+      if (res.ok) {
+        console.log(43, "new requests created");
+                return res.json();
+      } else {
+        console.error("Failed to create");
+      }
+    })
+    .then((json) => {
+      if (json) {
+        console.log("json:", json);
+
+          return json;
+        }
+    });
+}
