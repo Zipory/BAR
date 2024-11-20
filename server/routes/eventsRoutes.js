@@ -72,11 +72,8 @@ router.get("/", authenticateToken, (req, res) => {
 });
 
 async function getSoonEvents(req, res) {
-  console.log("hereeeeee");
-
   try {
     const user = await extractingUserDetails(req.headers["authorization"]);
-    console.log("user: ", user);
 
     const status = capitalizeFirstLetter(req.params.status);
 

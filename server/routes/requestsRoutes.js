@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { pool } from "../connection.js";
+import { sendMail } from "../Gmail sender/send.js";
 import {
   getCurrentDate,
   getCurrentTime,
@@ -13,7 +14,7 @@ import {
   authenticateToken,
   extractingUserDetails,
 } from "../sources/function.js";
-import e from "express";
+import { waiter_Fields_Select } from "../sources/variables.js";
 dotenv.config();
 const router = express.Router();
 /** -----------------get requests by status and event id---------------- */
@@ -34,6 +35,7 @@ async function getRequests(req, res) {
       `SELECT * FROM events WHERE id = ? AND company_id = ?`,
       [req.params.event_id, user.id]
     );
+    //if the event does not exist, return an error
     if (results[0].length === 0) {
       return res.status(401).json({
         message: "You are not allowed to see this event",
@@ -44,17 +46,33 @@ async function getRequests(req, res) {
         `SELECT waiter_id FROM requests WHERE event_id = ? AND status =?`,
         [req.params.event_id, status]
       );
-      console.log("results: ", results);
-
+      //if there are no requests, return an empty array
       if (results[0].length === 0) {
-        return res
-          .status(200)
-          .json({ message: "Requests", succeed: true, data: [] });
-      } else {
-        return res
-          .status(200)
-          .json({ message: "Requests", succeed: true, data: results[0] });
+        return res.status(200).json({
+          message: "Requests fetched successfully - There are no requests",
+          succeed: true,
+          data: [],
+        });
       }
+      //add waiters details
+      const waiter_ids = results[0].map((request) => request.waiter_id);
+      const waiter_fields = waiter_Fields_Select.join(",");
+      results = await pool.query(
+        `SELECT ${waiter_fields} FROM waiters WHERE id IN (${waiter_ids.join(
+          ","
+        )})`
+      );
+      //return the requests
+      //cut the ISO birthday
+      let resultsArray = [...results[0]];
+      resultsArray.map((waiter) => {
+        waiter.birthday = cutIsoDate(waiter.birthday);
+      });
+      return res.status(200).json({
+        message: "Requests fetched successfully",
+        succeed: true,
+        data: results[0],
+      });
     }
   } catch {
     res.status(500).json({
@@ -71,44 +89,88 @@ async function approveRequest(req, res) {
   try {
     const user = await extractingUserDetails(req.headers["authorization"]);
     const request = req.body;
+    //if the user is not a company, return an error
     if (user.isAwaiter) {
       return res.status(401).send({
         message: "You are not allowed to approve this request",
         succeed: false,
       });
     }
+    //if the user didn't provide waiter_id or event_id, return an error
     if (!request.waiter_id || !request.event_id) {
-      return res.status(401).send({
+      return res.status(400).send({
         message: "Please provide waiter_id and event_id",
         succeed: false,
       });
     }
+    //check if the event exists
     let results = await pool.query(
-      `SELECT id from events WHERE id = ? AND company_id = ?`,
+      `SELECT id,e_date,e_time,location,event_description from events WHERE id = ? AND company_id = ?`,
       [request.event_id, user.id]
     );
+
+    //if the event does not exist, return an error
     if (results[0].length === 0) {
       return res.status(401).send({
         message: "You are not allowed to approve this request",
         succeed: false,
       });
     }
+    //takes the details of the event for the email message
+    const eventDate = cutIsoDate(results[0][0].e_date);
+    const eventTime = results[0][0].e_time;
+    const eventLocation = results[0][0].location;
+    const eventDescription = results[0][0].event_description;
+    //check if the event has reached its limit
     results = await pool.query(
       `SELECT waiters_amount,approved_waiters FROM events WHERE id = ? AND company_id = ?`,
       [request.event_id, user.id]
     );
+    //if the event has reached its limit, return an error
     if (results[0][0].waiters_amount === results[0][0].approved_waiters) {
-      return res.status(401).send({
+      return res.status(409).send({
         message: "All waiters have already been approved for this event",
         succeed: false,
       });
     }
-
+    //check if the waiter has already been approved or rejected
+    results = await pool.query(
+      `SELECT id,status FROM requests WHERE waiter_id = ? AND event_id = ? AND (status = 'Approved' OR status = 'Rejected')`,
+      [request.waiter_id, request.event_id]
+    );
+    //if the waiter has already been approved or rejected, return an error
+    if (results[0].length !== 0) {
+      return res.status(409).send({
+        message: `This waiter has already been ${results[0][0].status} for this event`,
+        succeed: false,
+      });
+    }
+    //approve the request
     pool.query(
       `UPDATE requests SET status = 'Approved' WHERE waiter_id = ? AND event_id = ?`,
       [request.waiter_id, request.event_id]
     );
     res.status(200).json({ message: "Request approved", succeed: true });
+    let waiter_email_details = await pool.query(
+      `SELECT email,CONCAT(first_name,' ',last_name) as name FROM waiters WHERE id = ?`,
+      [request.waiter_id]
+    );
+    //send an email to the waiter
+
+    sendMail(
+      waiter_email_details[0][0].email,
+      "ברכות, אושרת לעבודה",
+      true,
+      `
+      שלום ${waiter_email_details[0][0].name}
+      צוות בר שמח לבשר לך כי אושרת לעבודה 
+      בתאריך : ${eventDate}
+      בשעה : ${eventTime}
+      בכתובת : ${eventLocation}
+      אירוע : ${eventDescription}
+      בהצלחה
+      `
+    );
   } catch {
     res.status(500).json({
       message: "Error fetching data from the database",
@@ -118,22 +180,75 @@ async function approveRequest(req, res) {
 }
 router.post("/approve-request", authenticateToken, approveRequest);
 
+// reject request - company
+
+async function rejectRequest(req, res) {
+  try {
+    const user = await extractingUserDetails(req.headers["authorization"]);
+    const request = req.body;
+
+    if (user.isAwaiter) {
+      return res.status(401).send({
+        message: "You are not allowed to reject this request",
+        succeed: false,
+      });
+    }
+    if (!request.waiter_id || !request.event_id) {
+      return res.status(400).send({
+        message: "Please provide waiter_id and event_id",
+        succeed: false,
+      });
+    }
+    let results = await pool.query(
+      `SELECT id FROM events WHERE id = ? AND company_id = ?`,
+      [request.event_id, user.id]
+    );
+    if (results[0].length === 0) {
+      return res.status(401).send({
+        message: "You are not allowed to reject this request",
+        succeed: false,
+      });
+    }
+    results = await pool.query(
+      `SELECT id FROM requests WHERE waiter_id = ? AND event_id = ? AND status = 'Pending'`,
+      [request.waiter_id, request.event_id]
+    );
+    if (results[0].length === 0) {
+      return res.status(409).send({
+        message: `This waiter has not been Pending for this event`,
+        succeed: false,
+      });
+    }
+
+    pool.query(
+      `UPDATE requests SET status = 'Rejected' WHERE waiter_id = ? AND event_id = ?`,
+      [request.waiter_id, request.event_id]
+    );
+    res.status(200).json({ message: "Request rejected", succeed: true });
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      message: "Error fetching data from the database",
+      succeed: false,
+    });
+  }
+}
+
+router.post("/reject-request", authenticateToken, rejectRequest);
 /**--------------------------new request---------------- */
 //new request - waiter
 async function newRequest(req, res) {
   const user = await extractingUserDetails(req.headers["authorization"]);
-  const userEmail = req.header("email");
-  // const isAwaiter = req.header("isAwaiter") === "true";
   const isAwaiter = user.isAwaiter;
   const request = req.body;
-  // console.log("request: ", request);
 
-  if (!(userEmail && request.event_id)) {
+  if (!request.event_id) {
     return res.status(401).send({ message: "Unauthorized", succeed: false });
   }
   if (!isAwaiter) {
     return res.status(401).send({
-      message: "You are not allowed to delete this event",
+      message: "You are not allowed to add requests for this event",
       succeed: false,
     });
   }
@@ -177,12 +292,13 @@ router.post("/new-request", authenticateToken, newRequest);
 //cancel request - waiter
 async function cancelRequest(req, res) {
   const user = await extractingUserDetails(req.headers["authorization"]);
-  const userEmail = req.header("email");
   const isAwaiter = user.isAwaiter;
   const request = req.body;
 
-  if (!(userEmail && request.event_id)) {
-    return res.status(401).send({ message: "Unauthorized", succeed: false });
+  if (!request.event_id) {
+    return res
+      .status(401)
+      .send({ message: "Please enter event id", succeed: false });
   }
   if (!isAwaiter) {
     return res.status(401).send({
