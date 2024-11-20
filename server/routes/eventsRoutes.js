@@ -72,6 +72,8 @@ router.get("/", authenticateToken, (req, res) => {
 });
 
 async function getSoonEvents(req, res) {
+  //TODO : add a variable for rating status per event for waiters
+  //TODO : add a variable for rating status per event and waiter for companies
   try {
     const user = await extractingUserDetails(req.headers["authorization"]);
 
@@ -118,9 +120,12 @@ async function getSoonEvents(req, res) {
         [user.id]
       );
       let resultsArray = [...results[0]];
+
       resultsArray.forEach((event) => {
         event.e_date = cutIsoDate(event.e_date);
       });
+      console.log("resultsArray: ", resultsArray);
+
       return res.status(200).json({
         message: "Events fetched successfully",
         succeed: true,
@@ -139,142 +144,159 @@ async function getSoonEvents(req, res) {
 }
 router.get("/my-events/:status", authenticateToken, getSoonEvents);
 
-router.get("/:email/:status", authenticateToken, (req, res) => {
-  //user details
+// router.get("/:email/:status", authenticateToken, (req, res) => {
+//   //user details
 
-  const isAwaiter = req.header("isAwaiter") === "true";
-  const userEmail = req.params.email;
-  const status = capitalizeFirstLetter(req.params.status);
-  let stage = status === "Pending" ? "Pending" : "Approved";
-  // console.log("isAwaiter: ", isAwaiter);
+//   const isAwaiter = req.header("isAwaiter") === "true";
+//   const userEmail = req.params.email;
+//   const status = capitalizeFirstLetter(req.params.status);
+//   let stage = status === "Pending" ? "Pending" : "Approved";
+//   // console.log("isAwaiter: ", isAwaiter);
 
-  // console.log("userEmail: ", userEmail);
+//   // console.log("userEmail: ", userEmail);
 
-  //if user is logged
+//   //if user is logged
 
-  //if user is an awaiter
-  if (isAwaiter) {
-    sqlQuerySelect(
-      "id",
-      "waiters",
-      ["email"],
-      "=",
-      [userEmail],
-      0,
-      (err, results) => {
-        if (err) {
-          res.status(500).json({
-            message: "Error finding waiter ID inside database",
-            succeed: false,
-          });
-        } else {
-          connection.query(
-            `SELECT events.*
+//   //if user is an awaiter
+//   if (isAwaiter) {
+//     sqlQuerySelect(
+//       "id",
+//       "waiters",
+//       ["email"],
+//       "=",
+//       [userEmail],
+//       0,
+//       (err, results) => {
+//         if (err) {
+//           res.status(500).json({
+//             message: "Error finding waiter ID inside database",
+//             succeed: false,
+//           });
+//         } else {
+//           connection.query(
+//             `SELECT events.*
 
-            FROM requests
-            JOIN events ON requests.event_id = events.id
-            WHERE requests.waiter_id =?
-              AND requests.status =? ${
-                status === "Future"
-                  ? `AND events.e_date >=${getCurrentDate()}`
-                  : status === "Past"
-                  ? `AND events.e_date <${getCurrentDate()}`
-                  : ""
-              };`,
-            [results[0].id, stage],
-            (err, results) => {
-              if (err) {
-                res.status(500).json({
-                  message: "Error finding waiter events inside database",
-                  succeed: false,
-                });
-              } else {
-                let resultsArray = [...results];
+//             FROM requests
+//             JOIN events ON requests.event_id = events.id
+//             WHERE requests.waiter_id =?
+//               AND requests.status =? ${
+//                 status === "Future"
+//                   ? `AND events.e_date >=${getCurrentDate()}`
+//                   : status === "Past"
+//                   ? `AND events.e_date <${getCurrentDate()}`
+//                   : ""
+//               };`,
+//             [results[0].id, stage],
+//             (err, results) => {
+//               if (err) {
+//                 res.status(500).json({
+//                   message: "Error finding waiter events inside database",
+//                   succeed: false,
+//                 });
+//               } else {
+//                 let resultsArray = [...results];
 
-                // cut iso date
-                resultsArray.forEach((event) => {
-                  event.e_date = cutIsoDate(event.e_date);
-                });
+//                 // cut iso date
+//                 resultsArray.forEach((event) => {
+//                   event.e_date = cutIsoDate(event.e_date);
+//                 });
 
-                res.status(200).json({
-                  message: "Events fetched successfully",
-                  succeed: true,
-                  data: resultsArray,
-                });
-              }
-            }
-          );
-        }
-      }
-    );
-  } else {
-    // if user is an company
-    //find company id
-    sqlQuerySelect(
-      "id",
-      "companies",
-      ["email"],
-      "=",
-      [userEmail],
-      0,
-      (err, results) => {
-        if (err) {
-          res.status(500).json({
-            message: "Error finding employer ID inside database",
-            succeed: false,
-          });
-        } else if (results.length > 0) {
-          console.log("results[0].id: ", results[0].id);
+//                 res.status(200).json({
+//                   message: "Events fetched successfully",
+//                   succeed: true,
+//                   data: resultsArray,
+//                 });
+//               }
+//             }
+//           );
+//         }
+//       }
+//     );
+//   } else {
+//     // if user is an company
+//     //find company id
+//     sqlQuerySelect(
+//       "id",
+//       "companies",
+//       ["email"],
+//       "=",
+//       [userEmail],
+//       0,
+//       (err, results) => {
+//         if (err) {
+//           res.status(500).json({
+//             message: "Error finding employer ID inside database",
+//             succeed: false,
+//           });
+//         } else if (results.length > 0) {
+//           console.log("results[0].id: ", results[0].id);
 
-          //find events of company with company id
-          sqlQuerySelect(
-            "*",
-            "events",
-            ["company_id"],
-            "=",
-            [results[0].id],
-            0,
-            (err, results) => {
-              if (err) {
-                res.status(500).json({
-                  message: "Error finding events inside database",
-                  succeed: false,
-                });
-              } else {
-                let resultsArray = [...results];
+//           //find events of company with company id
+//           sqlQuerySelect(
+//             "*",
+//             "events",
+//             ["company_id"],
+//             "=",
+//             [results[0].id],
+//             0,
+//             (err, results) => {
+//               if (err) {
+//                 res.status(500).json({
+//                   message: "Error finding events inside database",
+//                   succeed: false,
+//                 });
+//               } else {
+//                 let resultsArray = [...results];
 
-                // cut iso date
-                resultsArray.forEach((event) => {
-                  event.e_date = cutIsoDate(event.e_date);
-                });
-                if (status === "Future") {
-                  resultsArray = resultsArray.filter((event) => {
-                    return event.e_date >= getCurrentDate();
-                  });
-                } else {
-                  resultsArray = resultsArray.filter((event) => {
-                    return event.e_date < getCurrentDate();
-                  });
-                }
+//                 // cut iso date
+//                 resultsArray.forEach((event) => {
+//                   event.e_date = cutIsoDate(event.e_date);
+//                 });
+//                 if (status === "Future") {
+//                   resultsArray = resultsArray.filter((event) => {
+//                     return event.e_date >= getCurrentDate();
+//                   });
+//                 } else {
+//                   resultsArray = resultsArray.filter((event) => {
+//                     return event.e_date < getCurrentDate();
+//                   });
+//                 }
 
-                res.status(200).json({
-                  message: "Events found successfully",
-                  succeed: true,
-                  data: resultsArray,
-                });
-              }
-            }
-          );
-        } else {
-          res.status(200).json({
-            message: "There is no company with this email",
-            succeed: false,
-          });
-        }
-      }
-    );
-  }
-});
+//                 res.status(200).json({
+//                   message: "Events found successfully",
+//                   succeed: true,
+//                   data: resultsArray,
+//                 });
+//               }
+//             }
+//           );
+//         } else {
+//           res.status(200).json({
+//             message: "There is no company with this email",
+//             succeed: false,
+//           });
+//         }
+//       }
+//     );
+//   }
+// });
+
+// async function newEvent(req, res) {
+//   const user = await extractingUserDetails(req.headers["authorization"]);
+//   const isAwaiter = user.isAwaiter;
+//   const event = req.body;
+
+//   if (!isAwaiter) {
+//     return res.status(401).send({
+//       message: "You are not allowed to add events",
+//       succeed: false,
+//     });
+//     if (event.event_id) {
+//     }
+//   }
+// }
+
+// router.post("/new-event", authenticateToken, newEvent);
 
 router.post("/new-event", authenticateToken, (req, res) => {
   //   console.log(req.body);

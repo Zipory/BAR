@@ -71,10 +71,12 @@ const port = 4000;
 async function loginFunction(req, res) {
   try {
     const user = req.body;
+    console.log("user:", user);
+    console.log(!user.email);
 
     //check if the user enter email and password
     if (!user.email || !user.password) {
-      res.status(500).json({
+      return res.status(500).json({
         message: "Please enter your email and password",
         succeed: false,
       });
@@ -104,13 +106,13 @@ async function loginFunction(req, res) {
       //send response
       let response = await { ...results[0][0], token: userToken };
 
-      res
+      return res
         .status(200)
         .send({ message: "Login successful", succeed: true, data: response });
     } else {
       //if the user not exist
       //send response
-      res.status(500).json({
+      return res.status(500).json({
         message: "There is no account with this details",
         succeed: false,
         data: { token: null },
@@ -118,7 +120,7 @@ async function loginFunction(req, res) {
     }
   } catch {
     //if there is an error
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error fetching data from the database",
       succeed: false,
       data: { token: null },
