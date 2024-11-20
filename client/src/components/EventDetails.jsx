@@ -5,6 +5,7 @@ import Newevent from "./manager/Newevent";
 import { userInfo } from "../App";
 import { typeOfUser } from "../App";
 import { getToken } from "./entry/CheckToken";
+
 import ReqButton from "./extra/ReqButton";
 import canBut from "./extra/canBut";
 const EventDetails = ({ eventInfo, company }) => {
