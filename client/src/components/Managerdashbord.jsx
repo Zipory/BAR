@@ -11,6 +11,7 @@ import Allevents from "./waiter/Allevents.jsx";
 import EventDetails from "./EventDetails.jsx";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "./entry/CheckToken.js";
+import GetRequests from "./manager/request/GetRequests.jsx";
 
 const ManagerDashboard = () => {
   const [user, setUser] = useContext(userInfo);
@@ -76,10 +77,11 @@ const ManagerDashboard = () => {
       </button>
       <History history={history} />
       {/* <EventDetails eventInfo={history}/> */}
-      <div className="meter" dir="ltr">
+      {/* <div className="meter" dir="ltr">
         <div className="inner-meter">4 / 6</div>
-      </div>
+      </div> */}
       {/* <Allevents/> */}
+      <GetRequests/>
     </div>
   );
 };
