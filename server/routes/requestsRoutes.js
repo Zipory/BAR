@@ -252,10 +252,9 @@ async function newRequest(req, res) {
       succeed: false,
     });
   }
+  let connection = await pool.getConnection();
 
   try {
-    let connection;
-    connection = await pool.getConnection();
     await connection.beginTransaction();
 
     const waiter_id = user.id;
@@ -264,10 +263,15 @@ async function newRequest(req, res) {
       `SELECT id,status FROM requests WHERE waiter_id = ? AND event_id = ? LIMIT 1`,
       [waiter_id, request.event_id]
     );
-    results_request_id = results_request_id[0][0];
+    console.log("results_request_id: ", results_request_id);
+
+    results_request_id = results_request_id[0];
+    console.log("results_request_id: ", results_request_id);
+    console.log(results_request_id.length > 0);
+
     if (results_request_id.length > 0) {
       return res.status(200).json({
-        message: `Your request is already ${results_request_id.status}`,
+        message: `Your request is already ${results_request_id[0].status}`,
         succeed: false,
       });
     }
@@ -283,7 +287,7 @@ async function newRequest(req, res) {
     await connection.rollback();
     res.status(500).json({ message: "Error creating request", succeed: false });
   } finally {
-    connection.release();
+    if (connection) connection.release();
   }
 }
 
