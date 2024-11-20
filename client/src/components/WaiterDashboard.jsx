@@ -28,9 +28,9 @@ const WaiterDashboard = () => {
         <Futureevents/>
       </section> */}
       <section>
-        <Pastevents/>
+        {/* <Pastevents/>
         <PendingEvents/>
-        <FutureEvents/>
+        <FutureEvents/> */}
       </section>
     </div>
   );

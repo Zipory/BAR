@@ -167,6 +167,41 @@ export async function FetchNewEvent(url, data, setState, email, token) {
     });
 }
 
+/**----------the new wey to post (new requests from waiters) */
+export async function FetchPP(url, data, token) {
+  console.log("welcom to FetchNewEvent");
+  console.log(29, "url:", url);
+  console.log(28, "data:",  JSON.stringify(data), typeof data);
+  console.log("token:", token[0]);
+
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: token[0],
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      console.log(res);
+      
+      if (res.ok) {
+        console.log(43, "new requests created");
+
+        return res.json();
+      } else {
+        console.error("Failed to create");
+      }
+    })
+    .then((json) => {
+      if (json) {
+        console.log("json:", json);
+          return json;
+        }
+    });
+}
+
+
 /**----------Fetch put---------------- */
 export async function FetchPut(url, data, setState, email, token) {
   console.log("welcom to FetchPut");
