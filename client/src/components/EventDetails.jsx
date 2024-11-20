@@ -11,7 +11,8 @@ import CanBut from "./extra/CanBut";
 const EventDetails = ({ eventInfo, company }) => {
   const urlDelete = "http://localhost:4000/events/delete-event";
   const [showModal, setShowModal] = useState(false);
-  const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
+  // const [iswaiter, setIsAwaiter] = useContext(typeOfUser);
+  let [token, iswaiter] = getToken();
   const [user, setUser] = useContext(userInfo);
   const divRef = useRef(null);
   function edit() {}
@@ -34,13 +35,13 @@ const EventDetails = ({ eventInfo, company }) => {
 
   return (
     <div className="event-details">
-      {!isAwaiter && (
+      {!iswaiter && (
         <button onClick={() => setShowModal(true)}>ערוך מחדש</button>
       )}
-      {!isAwaiter && (
+      {!iswaiter && (
         <button
           onClick={() =>
-            FetchDelete(urlDelete, user.email, eventInfo, getToken())
+            FetchDelete(urlDelete, user.email, {event_id: eventInfo.id}, getToken())
           }>מחיקה</button>
       )}
       <div ref={divRef}>
@@ -48,8 +49,8 @@ const EventDetails = ({ eventInfo, company }) => {
           <Newevent setShowModal={setShowModal} eventStatus={"update-event"} />
         )}
       </div>
-      {isAwaiter && <ReqButton eventID={eventInfo.id} />}
-      {isAwaiter && <CanBut eventID={eventInfo.id} />}
+      {iswaiter && <ReqButton eventID={eventInfo.id} />}
+      {iswaiter && <CanBut eventID={eventInfo.id} />}
       <h2>פרטי האירוע</h2>
       <p>
         <strong>תאריך:</strong> {eventInfo.e_date}
