@@ -21,7 +21,7 @@ export async function Fetch(url, token, setState) {
     });
 }
 
-/**--Fetch send token in header, 
+/**--Fetch send token in header,
  * and set the state with the data respons-- */
 export async function FetchToken(url, token, setState) {
   console.log("welcom to FetchToken");
@@ -66,13 +66,13 @@ export async function FetchIncludeHeader(url, email, setState, token) {
   })
     .then((res) => {
       console.log(res);
-      res.json();
+      return res.json();
     })
     .then((json) => {
+      console.log("json:", json);
       if (json?.succeed) {
         setState(json.data);
       }
-      console.log("json:", json);
     });
 }
 
@@ -152,7 +152,7 @@ export async function FetchNewEvent(url, data, setState, email, token) {
         console.log("json:", json);
         if (setState) {
           setState(json.data); // todo: replace with json.data
-          if (json.data.token) {
+          if (json.data?.token) {
             window.localStorage.setItem("bar", json.data.token);
             window.localStorage.setItem(
               "isWaiter",
@@ -167,28 +167,27 @@ export async function FetchNewEvent(url, data, setState, email, token) {
     });
 }
 
-
 /**----------the new wey to post (new requests from waiters) */
 export async function FetchPP(url, data, token) {
   console.log("welcom to FetchNewEvent");
   console.log(29, "url:", url);
-  console.log(28, "data:",  JSON.stringify(data), typeof data);
-    console.log("token:", token[0]);
+  console.log(28, "data:", JSON.stringify(data), typeof data);
+  console.log("token:", token[0]);
 
   fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-            authorization: token[0],
+      authorization: token[0],
     },
     body: JSON.stringify(data),
   })
     .then((res) => {
       console.log(res);
-      
+
       if (res.ok) {
         console.log(43, "new requests created");
-                return res.json();
+        return res.json();
       } else {
         console.error("Failed to create");
       }
@@ -197,8 +196,8 @@ export async function FetchPP(url, data, token) {
       if (json) {
         console.log("json:", json);
 
-          return json;
-        }
+        return json;
+      }
     });
 }
 
@@ -237,12 +236,12 @@ export async function FetchPut(url, data, setState, email, token) {
 }
 
 /**----------Fetch delete---------------- */
-export async function FetchDelete(url, email, event, token) {
+export async function FetchDelete(url, email, id, token) {
   console.log("welcom to FetchDelete");
 
   console.log(76, "url:", url);
   console.log("email:", email);
-  console.log("event.id:", event.id);
+  console.log("id:", id);
   fetch(url, {
     method: "DELETE",
     headers: {
@@ -251,7 +250,7 @@ export async function FetchDelete(url, email, event, token) {
       isAwaiter: token[1],
       authorization: token[0],
     },
-    body: JSON.stringify({ id: event.id }),
+    body: JSON.stringify(id),
   })
     .then((res) => {
       if (res.ok) {
@@ -264,6 +263,40 @@ export async function FetchDelete(url, email, event, token) {
     .then((json) => {
       if (json) {
         console.log("json:", json);
+      }
+    });
+}
+
+/**---------Fetch new delete ---------- */
+export async function FetchDD(url, data, token) {
+  console.log("welcom to FetchDD");
+  console.log(29, "url:", url);
+  console.log(28, "data:", JSON.stringify(data), typeof data);
+  console.log("token:", token[0]);
+
+  fetch(url, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: token[0],
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      console.log(res);
+
+      if (res.ok) {
+        console.log(43, "new requests created");
+        return res.json();
+      } else {
+        console.error("Failed to create");
+      }
+    })
+    .then((json) => {
+      if (json) {
+        console.log("json:", json);
+
+        return json;
       }
     });
 }

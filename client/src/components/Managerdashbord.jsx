@@ -11,6 +11,7 @@ import Allevents from "./waiter/Allevents.jsx";
 import EventDetails from "./EventDetails.jsx";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "./entry/CheckToken.js";
+import GetRequests from "./manager/request/GetRequests.jsx";
 
 const ManagerDashboard = () => {
   const [user, setUser] = useContext(userInfo);
@@ -35,11 +36,8 @@ const ManagerDashboard = () => {
     }
   }, [history]);
   const getHistory = () => {
-
     status = "past";
     const serverUrl = `http://localhost:4000/events/my-events/${status}`;
-    
-
     FetchIncludeHeader(serverUrl, user?.email, setHistory, getToken());
   };
 
@@ -67,25 +65,23 @@ const ManagerDashboard = () => {
         ליצירת אירוע חדש
       </button>
       <div ref={divRef}>
-        {" "}
         {showModal && (
           <Newevent setShowModal={setShowModal} eventStatus={"new-event"} />
         )}
       </div>
-
       {/* Future Events Window */}
       {/* <Futureevents /> */}
-
       {/* View History Button */}
       <button className="medium-button" onClick={() => getHistory()}>
         היסטורית אירועים
       </button>
       <History history={history} />
       {/* <EventDetails eventInfo={history}/> */}
-      <div className="meter" dir="ltr">
+      {/* <div className="meter" dir="ltr">
         <div className="inner-meter">4 / 6</div>
-      </div>
+      </div> */}
       {/* <Allevents/> */}
+      <GetRequests/>
     </div>
   );
 };
