@@ -5,7 +5,9 @@ import Newevent from "./manager/Newevent";
 import { userInfo } from "../App";
 import { typeOfUser } from "../App";
 import { getToken } from "./entry/CheckToken";
+
 import ReqButton from "./extra/ReqButton";
+
 const EventDetails = ({ eventInfo, company }) => {
   const urlDelete = "http://localhost:4000/events/delete-event";
   const [showModal, setShowModal] = useState(false);

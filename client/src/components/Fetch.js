@@ -167,18 +167,19 @@ export async function FetchNewEvent(url, data, setState, email, token) {
     });
 }
 
+
 /**----------the new wey to post (new requests from waiters) */
 export async function FetchPP(url, data, token) {
   console.log("welcom to FetchNewEvent");
   console.log(29, "url:", url);
   console.log(28, "data:",  JSON.stringify(data), typeof data);
-  console.log("token:", token[0]);
+    console.log("token:", token[0]);
 
   fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      authorization: token[0],
+            authorization: token[0],
     },
     body: JSON.stringify(data),
   })
@@ -187,8 +188,7 @@ export async function FetchPP(url, data, token) {
       
       if (res.ok) {
         console.log(43, "new requests created");
-
-        return res.json();
+                return res.json();
       } else {
         console.error("Failed to create");
       }
@@ -196,11 +196,11 @@ export async function FetchPP(url, data, token) {
     .then((json) => {
       if (json) {
         console.log("json:", json);
+
           return json;
         }
     });
 }
-
 
 /**----------Fetch put---------------- */
 export async function FetchPut(url, data, setState, email, token) {

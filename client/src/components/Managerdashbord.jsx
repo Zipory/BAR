@@ -35,9 +35,11 @@ const ManagerDashboard = () => {
     }
   }, [history]);
   const getHistory = () => {
+
     status = "past";
     const serverUrl = `http://localhost:4000/events/my-events/${status}`;
     
+
     FetchIncludeHeader(serverUrl, user?.email, setHistory, getToken());
   };
 

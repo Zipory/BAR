@@ -13,6 +13,7 @@ import {
   sqlQueryDelete,
   sqlQueryUpdate,
   authenticateToken,
+  extractingUserDetails,
 } from "../sources/function.js";
 
 import {
@@ -69,6 +70,78 @@ router.get("/", authenticateToken, (req, res) => {
     }
   );
 });
+
+async function getSoonEvents(req, res) {
+  console.log("hereeeeee");
+
+  try {
+    const user = await extractingUserDetails(req.headers["authorization"]);
+    console.log("user: ", user);
+
+    const status = capitalizeFirstLetter(req.params.status);
+
+    if (status !== "Pending" && status !== "Future" && status !== "Past") {
+      return res
+        .status(500)
+        .json({ message: "Invalid status", succeed: false });
+    }
+
+    if (user.isAwaiter) {
+      const future = `'approved' AND events.e_date >' ${getCurrentDate()}' OR events.e_date = '${getCurrentDate()}' AND events.e_time > '${getCurrentTime()}'`;
+      const past = `'approved' AND events.e_date <' ${getCurrentDate()}' OR events.e_date =' ${getCurrentDate()}' AND events.e_time < '${getCurrentTime()}'`;
+      const pending = `'pending' AND events.e_date > '${getCurrentDate()}' OR events.e_date =' ${getCurrentDate()}' AND events.e_time >' ${getCurrentTime()}'`;
+      let results = await pool.query(
+        `SELECT events.*
+            FROM requests
+            JOIN events ON requests.event_id = events.id
+            WHERE requests.waiter_id =? 
+            AND requests.status =
+            ${
+              status === "Future" ? future : status === "Past" ? past : pending
+            }`,
+        [user.id]
+      );
+      let resultsArray = [...results[0]];
+      resultsArray.forEach((event) => {
+        event.e_date = cutIsoDate(event.e_date);
+      });
+      return res.status(200).json({
+        message: "Events fetched successfully",
+        succeed: true,
+        data: resultsArray,
+      });
+    } else {
+      const future = `events.e_date > '${getCurrentDate()}' OR events.e_date = '${getCurrentDate()}' AND events.e_time >' ${getCurrentTime()}'`;
+      const past = `e_date < '${getCurrentDate()}' OR e_date = '${getCurrentDate()}' AND e_time < '${getCurrentTime()}'`;
+
+      let results = await pool.query(
+        `SELECT * FROM events WHERE company_id = ? AND ${
+          status === "Future" ? future : past
+        }`,
+        [user.id]
+      );
+      let resultsArray = [...results[0]];
+      resultsArray.forEach((event) => {
+        event.e_date = cutIsoDate(event.e_date);
+      });
+      return res.status(200).json({
+        message: "Events fetched successfully",
+        succeed: true,
+        data: resultsArray,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({
+      message: "Error fetching data from the database",
+      succeed: false,
+      data: null,
+    });
+  }
+}
+router.get("/my-events/:status", authenticateToken, getSoonEvents);
+
 router.get("/:email/:status", authenticateToken, (req, res) => {
   //user details
 
@@ -99,7 +172,8 @@ router.get("/:email/:status", authenticateToken, (req, res) => {
           });
         } else {
           connection.query(
-            `      SELECT events.*
+            `SELECT events.*
+
             FROM requests
             JOIN events ON requests.event_id = events.id
             WHERE requests.waiter_id =?
