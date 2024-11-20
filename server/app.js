@@ -100,6 +100,7 @@ async function loginFunction(req, res) {
         name: name,
         isAwaiter: user.isAwaiter,
       });
+
       //send response
       let response = await { ...results[0][0], token: userToken };
 
