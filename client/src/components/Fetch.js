@@ -152,7 +152,7 @@ export async function FetchNewEvent(url, data, setState, email, token) {
         console.log("json:", json);
         if (setState) {
           setState(json.data); // todo: replace with json.data
-          if (json.data.token) {
+          if (json.data?.token) {
             window.localStorage.setItem("bar", json.data.token);
             window.localStorage.setItem(
               "isWaiter",

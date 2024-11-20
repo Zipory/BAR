@@ -35,11 +35,8 @@ const ManagerDashboard = () => {
     }
   }, [history]);
   const getHistory = () => {
-
     status = "past";
     const serverUrl = `http://localhost:4000/events/my-events/${status}`;
-    
-
     FetchIncludeHeader(serverUrl, user?.email, setHistory, getToken());
   };
 
@@ -67,15 +64,12 @@ const ManagerDashboard = () => {
         ליצירת אירוע חדש
       </button>
       <div ref={divRef}>
-        {" "}
         {showModal && (
           <Newevent setShowModal={setShowModal} eventStatus={"new-event"} />
         )}
       </div>
-
       {/* Future Events Window */}
       {/* <Futureevents /> */}
-
       {/* View History Button */}
       <button className="medium-button" onClick={() => getHistory()}>
         היסטורית אירועים
