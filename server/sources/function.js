@@ -182,8 +182,6 @@ function sqlQueryUpdate(
 /**-----------------JWT functions------------------ */
 //generate token
 function generateToken(user) {
-  console.log("user details: ", user);
-
   return jwt.sign(
     { id: user.id, isAwaiter: user.isAwaiter, name: user.name },
     process.env.SECRET_KEY,
