@@ -6,6 +6,7 @@ import { userInfo } from "../App";
 import { typeOfUser } from "../App";
 import { getToken } from "./entry/CheckToken";
 import ReqButton from "./extra/ReqButton";
+import canBut from "./extra/canBut";
 const EventDetails = ({ eventInfo, company }) => {
   const urlDelete = "http://localhost:4000/events/delete-event";
   const [showModal, setShowModal] = useState(false);
@@ -41,6 +42,8 @@ const handleClickOutside = (event) => {
         <div ref={divRef}> {showModal && <Newevent setShowModal={setShowModal} eventStatus={"update-event"}/>}</div>
         {isAwaiter && 
       <ReqButton eventID={eventInfo.id}/>}
+        {isAwaiter && 
+      <canBut eventID={eventInfo.id}/>}
       <h2>פרטי האירוע</h2>
       <p>
         <strong>תאריך:</strong> {eventInfo.e_date}
