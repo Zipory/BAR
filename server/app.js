@@ -9,6 +9,7 @@ import { connection, pool } from "./connection.js";
 import eventsRoutes from "./routes/eventsRoutes.js";
 import requestsRoutes from "./routes/requestsRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import ratingRoutes from "./routes/ratingRoutes.js";
 import {
   getCurrentDate,
   getCurrentTime,
@@ -281,6 +282,7 @@ app.get("/protected", authenticateToken, (req, res) => {
 app.use("/events", eventsRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/user", userRoutes);
+app.use("/rating", ratingRoutes);
 /*-----------------set listener open on port 4000 ------------------ */
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

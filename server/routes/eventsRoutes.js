@@ -64,7 +64,7 @@ router.get("/", authenticateToken, (req, res) => {
         res.status(200).json({
           message: "Events fetched successfully",
           succeed: true,
-          resultsArray,
+          data: resultsArray,
         });
       }
     }
