@@ -2,9 +2,10 @@ import React, {useState, useEffect} from 'react'
 import { FetchToken } from '../Fetch';
 import { getToken } from '../entry/CheckToken';
 import EventDetails from '../EventDetails';
+import Event from '../single-event/Event';
 
 /**getting past events that connect to the user. */
-const GetMyPastEvents = () => {
+const Pastevents = () => {
     const [events, setEvents] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
     let status = "past";
@@ -34,10 +35,11 @@ const GetMyPastEvents = () => {
           {events.map((val, indx) => (
         <li className="li-event" event={val[0]} key={indx}>
           event: <EventDetails eventInfo={val} />
+          {/* <Event eventInfo={val}/> */}
         </li>
       ))}
       </div>
     );
   };
 
-export default GetMyPastEvents
+export default Pastevents

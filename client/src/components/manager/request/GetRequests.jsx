@@ -10,7 +10,7 @@ const GetRequests = ({ eventID }) => {
         
     }
   return (
-    <button onClick={handleGetReq}>הראה בקשות הצורפות</button>
+    <button onClick={handleGetReq}>הראה בקשות הצטרפות</button>
   )
 }
 
