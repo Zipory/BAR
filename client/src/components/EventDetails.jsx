@@ -3,7 +3,6 @@ import "../style/eventDetails.css";
 import { FetchDelete, FetchPut } from "./Fetch";
 import Newevent from "./manager/Newevent";
 import { userInfo } from "../App";
-import { typeOfUser } from "../App";
 import { getToken } from "./entry/CheckToken";
 
 import ReqButton from "./extra/ReqButton";
@@ -11,7 +10,6 @@ import CanBut from "./extra/CanBut";
 const EventDetails = ({ eventInfo, company }) => {
   const urlDelete = "http://localhost:4000/events/delete-event";
   const [showModal, setShowModal] = useState(false);
-  // const [iswaiter, setIsAwaiter] = useContext(typeOfUser);
   let [token, iswaiter] = getToken();
   const [user, setUser] = useContext(userInfo);
   const divRef = useRef(null);
@@ -53,6 +51,10 @@ const EventDetails = ({ eventInfo, company }) => {
       {iswaiter && <CanBut eventID={eventInfo.id} />}
       <h2>פרטי האירוע</h2>
       <p>
+        <strong>תאור האירוע:</strong>{" "}
+        {eventInfo.event_description || "אין תאור לאירוע"}
+      </p>
+      <p>
         <strong>תאריך:</strong> {eventInfo.e_date}
       </p>
       <p>
@@ -65,11 +67,10 @@ const EventDetails = ({ eventInfo, company }) => {
         <strong>מיקום:</strong> {eventInfo.location}, מס' {eventInfo.suite}
       </p>
       <p>
-        <strong>תאור האירוע:</strong>{" "}
-        {eventInfo.event_description || "אין תאור לאירוע"}
+        <strong>כמות מלצרים שדרושה:</strong> {eventInfo.waiters_amount}
       </p>
       <p>
-        <strong>כמות מלצרים:</strong> {eventInfo.waiters_amount}
+        <strong>כמות מלצרים שרשומים:</strong> {eventInfo.approved_waiters ?? 0}
       </p>
       <p>
         <strong>תשלום:</strong> {eventInfo.salary}{" "}
@@ -78,6 +79,7 @@ const EventDetails = ({ eventInfo, company }) => {
       <p>
         <strong>כולל שינה:</strong> {eventInfo.has_sleep ? "כן" : "לא"}
       </p>
+      {console.log(eventInfo)}
     </div>
   );
 };

@@ -1,9 +1,10 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect} from 'react'
 import { FetchToken } from '../Fetch';
 import { getToken } from '../entry/CheckToken';
 import EventDetails from '../EventDetails';
 
-const Pastevents = () => {
+/**getting past events that connect to the user. */
+const GetMyPastEvents = () => {
     const [events, setEvents] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
     let status = "past";
@@ -39,4 +40,4 @@ const Pastevents = () => {
     );
   };
 
-export default Pastevents
+export default GetMyPastEvents

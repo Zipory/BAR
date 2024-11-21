@@ -1,11 +1,11 @@
+import "../style/waiterDashboard.css";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import UserInfo from "./waiter/info";
-import Allevents from "./waiter/Allevents";
-import FutureEvents from "./waiter/FutureEvents";
-import Pastevents from "./waiter/Pastevents";
 import PendingEvents from "./waiter/pendingEvents";
-import "../style/waiterDashboard.css";
+import GetAllFutureEvents from "./events/GetAllFutureEvents";
+import GetMyFutureEvents from "./events/GetMyFutureEvents";
+import GetMyPastEvents from "./events/GetMyPastEvents";
 
 const WaiterDashboard = () => {
   let isAwaiter2 = JSON.parse(window.localStorage.getItem("isWaiter"));
@@ -22,18 +22,11 @@ const WaiterDashboard = () => {
       <h2>
         <UserInfo />
       </h2>
-      {/* <section>אירועים עתידיים כלליים:
-        <Allevents/>
-      </section> */}
-      {/* <section>אירועים עתידיים פרטיים:
-        <FutureEvents/>
-      </section> */}
-      {/* <section>
-        אירועים שעברו פרטיים: <Pastevents />
-      </section> */}
-      <section>
-        <PendingEvents/>
-      </section>
+      {/* ----------------new way to see the events---------------------- */}
+      <section><GetAllFutureEvents/></section>
+      <section><PendingEvents/></section>
+        <section><GetMyFutureEvents/></section>
+        <section><GetMyPastEvents/></section>
     </div>
   );
 };
