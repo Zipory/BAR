@@ -34,6 +34,42 @@ function cutIsoDate(e_date) {
     return e_date.slice(0, 10);
   }
 }
+function addHoursToDateAndTime(date, time, hoursToAdd) {
+  // Combine date and time into a single ISO string
+  const dateTimeString = `${date}T${time}`;
+  const dateTime = new Date(dateTimeString);
+
+  // Add the specified number of hours
+  dateTime.setHours(dateTime.getHours() + hoursToAdd);
+
+  // Extract the updated date (YYYY-MM-DD) and time (HH:mm:ss)
+  const updatedDate = dateTime.toISOString().split("T")[0]; // Get the date part
+  const updatedTime = dateTime.toTimeString().split(" ")[0]; // Get the time part
+
+  // Return an object with the updated date and time
+  return {
+    updatedDate,
+    updatedTime,
+  };
+}
+function compareDates(date1, condition, date2) {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+  switch (condition) {
+    case "<":
+      return d1 < d2;
+    case ">":
+      return d1 > d2;
+    case "<=":
+      return d1 <= d2;
+    case ">=":
+      return d1 >= d2;
+    case "=":
+      return d1 === d2;
+    default:
+      false;
+  }
+}
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -218,6 +254,8 @@ export {
   getCurrentDate,
   getCurrentTime,
   cutIsoDate,
+  addHoursToDateAndTime,
+  compareDates,
   sqlQueryInsert,
   sqlQuerySelect,
   sqlQueryDelete,
