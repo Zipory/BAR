@@ -34,8 +34,8 @@ const Pastevents = () => {
       <div>
           {events.map((val, indx) => (
         <li className="li-event" event={val[0]} key={indx}>
-          {/* event: <EventDetails eventInfo={val} /> */}
-          <Event eventInfo={val}/>
+          event: <EventDetails eventInfo={val} />
+          {/* <Event eventInfo={val}/> */}
         </li>
       ))}
       </div>
