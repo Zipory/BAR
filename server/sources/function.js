@@ -1,4 +1,4 @@
-import { connection } from "../connection.js";
+import { connection, pool } from "../connection.js";
 import jwt from "jsonwebtoken";
 
 function getCurrentDate() {
@@ -215,6 +215,20 @@ function sqlQueryUpdate(
     }
   );
 }
+async function selectCompanies(company_id, callback) {
+  if (typeof Number(company_id) !== "number") {
+    return "שם החברה: לא ידוע";
+  }
+  let results = await pool.query(
+    `SELECT company_name FROM companies WHERE id = ? LIMIT 1`,
+    [company_id]
+  );
+
+  if (results[0].length === 0) {
+    return "שם החברה: לא ידוע";
+  }
+  return results[0][0].company_name;
+}
 /**-----------------JWT functions------------------ */
 //generate token
 function generateToken(user) {
@@ -260,6 +274,7 @@ export {
   sqlQuerySelect,
   sqlQueryDelete,
   sqlQueryUpdate,
+  selectCompanies,
   capitalizeFirstLetter,
   generateToken,
   authenticateToken,
