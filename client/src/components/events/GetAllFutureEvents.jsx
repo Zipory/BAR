@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { FetchToken } from '../Fetch';
 import { getToken } from '../entry/CheckToken';
 import EventDetails from '../EventDetails';
+import Event from '../single-event/Event';
 
 /**getting future events of all users. */
 const GetAllFutureEvents = () => {
@@ -32,7 +33,8 @@ const GetAllFutureEvents = () => {
       <div>
           {events.map((val, indx) => (
         <li className="li-event" event={val[0]} key={indx}>
-          event: <EventDetails eventInfo={val} />
+          {/* event: <EventDetails eventInfo={val} /> */}
+          <Event eventInfo={val}/>
         </li>
       ))}
       </div>
