@@ -1,9 +1,10 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect} from 'react'
 import { FetchToken } from '../Fetch';
 import { getToken } from '../entry/CheckToken';
 import EventDetails from '../EventDetails';
-/** the new future event component */
-const FutureEvents = () => {
+
+/**getting future events that connect to the user. */
+const GetMyFutureEvents = () => {
     const [events, setEvents] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
     let status = "future";
@@ -39,4 +40,4 @@ const FutureEvents = () => {
     );
   };
 
-export default FutureEvents
+export default GetMyFutureEvents
