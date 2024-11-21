@@ -12,6 +12,7 @@ import {
   sqlQuerySelect,
   sqlQueryDelete,
   sqlQueryUpdate,
+  selectCompanies,
   authenticateToken,
   extractingUserDetails,
 } from "../sources/function.js";
@@ -26,106 +27,114 @@ import {
 dotenv.config();
 const router = express.Router();
 
-router.get("/", authenticateToken, (req, res) => {
-  //Get all events with limit - optional
+async function getAllEvents(req, res) {
+  try {
+    // get all future events with company name
+    let results = await pool.query(
+      `SELECT e.*, c.company_name FROM events e
+       JOIN companies c ON e.company_id = c.id 
+       WHERE (e.e_date > CURDATE()) 
+       OR (e.e_date = CURDATE() AND e.e_time > CURTIME()) 
+       ORDER BY e.e_date, e.e_time;`
+    );
+    let resultsArray = [...results[0]];
 
-  sqlQuerySelect(
-    "*",
-    "events",
-    ["e_date"],
-    ">=",
-    [getCurrentDate()],
-    0,
-    (err, results) => {
-      if (err) {
-        res.status(500).json({
-          message: "Error fetching data from the database",
-          succeed: false,
-        });
-      } else {
-        // create a copy of results
-        let resultsArray = [...results];
+    // cut iso date
+    resultsArray.forEach((event) => {
+      event.e_date = cutIsoDate(event.e_date);
+    });
 
-        // cut iso date
-        resultsArray.forEach((event) => {
-          event.e_date = cutIsoDate(event.e_date);
-        });
+    res.status(200).json({
+      message: "Events fetched successfully",
+      succeed: true,
+      data: results[0],
+    });
+  } catch {
+    res.status(500).json({
+      message: "Error fetching data from the database",
+      succeed: false,
+    });
+  }
+}
 
-        // filter out events that have passed
-        resultsArray = resultsArray.filter((event) => {
-          return (
-            event.e_date > getCurrentDate() ||
-            (event.e_date === getCurrentDate() &&
-              event.e_time > getCurrentTime())
-          );
-        });
-        // console.log("resultsArray length: ", resultsArray.length);
-
-        res.status(200).json({
-          message: "Events fetched successfully",
-          succeed: true,
-          data: resultsArray,
-        });
-      }
-    }
-  );
-});
+router.get("/", authenticateToken, getAllEvents);
 
 async function getSoonEvents(req, res) {
   //TODO : add a variable for rating status per event for waiters
   //TODO : add a variable for rating status per event and waiter for companies
   try {
+    // get all events for user sorted by status and date
     const user = await extractingUserDetails(req.headers["authorization"]);
-
+    //capitalize status
     const status = capitalizeFirstLetter(req.params.status);
 
-    if (status !== "Pending" && status !== "Future" && status !== "Past") {
-      return res
-        .status(500)
-        .json({ message: "Invalid status", succeed: false });
-    }
-
+    //check if user is an awaiter
     if (user.isAwaiter) {
-      const future = `'approved' AND events.e_date >' ${getCurrentDate()}' OR events.e_date = '${getCurrentDate()}' AND events.e_time > '${getCurrentTime()}'`;
-      const past = `'approved' AND events.e_date <' ${getCurrentDate()}' OR events.e_date =' ${getCurrentDate()}' AND events.e_time < '${getCurrentTime()}'`;
-      const pending = `'pending' AND events.e_date > '${getCurrentDate()}' OR events.e_date =' ${getCurrentDate()}' AND events.e_time >' ${getCurrentTime()}'`;
+      //check if status is valid
+      if (status !== "Pending" && status !== "Future" && status !== "Past") {
+        return res
+          .status(500)
+          .json({ message: "Invalid status", succeed: false });
+      }
+      //created a query for each status
+      const future = `requests.status = 'approved' AND events.e_date > '${getCurrentDate()}' 
+      OR (events.e_date = '${getCurrentDate()}' AND events.e_time > '${getCurrentTime()}')`;
+
+      const past = `requests.status = 'approved' AND events.e_date < '${getCurrentDate()}'
+        OR (events.e_date = '${getCurrentDate()}' AND events.e_time < '${getCurrentTime()}')`;
+
+      const pending = `requests.status = 'pending' AND events.e_date > '${getCurrentDate()}'
+        OR (events.e_date = '${getCurrentDate()}' AND events.e_time > '${getCurrentTime()}')`;
+      //run query
+      //join tables
+      //join company name
       let results = await pool.query(
-        `SELECT events.*
-            FROM requests
-            JOIN events ON requests.event_id = events.id
-            WHERE requests.waiter_id =? 
-            AND requests.status =
-            ${
-              status === "Future" ? future : status === "Past" ? past : pending
-            }`,
+        `SELECT events.*, companies.company_name
+          FROM requests
+          JOIN events ON requests.event_id = events.id
+          JOIN companies ON events.company_id = companies.id
+          WHERE requests.waiter_id = ?
+          AND (${
+            status === "Future" ? future : status === "Past" ? past : pending
+          })`,
         [user.id]
       );
+      //cut iso date
       let resultsArray = [...results[0]];
       resultsArray.forEach((event) => {
         event.e_date = cutIsoDate(event.e_date);
       });
+      //send response
       return res.status(200).json({
         message: "Events fetched successfully",
         succeed: true,
         data: resultsArray,
       });
     } else {
+      //if user is a company
+      //check if status is valid
+      if (status !== "Future" && status !== "Past") {
+        return res
+          .status(500)
+          .json({ message: "Invalid status", succeed: false });
+      }
+      //created a query for each status
       const future = `events.e_date > '${getCurrentDate()}' OR events.e_date = '${getCurrentDate()}' AND events.e_time >' ${getCurrentTime()}'`;
       const past = `e_date < '${getCurrentDate()}' OR e_date = '${getCurrentDate()}' AND e_time < '${getCurrentTime()}'`;
-
+      //run query
       let results = await pool.query(
         `SELECT * FROM events WHERE company_id = ? AND ${
           status === "Future" ? future : past
         }`,
         [user.id]
       );
+      //cut iso date
       let resultsArray = [...results[0]];
 
       resultsArray.forEach((event) => {
         event.e_date = cutIsoDate(event.e_date);
       });
-      console.log("resultsArray: ", resultsArray);
-
+      //send response
       return res.status(200).json({
         message: "Events fetched successfully",
         succeed: true,
@@ -133,8 +142,9 @@ async function getSoonEvents(req, res) {
       });
     }
   } catch (err) {
+    //log error
     console.log(err);
-
+    //send error
     return res.status(500).json({
       message: "Error fetching data from the database",
       succeed: false,
