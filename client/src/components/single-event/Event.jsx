@@ -12,9 +12,9 @@ const Event = ({eventInfo}) => {
   if (isWaiter) {
       return (
           <div className="waiter-event event-details">
-        <CancelButton/>
+        <CancelButton eventID={eventInfo.id}/>
         <EventDetails eventInfo={eventInfo}/>
-        <SendRequestButton/>
+        <SendRequestButton eventID={eventInfo.id}/>
       </div>
     );
 } 
@@ -22,8 +22,8 @@ const Event = ({eventInfo}) => {
   else {
     return (
       <div className="manager-event event-details">
-        <DeleteButton id={eventInfo.id}/>
-        <EventDetails />
+        <DeleteButton eventID={eventInfo.id}/>
+        <EventDetails eventInfo={eventInfo}/>
       </div>
     );
   }
