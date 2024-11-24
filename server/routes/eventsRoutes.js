@@ -316,9 +316,10 @@ async function deleteEvent(req, res) {
   let connection;
 
   try {
-    const isAwaiter = req.header("isAwaiter") === "true";
+    const user = await extractingUserDetails(req.headers["authorization"]);
+    const isAwaiter = user.isAwaiter;
     const event = req.body;
-
+    const company_id = user.id;
     if (!event.event_id) {
       return res.status(401).send({ message: "Unauthorized", succeed: false });
     }
@@ -331,13 +332,22 @@ async function deleteEvent(req, res) {
     connection = await pool.getConnection();
 
     await connection.beginTransaction();
-    let company_id = await connection.query(
-      `SELECT id FROM companies WHERE email = ? LIMIT 1`,
-      [userEmail]
+    let results = await connection.query(
+      `SELECT id FROM events WHERE id = ? AND company_id = ?`,
+      [event.event_id, company_id]
     );
-
-    company_id = company_id[0][0].id;
-
+    if (results[0].length === 0) {
+      return res.status(401).send({
+        message: "There is no event with this id",
+        succeed: false,
+      });
+    }
+    if (results[0][0].status === "Canceled") {
+      return res.status(401).send({
+        message: "This event is already canceled",
+        succeed: false,
+      });
+    }
     await connection.query(
       `UPDATE events SET status = 'Canceled' WHERE id = ? AND company_id = ?`,
       [event.event_id, company_id]
