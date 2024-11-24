@@ -55,21 +55,59 @@ function addHoursToDateAndTime(date, time, hoursToAdd) {
 function compareDates(date1, condition, date2) {
   const d1 = new Date(date1);
   const d2 = new Date(date2);
+
   switch (condition) {
     case "<":
-      return d1 < d2;
+      return d1.getTime() < d2.getTime();
     case ">":
-      return d1 > d2;
+      return d1.getTime() > d2.getTime();
     case "<=":
-      return d1 <= d2;
+      return d1.getTime() <= d2.getTime();
     case ">=":
-      return d1 >= d2;
+      return d1.getTime() >= d2.getTime();
     case "=":
-      return d1 === d2;
+      return d1.getTime() === d2.getTime();
     default:
-      false;
+      return false;
   }
 }
+//compare times
+function compareTimes(time1, condition, time2) {
+  const timeToSeconds = (time) => {
+    const [hours, minutes, seconds] = time.split(":").map(Number);
+    return hours * 3600 + minutes * 60 + (seconds || 0); // אם אין שניות, נוסיף 0
+  };
+
+  const t1 = timeToSeconds(time1);
+  const t2 = timeToSeconds(time2);
+
+  switch (condition) {
+    case "<":
+      return t1 < t2;
+    case ">":
+      return t1 > t2;
+    case "<=":
+      return t1 <= t2;
+    case ">=":
+      return t1 >= t2;
+    case "=":
+      return t1 === t2;
+    default:
+      return false;
+  }
+}
+
+//check if date is valid
+function isValidDate(dateString) {
+  const date = new Date(dateString);
+  return !isNaN(date.getTime());
+}
+//check if time is valid
+function isValidTime(timeString) {
+  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+  return timeRegex.test(timeString);
+}
+
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -270,6 +308,9 @@ export {
   cutIsoDate,
   addHoursToDateAndTime,
   compareDates,
+  compareTimes,
+  isValidDate,
+  isValidTime,
   sqlQueryInsert,
   sqlQuerySelect,
   sqlQueryDelete,
