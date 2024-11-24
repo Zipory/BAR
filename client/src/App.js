@@ -9,7 +9,6 @@ import Managerdashboard from "./components/Managerdashbord.jsx";
 import WaiterDashboard from "./components/WaiterDashboard.jsx";
 import "./App.css";
 import { CheckToken } from "./components/entry/CheckToken.js";
-import TokenTest from "./components/extra/tokenTest.jsx";
 import GetUserInfo from "./components/entry/GetUserInfo.jsx";
 import FirstNav from "./components/entry/FirstNav.jsx";
 import Logout from "./components/entry/Logout.jsx";
@@ -80,7 +79,6 @@ function App() {
           </userInfo.Provider>
         </typeOfUser.Provider>
       </main>
-
       <footer>
         <Footer />
       </footer>

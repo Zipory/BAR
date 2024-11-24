@@ -46,8 +46,6 @@ const Newevent = ({ setShowModal, eventStatus }) => {
         onChange={handleForm}
         onSubmit={sendForm}
       >
-        {/* date, time, len, street, suite, description, waiters_sum, payment, is_global, has sleep */}
-        {/* TODO: check that the date dont pass */}
         <Calendar setDate={setDate} />
         <input name="date" type="date" disabled value={date} required />
         <label htmlFor="start-time">שעת התחלה:</label>
@@ -60,11 +58,6 @@ const Newevent = ({ setShowModal, eventStatus }) => {
           step={0.5}
           required
         />
-        {/* <select name="city" type="select" placeholder="city" required >
-        {<GetCity city="בית שמש"/>}
-        </select>
-        <input name="street" type="text" placeholder="street" required />
-        {<Getstreet city={"בית שמש"} street={"יגאל"}/>} */}
         <LocatinInputs />
         <input name="suite" type="text" placeholder="מספר בית" required />
         <textarea
