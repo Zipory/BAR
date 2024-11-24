@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FetchToken } from "../Fetch";
 import { getToken } from "../entry/CheckToken";
-import EventDetails from "../EventDetails";
 import Event from "../single-event/Event";
 
 /**getting future events that connect to the user. */
@@ -34,7 +33,6 @@ const ToggledComponent = ({ events }) => {
     <div>
       {events.map((val, indx) => (
         <li className="li-event" event={val[0]} key={indx}>
-          {/* event: <EventDetails eventInfo={val} /> */}
           <Event eventInfo={val} />
         </li>
       ))}

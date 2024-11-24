@@ -5,6 +5,7 @@ import { getToken } from "../entry/CheckToken";
 import CancelButton from "./CancelButton";
 import SendRequestButton from "./SendRequestButton";
 import DeleteButton from "./DeleteButton";
+import GetRequests from "../manager/request/GetRequests";
 
 const Event = ({eventInfo}) => {
   let [token, isWaiter] = getToken();
@@ -24,6 +25,7 @@ const Event = ({eventInfo}) => {
       <div className="manager-event event-details">
         <DeleteButton eventID={eventInfo.id}/>
         <EventDetails eventInfo={eventInfo}/>
+        <GetRequests eventID={eventInfo.id}/>
       </div>
     );
   }
