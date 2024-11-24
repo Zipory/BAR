@@ -15,7 +15,7 @@ const ManagerDashboard = () => {
   // const serverUrl = `http://localhost:4000/events/my-events/${status}`;
   const [showModal, setShowModal] = useState(false);
   const divRef = useRef(null);
-  
+
   // check that the user is event-manager.
   const navigate = useNavigate();
   let isAwaiter2 = JSON.parse(window.localStorage.getItem("isWaiter"));
@@ -57,15 +57,19 @@ const ManagerDashboard = () => {
       {/* <div className="meter" dir="ltr">
         <div className="inner-meter">4 / 6</div>
       </div> */}
-   
-        {/* ----------------------new way to see the events---------------------------- */}
-        <section><GetAllFutureEvents/></section>
-        <section><GetMyFutureEvents/></section>
-        <section><GetMyPastEvents/></section>
+
+      {/* ----------------------new way to see the events---------------------------- */}
+      <section>
+        <GetAllFutureEvents />
+      </section>
+      <section>
+        <GetMyFutureEvents />
+      </section>
+      <section>
+        <GetMyPastEvents />
+      </section>
     </div>
   );
 };
 
 export default ManagerDashboard;
-
-

@@ -3,6 +3,7 @@ import React from "react";
 const EventDetails = ({ eventInfo, company }) => {
   return (
     <div className="">
+      <h2><strong>{eventInfo.company_name}</strong></h2>
       <h2>פרטי האירוע</h2>
       <p>
         <strong>תאור האירוע:</strong>

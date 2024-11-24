@@ -271,7 +271,7 @@ export async function FetchDelete(url, email, id, token) {
 export async function FetchDD(url, data, token) {
   console.log("welcom to FetchDD");
   console.log(29, "url:", url);
-  console.log(28, "data:", JSON.stringify(data), typeof data);
+  console.log(28, "data:", JSON.stringify(data));
   console.log("token:", token[0]);
 
   fetch(url, {
