@@ -8,7 +8,7 @@ import Futureevents from "./manager/Futureevents.jsx";
 import { userInfo } from "../App";
 import Newevent from "./manager/Newevent.jsx";
 import { useNavigate } from "react-router-dom";
-import GetRequests from "./manager/request/GetRequests.jsx";
+// import GetRequests from "./manager/request/GetRequests.jsx";
 const ManagerDashboard = () => {
   // const [user, setUser] = useContext(userInfo);
   // let status = "aproved";

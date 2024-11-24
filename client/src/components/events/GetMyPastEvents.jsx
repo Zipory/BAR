@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { FetchToken } from '../Fetch';
 import { getToken } from '../entry/CheckToken';
-import EventDetails from '../EventDetails';
 import Event from '../single-event/Event';
 
 /**getting past events that connect to the user. */

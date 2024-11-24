@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react'
 import { FetchToken } from '../Fetch';
 import { getToken } from '../entry/CheckToken';
-import EventDetails from '../EventDetails';
 import Event from '../single-event/Event';
 
 /** Getting the events that the waiter is pending for. */

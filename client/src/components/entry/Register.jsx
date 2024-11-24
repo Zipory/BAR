@@ -5,7 +5,6 @@ import { typeOfUser } from "../../App";
 import { FetchPost } from "../Fetch";
 import { useNavigate } from "react-router-dom";
 import useUserEffect from "../../hooks/useUserEffect";
-import About from "../home-page/About";
 
 const postUrl = "http://localhost:4000/register";
 

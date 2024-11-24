@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { userInfo } from "../../App";
 import { FetchIncludeHeader } from "../Fetch";
-import EventDetails from "../EventDetails";
+// import EventDetails from "../EventDetails";
 import { typeOfUser } from "../../App";
 import { getToken } from "../entry/CheckToken";
+import Event from "../single-event/Event";
 
 // need to be deleted!!!!!!!!!!!!!
 const Futureevents = () => {
@@ -36,7 +37,7 @@ const Futureevents = () => {
         {/* <progress value="37" max="100"></progress> */}
         {/* <meter value={events.numberOfWaiters} max={events.numberOfWaitersNeeded}>{percentage(events[0])}%</meter> */}
         {events.succeed && events.map((event, index) => (
-        <li>אירוע: <EventDetails/></li>
+        <li>אירוע: <Event/></li>
       ))}
       </ul>
     </div>
