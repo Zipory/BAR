@@ -321,7 +321,9 @@ async function deleteEvent(req, res) {
     const event = req.body;
     const company_id = user.id;
     if (!event.event_id) {
-      return res.status(401).send({ message: "Unauthorized", succeed: false });
+      return res
+        .status(401)
+        .send({ message: "Please enter event id", succeed: false });
     }
     if (isAwaiter) {
       return res.status(401).send({
@@ -333,7 +335,7 @@ async function deleteEvent(req, res) {
 
     await connection.beginTransaction();
     let results = await connection.query(
-      `SELECT id FROM events WHERE id = ? AND company_id = ?`,
+      `SELECT id,status FROM events WHERE id = ? AND company_id = ?`,
       [event.event_id, company_id]
     );
     if (results[0].length === 0) {
@@ -342,6 +344,7 @@ async function deleteEvent(req, res) {
         succeed: false,
       });
     }
+
     if (results[0][0].status === "Canceled") {
       return res.status(401).send({
         message: "This event is already canceled",
@@ -366,7 +369,9 @@ async function deleteEvent(req, res) {
     if (connection) {
       await connection.rollback();
     }
-    res.status(500).json({ message: "Error deleting event", succeed: false });
+    res
+      .status(500)
+      .json({ message: "Error deleting event" + " " + error, succeed: false });
   } finally {
     if (connection) {
       connection.release();
