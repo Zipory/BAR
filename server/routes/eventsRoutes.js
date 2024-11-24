@@ -316,11 +316,10 @@ async function deleteEvent(req, res) {
   let connection;
 
   try {
-    const userEmail = req.header("email");
     const isAwaiter = req.header("isAwaiter") === "true";
     const event = req.body;
 
-    if (!(userEmail && event.event_id)) {
+    if (!event.event_id) {
       return res.status(401).send({ message: "Unauthorized", succeed: false });
     }
     if (isAwaiter) {
