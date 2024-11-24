@@ -7,6 +7,8 @@ import {
   getCurrentDate,
   getCurrentTime,
   cutIsoDate,
+  isValidDate,
+  isValidTime,
   capitalizeFirstLetter,
   sqlQueryInsert,
   sqlQuerySelect,
@@ -15,6 +17,8 @@ import {
   selectCompanies,
   authenticateToken,
   extractingUserDetails,
+  compareDates,
+  compareTimes,
 } from "../sources/function.js";
 
 import {
@@ -154,217 +158,158 @@ async function getSoonEvents(req, res) {
 }
 router.get("/my-events/:status", authenticateToken, getSoonEvents);
 
-// router.get("/:email/:status", authenticateToken, (req, res) => {
-//   //user details
+async function newEvent(req, res) {
+  try {
+    const user = await extractingUserDetails(req.headers["authorization"]);
+    const isAwaiter = user.isAwaiter;
+    const event = req.body;
+    const approved_waiters = 0;
+    const status = "Active";
+    const eventArray = [
+      user.id, //company_id
+      event.date,
+      event.time,
+      Number(event.e_duration),
+      event.location,
+      event.suite,
+      event.description,
+      Number(event.waiters_amount),
+      Number(event.salary),
+      event.is_global ? true : false,
+      event.has_sleep ? true : false,
+      approved_waiters,
+      status,
+    ];
 
-//   const isAwaiter = req.header("isAwaiter") === "true";
-//   const userEmail = req.params.email;
-//   const status = capitalizeFirstLetter(req.params.status);
-//   let stage = status === "Pending" ? "Pending" : "Approved";
-//   // console.log("isAwaiter: ", isAwaiter);
-
-//   // console.log("userEmail: ", userEmail);
-
-//   //if user is logged
-
-//   //if user is an awaiter
-//   if (isAwaiter) {
-//     sqlQuerySelect(
-//       "id",
-//       "waiters",
-//       ["email"],
-//       "=",
-//       [userEmail],
-//       0,
-//       (err, results) => {
-//         if (err) {
-//           res.status(500).json({
-//             message: "Error finding waiter ID inside database",
-//             succeed: false,
-//           });
-//         } else {
-//           connection.query(
-//             `SELECT events.*
-
-//             FROM requests
-//             JOIN events ON requests.event_id = events.id
-//             WHERE requests.waiter_id =?
-//               AND requests.status =? ${
-//                 status === "Future"
-//                   ? `AND events.e_date >=${getCurrentDate()}`
-//                   : status === "Past"
-//                   ? `AND events.e_date <${getCurrentDate()}`
-//                   : ""
-//               };`,
-//             [results[0].id, stage],
-//             (err, results) => {
-//               if (err) {
-//                 res.status(500).json({
-//                   message: "Error finding waiter events inside database",
-//                   succeed: false,
-//                 });
-//               } else {
-//                 let resultsArray = [...results];
-
-//                 // cut iso date
-//                 resultsArray.forEach((event) => {
-//                   event.e_date = cutIsoDate(event.e_date);
-//                 });
-
-//                 res.status(200).json({
-//                   message: "Events fetched successfully",
-//                   succeed: true,
-//                   data: resultsArray,
-//                 });
-//               }
-//             }
-//           );
-//         }
-//       }
-//     );
-//   } else {
-//     // if user is an company
-//     //find company id
-//     sqlQuerySelect(
-//       "id",
-//       "companies",
-//       ["email"],
-//       "=",
-//       [userEmail],
-//       0,
-//       (err, results) => {
-//         if (err) {
-//           res.status(500).json({
-//             message: "Error finding employer ID inside database",
-//             succeed: false,
-//           });
-//         } else if (results.length > 0) {
-//           console.log("results[0].id: ", results[0].id);
-
-//           //find events of company with company id
-//           sqlQuerySelect(
-//             "*",
-//             "events",
-//             ["company_id"],
-//             "=",
-//             [results[0].id],
-//             0,
-//             (err, results) => {
-//               if (err) {
-//                 res.status(500).json({
-//                   message: "Error finding events inside database",
-//                   succeed: false,
-//                 });
-//               } else {
-//                 let resultsArray = [...results];
-
-//                 // cut iso date
-//                 resultsArray.forEach((event) => {
-//                   event.e_date = cutIsoDate(event.e_date);
-//                 });
-//                 if (status === "Future") {
-//                   resultsArray = resultsArray.filter((event) => {
-//                     return event.e_date >= getCurrentDate();
-//                   });
-//                 } else {
-//                   resultsArray = resultsArray.filter((event) => {
-//                     return event.e_date < getCurrentDate();
-//                   });
-//                 }
-
-//                 res.status(200).json({
-//                   message: "Events found successfully",
-//                   succeed: true,
-//                   data: resultsArray,
-//                 });
-//               }
-//             }
-//           );
-//         } else {
-//           res.status(200).json({
-//             message: "There is no company with this email",
-//             succeed: false,
-//           });
-//         }
-//       }
-//     );
-//   }
-// });
-
-// async function newEvent(req, res) {
-//   const user = await extractingUserDetails(req.headers["authorization"]);
-//   const isAwaiter = user.isAwaiter;
-//   const event = req.body;
-
-//   if (!isAwaiter) {
-//     return res.status(401).send({
-//       message: "You are not allowed to add events",
-//       succeed: false,
-//     });
-//     if (event.event_id) {
-//     }
-//   }
-// }
-
-// router.post("/new-event", authenticateToken, newEvent);
-
-router.post("/new-event", authenticateToken, (req, res) => {
-  //   console.log(req.body);
-  console.log("req.body: ", req.body);
-
-  const newEvent = req.body;
-  const userEmail = req.header("email");
-  const eventsArray = [
-    newEvent.date,
-    newEvent.time,
-    Number(newEvent.e_duration),
-    newEvent.location,
-    newEvent.suite,
-    newEvent.description,
-    Number(newEvent.waiters_amount),
-    Number(newEvent.salary),
-    newEvent.is_global,
-    newEvent.has_sleep,
-  ];
-  console.log("email: ", userEmail);
-
-  sqlQuerySelect(
-    "id",
-    "companies",
-    ["email"],
-    "=",
-    [userEmail],
-    0,
-    (err, results) => {
-      if (err) {
-        res.status(500).json({
-          message: "Error finding employer ID inside database",
-          succeed: false,
-        });
-      } else if (results.length > 0) {
-        //   res.status(200).send(JSON.stringify(results[0].id));
-        eventsArray.unshift(Number(results[0].id));
-        sqlQueryInsert("events", events_Fields, eventsArray, (err, results) => {
-          if (err) {
-            res
-              .status(500)
-              .json({ message: "Error creating event", succeed: false });
-          } else {
-            res.status(200).json({
-              message: "Event created successfully",
-              succeed: true,
-            });
-          }
-        });
-      } else {
-        res.status(200).json({
-          message: "There is no company with this email",
-          succeed: false,
-        });
-      }
+    if (isAwaiter) {
+      return res.status(401).send({
+        message: "You are not allowed to add events",
+        succeed: false,
+      });
     }
-  );
-});
+    if (
+      !event.date ||
+      !event.time ||
+      !Number(event.e_duration) ||
+      !event.location ||
+      !event.suite ||
+      !event.description ||
+      !Number(event.waiters_amount) ||
+      !Number(event.salary)
+    ) {
+      return res.status(400).send({
+        message: "All fields are required",
+        succeed: false,
+      });
+    }
+    //TODO
+    if (!(isValidDate(event.date) && isValidTime(event.time))) {
+      return res.status(400).send({
+        message: "Invalid date or time format",
+        succeed: false,
+      });
+    }
+    if (
+      !(
+        compareDates(event.date, ">", getCurrentDate()) ||
+        (compareDates(event.date, "=", getCurrentDate()) &&
+          compareTimes(event.time, ">", getCurrentTime()))
+      )
+    ) {
+      return res.status(400).send({
+        message: "Date must be in the future",
+        succeed: false,
+      });
+    }
+    let results = await pool.query(
+      `SELECT * FROM events WHERE company_id = ? AND e_date = ? AND e_time = ? AND location = ? AND suite = ? `,
+      [user.id, event.date, event.time, event.location, event.suite]
+    );
+    if (results[0].length > 0) {
+      return res.status(400).send({
+        message: `Event already exists at ${event.date} ${event.time} in ${event.location} ${event.suite}`,
+        succeed: false,
+      });
+    }
+    await pool.query(
+      `INSERT INTO events 
+       (company_id, e_date, e_time, e_duration, location, suite, event_description, waiters_amount, salary, is_global, has_sleep, approved_waiters, status) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      eventArray
+    );
+
+    return res.status(200).send({
+      message: "Event created successfully",
+      succeed: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Error fetching data from the database",
+      succeed: false,
+    });
+  }
+}
+
+router.post("/new-event", authenticateToken, newEvent);
+
+// router.post("/new-event", authenticateToken, (req, res) => {
+//   //   console.log(req.body);
+//   console.log("req.body: ", req.body);
+
+//   const newEvent = req.body;
+//   const userEmail = req.header("email");
+//   const eventsArray = [
+//     newEvent.date,
+//     newEvent.time,
+//     Number(newEvent.e_duration),
+//     newEvent.location,
+//     newEvent.suite,
+//     newEvent.description,
+//     Number(newEvent.waiters_amount),
+//     Number(newEvent.salary),
+//     newEvent.is_global,
+//     newEvent.has_sleep,
+//   ];
+//   console.log("email: ", userEmail);
+
+//   sqlQuerySelect(
+//     "id",
+//     "companies",
+//     ["email"],
+//     "=",
+//     [userEmail],
+//     0,
+//     (err, results) => {
+//       if (err) {
+//         res.status(500).json({
+//           message: "Error finding employer ID inside database",
+//           succeed: false,
+//         });
+//       } else if (results.length > 0) {
+//         //   res.status(200).send(JSON.stringify(results[0].id));
+//         eventsArray.unshift(Number(results[0].id));
+//         sqlQueryInsert("events", events_Fields, eventsArray, (err, results) => {
+//           if (err) {
+//             res
+//               .status(500)
+//               .json({ message: "Error creating event", succeed: false });
+//           } else {
+//             res.status(200).json({
+//               message: "Event created successfully",
+//               succeed: true,
+//             });
+//           }
+//         });
+//       } else {
+//         res.status(200).json({
+//           message: "There is no company with this email",
+//           succeed: false,
+//         });
+//       }
+//     }
+//   );
+// });
 
 /**---------------------------------------------------------- */
 async function deleteEvent(req, res) {
