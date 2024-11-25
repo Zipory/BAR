@@ -6,6 +6,7 @@ import {
   getCurrentTime,
   addHoursToDateAndTime,
   compareDates,
+  compareTimes,
   cutIsoDate,
   extractingUserDetails,
   authenticateToken,
@@ -202,5 +203,133 @@ async function newRating(req, res) {
 }
 
 router.post("/new-rating", authenticateToken, newRating);
+
+//check if the user can rate the request
+async function isItPossibleToRate(req, res) {
+  try {
+    //extract user details
+    const user = await extractingUserDetails(req.headers["authorization"]);
+    const event = req.body;
+    //check if the user is an awaiter\
+    console.log(user);
+
+    if (user.isAwaiter) {
+      if (!Number(event.event_id)) {
+        return res.status(400).json({
+          message: "Please provide an event_id",
+          succeed: false,
+        });
+      }
+      let results = await pool.query(
+        `SELECT e_date,e_time,e_duration FROM events WHERE id = ? `,
+        [event.event_id]
+      );
+      if (results[0].length === 0) {
+        return res.status(401).json({
+          message: "This event is not found",
+          succeed: false,
+        });
+      }
+      //get the date and time of the event
+
+      const e_date = cutIsoDate(results[0][0].e_date);
+      const e_time = results[0][0].e_time;
+      const e_duration = Math.ceil(results[0][0].e_duration);
+      const { updatedDate, updatedTime } = addHoursToDateAndTime(
+        e_date,
+        e_time,
+        e_duration
+      );
+
+      //check if the time to rate the request has come
+      if (
+        !compareDates(updatedDate, "<", getCurrentDate()) &&
+        !compareDates(updatedDate, "=", getCurrentDate()) &&
+        updatedTime < getCurrentTime()
+      ) {
+        return res.status(401).json({
+          message: "You can't rate this request yet, please try again later",
+          succeed: false,
+        });
+      }
+      //select the request
+      results = await pool.query(
+        `SELECT id,status,rating_c FROM requests WHERE waiter_id = ? AND event_id = ? AND status = 'Approved' AND rating_c IS NULL`,
+        [user.id, event.event_id]
+      );
+      if (results[0].length === 0) {
+        return res.status(401).json({
+          message: "This request is not found",
+          succeed: false,
+        });
+      }
+
+      return res.status(200).json({
+        message: "Rating  is possible",
+        succeed: true,
+      });
+    } else {
+      if (!Number(event.event_id) || !Number(event.waiter_id)) {
+        return res.status(400).json({
+          message: "Please provide an event_id AND waiter_id",
+        });
+      }
+      //if the user is a company
+      let results = await pool.query(
+        `SELECT e_date,e_time,e_duration FROM events WHERE id = ? AND company_id = ?`,
+        [event.event_id, user.id]
+      );
+      if (results[0].length === 0) {
+        return res.status(401).json({
+          message: "This event is not found",
+          succeed: false,
+        });
+      }
+      //get the date and time of the event
+      const e_date = cutIsoDate(results[0][0].e_date);
+      const e_time = results[0][0].e_time;
+      const e_duration = Math.ceil(results[0][0].e_duration);
+      const { updatedDate, updatedTime } = addHoursToDateAndTime(
+        e_date,
+        e_time,
+        e_duration
+      );
+      //check if the time to rate the request has come
+      if (
+        !compareDates(updatedDate, "<", getCurrentDate()) &&
+        !compareDates(updatedDate, "=", getCurrentDate()) &&
+        updatedTime < getCurrentTime()
+      ) {
+        return res.status(401).json({
+          message: "You can't rate this request yet, please try again later",
+          succeed: false,
+        });
+      }
+
+      results = await pool.query(
+        `SELECT id,status,rating_c FROM requests WHERE event_id = ? AND waiter_id = ? AND status = 'Approved' AND rating_c IS NULL`,
+        [event.event_id, event.waiter_id]
+      );
+      if (results[0].length === 0) {
+        return res.status(401).json({
+          message: "This request is not found maybe you rate it already ",
+          succeed: false,
+        });
+      }
+
+      return res.status(200).json({
+        message: "Rating  is possible",
+        succeed: true,
+      });
+    }
+  } catch (err) {
+    //return error
+    console.log(err);
+    return res
+      .status(500)
+      .json({ message: "Error fetching rating is possible", succeed: false });
+  }
+}
+router.post("/possible-to-rate", authenticateToken, isItPossibleToRate);
 
 export default router;
