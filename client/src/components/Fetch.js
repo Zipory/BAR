@@ -79,9 +79,9 @@ export async function FetchIncludeHeader(url, email, setState, token) {
 /**----------Fetch post for register/login---------------- */
 export async function FetchPost(url, data, setState, email) {
   console.log("welcom to FetchPost");
-  console.log(28, "data:", data);
-  console.log(29, "url:", url);
-  console.log("email:", email);
+  console.log(82, "data:", data);
+  console.log(83, "url:", url);
+  console.log(84, "email:", data.email);
 
   fetch(url, {
     method: "POST",
@@ -104,8 +104,8 @@ export async function FetchPost(url, data, setState, email) {
       if (json) {
         console.log("json:", json);
         if (setState) {
-          setState(json.data);
-          if (json.data.token) {
+          setState(json.data ?? "nav to login");
+          if (json.data?.token) {
             window.localStorage.setItem("bar", json.data.token);
             window.localStorage.setItem(
               "isWaiter",

@@ -4,7 +4,7 @@ import { getToken } from '../entry/CheckToken';
 import Event from '../single-event/Event';
 
 /**getting past events that connect to the user. */
-const Pastevents = () => {
+const GetMyPastEvents = () => {
     const [events, setEvents] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
     let status = "past";
@@ -41,4 +41,4 @@ const Pastevents = () => {
     );
   };
 
-export default Pastevents
+export default GetMyPastEvents

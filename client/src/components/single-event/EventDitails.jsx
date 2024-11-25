@@ -3,11 +3,12 @@ import React from "react";
 const EventDetails = ({ eventInfo, company }) => {
   return (
     <div className="">
+        <p>ארוע { eventInfo.status === "Canceled" ?"מבוטל" : "קיים "}</p>
       <h2><strong>{eventInfo.company_name}</strong></h2>
-      <h2>פרטי האירוע</h2>
+      <h2>פרטי הארוע</h2>
       <p>
-        <strong>תאור האירוע:</strong>
-        {eventInfo.event_description || "אין תאור לאירוע"}
+        <strong>תאור הארוע: </strong>
+        {eventInfo.event_description || "אין תאור לארוע"}
       </p>
       <p>
         <strong>תאריך:</strong> {eventInfo.e_date}
@@ -16,7 +17,7 @@ const EventDetails = ({ eventInfo, company }) => {
         <strong>זמן התחלה:</strong> {eventInfo.e_time}
       </p>
       <p>
-        <strong>אורך האירוע:</strong> {eventInfo.e_duration} שעות
+        <strong>אורך הארוע:</strong> {eventInfo.e_duration} שעות
       </p>
       <p>
         <strong>מיקום:</strong> {eventInfo.location}, מס' {eventInfo.suite}
