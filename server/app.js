@@ -30,6 +30,7 @@ import {
   waiter_Fields_Select,
   company_Fields_Select,
 } from "./sources/variables.js";
+import { register } from "module";
 dotenv.config();
 // const { log } = require("console");
 // const bcrypt = require("bcrypt");
@@ -132,142 +133,241 @@ async function loginFunction(req, res) {
 app.post("/login", loginFunction);
 
 /**-----------------register----------------- */
-//register
-app.post("/register", (req, res) => {
-  const user = req.body;
-
-  if (!user.isAwaiter) {
-    sqlQuerySelect(
-      "*",
-      "companies",
-      ["email"],
-      "=",
-      [user.email],
-      0,
-      (err, results) => {
-        if (err) {
-          res.status(500).json({
-            message: "Error fetching data from the database",
-            succeed: false,
-          });
-        } else {
-          if (results.length > 0) {
-            res.status(500).json({
-              message: "There is already an account with this details",
-              succeed: false,
-            });
-          } else {
-            sqlQuerySelect(
-              "*",
-              "companies",
-              ["company_name"],
-              "=",
-              [user.company_name],
-              0,
-              (err, results) => {
-                if (err) {
-                  res.status(500).json({
-                    message: "Error fetching data from the database",
-                    succeed: false,
-                  });
-                } else {
-                  if (results.length > 0) {
-                    res.status(500).json({
-                      message: "There is already an account with this details",
-                      succeed: false,
-                    });
-                  } else {
-                    //register employer
-
-                    sqlQueryInsert(
-                      "companies",
-                      company_insert,
-                      [
-                        user.company_name,
-                        user.manager,
-                        user.manager_phone,
-                        user.email,
-                        user.password,
-                        user.about,
-                        "active",
-                      ],
-                      (err, results) => {
-                        if (err) {
-                          res.status(500).json({
-                            message:
-                              "Error inserting employer data into the database",
-                            succeed: false,
-                          });
-                        } else {
-                          res.status(200).json({
-                            message: "Account created successfully",
-                            succeed: true,
-                          });
-                        }
-                      }
-                    );
-                  }
-                }
-              }
-            );
-          }
-        }
+async function registerFunction(req, res) {
+  try {
+    const user = req.body;
+    if (user.isAwaiter) {
+      if (
+        !user.first_name ||
+        !user.last_name ||
+        !user.phone ||
+        !user.birthday ||
+        !user.email ||
+        !user.password ||
+        !user.gender
+      ) {
+        return res.status(500).json({
+          message: "Please enter your details",
+          succeed: false,
+        });
       }
-    );
-  } else {
-    sqlQuerySelect(
-      "*",
-      "waiters",
-      ["email"],
-      "=",
-      [user.email],
-      0,
-      (err, results) => {
-        if (err) {
-          res.status(500).json({
-            message: "Error fetching data from the database",
-            succeed: false,
-          });
-        } else {
-          if (results.length > 0) {
-            res.status(500).json({
-              message: "There is already an account with this details",
-              succeed: false,
-            });
-          } else {
-            sqlQueryInsert(
-              "waiters",
-              waiter_insert,
-              [
-                user.first_name,
-                user.last_name,
-                user.phone,
-                user.birthday,
-                user.email,
-                user.password,
-                user.gender,
-                "active",
-              ],
-              (err, results) => {
-                if (err) {
-                  res.status(500).json({
-                    message: "Error inserting waiter data into the database",
-                    succeed: false,
-                  });
-                } else {
-                  res.status(200).json({
-                    message: "Successfully registered",
-                    succeed: true,
-                  });
-                }
-              }
-            );
-          }
-        }
+
+      let results = await pool.query(
+        `SELECT * FROM waiters WHERE email = ? OR phone = ?`,
+        [user.email, user.phone]
+      );
+      if (results[0].length > 0) {
+        return res.status(500).json({
+          message: "There is already an account with this details",
+          succeed: false,
+        });
       }
-    );
+      await pool.query(
+        `INSERT INTO waiters (first_name, last_name, phone, birthday, email, w_password, gender,avg_rating, status) VALUES (?, ?, ?, ?, ?, ?, ?,?,?);`,
+        [
+          user.first_name,
+          user.last_name,
+          user.phone,
+          user.birthday,
+          user.email,
+          user.password,
+          user.gender,
+          0,
+          "Pending",
+        ]
+      );
+      return res.status(200).json({
+        message: "Account created successfully",
+        succeed: true,
+      });
+    } else {
+      if (
+        !user.company_name ||
+        !user.manager ||
+        !user.manager_phone ||
+        !user.email ||
+        !user.password ||
+        !user.about
+      ) {
+        return res.status(500).json({
+          message: "Please enter your details",
+          succeed: false,
+        });
+      }
+
+      let results = await pool.query(
+        `SELECT * FROM companies WHERE email = ? OR manager_phone = ?`,
+        [user.email, user.manager_phone]
+      );
+      if (results[0].length > 0) {
+        return res.status(500).json({
+          message: "There is already an account with this details",
+          succeed: false,
+        });
+      }
+      await pool.query(
+        `INSERT INTO companies (company_name, manager, manager_phone, email, e_password, about,avg_rating, status) VALUES (?, ?, ?, ?, ?,?, ?, ?);`,
+        [
+          user.company_name,
+          user.manager,
+          user.manager_phone,
+          user.email,
+          user.password,
+          user.about,
+          0,
+          "Pending",
+        ]
+      );
+      return res.status(200).json({
+        message: "Account created successfully",
+        succeed: true,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Error creating account",
+      succeed: false,
+    });
   }
-});
+}
+app.post("/register", registerFunction);
+//register
+// app.post("/register", (req, res) => {
+//   const user = req.body;
+
+//   if (!user.isAwaiter) {
+//     sqlQuerySelect(
+//       "*",
+//       "companies",
+//       ["email"],
+//       "=",
+//       [user.email],
+//       0,
+//       (err, results) => {
+//         if (err) {
+//           res.status(500).json({
+//             message: "Error fetching data from the database",
+//             succeed: false,
+//           });
+//         } else {
+//           if (results.length > 0) {
+//             res.status(500).json({
+//               message: "There is already an account with this details",
+//               succeed: false,
+//             });
+//           } else {
+//             sqlQuerySelect(
+//               "*",
+//               "companies",
+//               ["company_name"],
+//               "=",
+//               [user.company_name],
+//               0,
+//               (err, results) => {
+//                 if (err) {
+//                   res.status(500).json({
+//                     message: "Error fetching data from the database",
+//                     succeed: false,
+//                   });
+//                 } else {
+//                   if (results.length > 0) {
+//                     res.status(500).json({
+//                       message: "There is already an account with this details",
+//                       succeed: false,
+//                     });
+//                   } else {
+//                     //register employer
+
+//                     sqlQueryInsert(
+//                       "companies",
+//                       company_insert,
+//                       [
+//                         user.company_name,
+//                         user.manager,
+//                         user.manager_phone,
+//                         user.email,
+//                         user.password,
+//                         user.about,
+//                         "active",
+//                       ],
+//                       (err, results) => {
+//                         if (err) {
+//                           res.status(500).json({
+//                             message:
+//                               "Error inserting employer data into the database",
+//                             succeed: false,
+//                           });
+//                         } else {
+//                           res.status(200).json({
+//                             message: "Account created successfully",
+//                             succeed: true,
+//                           });
+//                         }
+//                       }
+//                     );
+//                   }
+//                 }
+//               }
+//             );
+//           }
+//         }
+//       }
+//     );
+//   } else {
+//     sqlQuerySelect(
+//       "*",
+//       "waiters",
+//       ["email"],
+//       "=",
+//       [user.email],
+//       0,
+//       (err, results) => {
+//         if (err) {
+//           res.status(500).json({
+//             message: "Error fetching data from the database",
+//             succeed: false,
+//           });
+//         } else {
+//           if (results.length > 0) {
+//             res.status(500).json({
+//               message: "There is already an account with this details",
+//               succeed: false,
+//             });
+//           } else {
+//             sqlQueryInsert(
+//               "waiters",
+//               waiter_insert,
+//               [
+//                 user.first_name,
+//                 user.last_name,
+//                 user.phone,
+//                 user.birthday,
+//                 user.email,
+//                 user.password,
+//                 user.gender,
+//                 "active",
+//               ],
+//               (err, results) => {
+//                 if (err) {
+//                   res.status(500).json({
+//                     message: "Error inserting waiter data into the database",
+//                     succeed: false,
+//                   });
+//                 } else {
+//                   res.status(200).json({
+//                     message: "Successfully registered",
+//                     succeed: true,
+//                   });
+//                 }
+//               }
+//             );
+//           }
+//         }
+//       }
+//     );
+//   }
+// });
 app.get("/protected", authenticateToken, (req, res) => {
   sendMail(
     "beni0548472300@gmail.com",
