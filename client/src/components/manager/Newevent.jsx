@@ -33,7 +33,6 @@ const Newevent = ({ setShowModal, eventStatus }) => {
         apiUrl,
         eventInfo,
         setSendOk,
-        user["email"],
         getToken()
       ).then(() => setShowModal(false));
     }

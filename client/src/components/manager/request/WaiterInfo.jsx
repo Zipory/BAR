@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RatingComponent from "../../rating/SetRating";
+import { getToken } from "../../entry/CheckToken";
+import { FetchNewEvent, FetchPP } from "../../Fetch";
 
 const WaiterInfo = ({info, eventID}) => {
     const formatDate = (dateString) => {
@@ -7,6 +9,17 @@ const WaiterInfo = ({info, eventID}) => {
         return new Date(dateString).toLocaleDateString(undefined, options);
       };
 
+      const [possible, setPossible] = useState(false);
+      let [token, isWaiter] = getToken();
+    
+      const posibleToRateApi = "http://localhost:4000/rating/possible-to-rate";
+        let myInfo = {
+          event_id: eventID,
+          waiter_id: info.id,
+        };
+        useEffect(() => {
+         FetchNewEvent(posibleToRateApi, myInfo, setPossible, getToken());
+        }, []);
   return (
     <div>
       <p>
@@ -25,12 +38,12 @@ const WaiterInfo = ({info, eventID}) => {
         <strong>מגדר:</strong> {info.gender}
       </p>
       <p>
-        <strong>ניקוד:</strong> {info.avg_rating ?? "אין דרוג"}
+        <strong>ממוצע ניקוד:</strong> {info.avg_rating ?? "אין דרוג"}
       </p>
-        <RatingComponent 
+       {possible && <RatingComponent 
         name={ info.first_name + " " +info.last_name} 
         eventID={eventID} 
-        waiterID={info.id} />
+        waiterID={info.id} />}
     </div>
   );
 };
