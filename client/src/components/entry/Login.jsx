@@ -5,9 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { typeOfUser } from "../../App";
 import { FetchPost } from "../Fetch";
 import { userInfo } from "../../App";
-import useUserEffect from "../../hooks/useUserEffect";
 const serverUrl = "http://localhost:4000/login";
-let demo_login_email = "roi@joyhall.com";
+
 /*Components that show the login page, and handle with it. */
 function Login() {
   const [email, setEmail] = useState("");
@@ -15,7 +14,6 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
   const [user, setUser] = useContext(userInfo);
-  // let title = isAwaiter ? "מלצר": "מנהל אירועים";
   const [title, setTitle] = useState(isAwaiter ? "מלצר" : "מנהל אירועים");
   const navagetTo = {manager:  "/events-manager", waiter: "/waiter"};
   let navigate = useNavigate();
@@ -27,7 +25,14 @@ function Login() {
   };
   
   /*A good way to use navaget in if statement. */
-  useUserEffect(user, navigate, navagetTo);
+  useEffect(() => {
+    if (user !== null && user !== false) {
+      isAwaiter === true ?  navigate(navagetTo.waiter) :  navigate(navagetTo.manager);
+      // This effect will run only when 'user' get value.
+    }
+  }, [user]);
+
+
   return (
     <div className="auth-container">
       <h2>התחברות כ{title}</h2>

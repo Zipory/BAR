@@ -1,0 +1,29 @@
+.meter {
+    height: 30px;
+    width: 200px; /* Outer meter width */
+    background-color: gainsboro;
+    border: 1px solid gray;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .inner-meter {
+    height: 100%; /* Full height of the meter */
+    width: 0; /* Dynamic width updated via props */
+    background-color: green;
+    transition: width 0.3s ease;
+  }
+  
+  .meter-label {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 0;
+    left: 0;
+    color: black;
+    font-weight: bold;
+    line-height: 30px; /* Center label vertically */
+    pointer-events: none; /* Prevent interactions with the label */
+  }
+  

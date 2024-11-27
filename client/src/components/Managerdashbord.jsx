@@ -8,19 +8,15 @@ import Futureevents from "./manager/Futureevents.jsx";
 import { userInfo } from "../App";
 import Newevent from "./manager/Newevent.jsx";
 import { useNavigate } from "react-router-dom";
-// import GetRequests from "./manager/request/GetRequests.jsx";
 const ManagerDashboard = () => {
-  // const [user, setUser] = useContext(userInfo);
-  // let status = "aproved";
-  // const serverUrl = `http://localhost:4000/events/my-events/${status}`;
   const [showModal, setShowModal] = useState(false);
   const divRef = useRef(null);
 
   // check that the user is event-manager.
   const navigate = useNavigate();
-  let isAwaiter2 = JSON.parse(window.localStorage.getItem("isWaiter"));
+  let isWaiter = JSON.parse(window.localStorage.getItem("isWaiter"));
   useEffect(() => {
-    if (isAwaiter2) {
+    if (isWaiter) {
       console.log("a waiter");
       navigate("/home");
     }

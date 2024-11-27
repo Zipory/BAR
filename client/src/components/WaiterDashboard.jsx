@@ -8,10 +8,10 @@ import GetMyFutureEvents from "./events/GetMyFutureEvents";
 import GetMyPastEvents from "./events/GetMyPastEvents";
 
 const WaiterDashboard = () => {
-  let isAwaiter2 = JSON.parse(window.localStorage.getItem("isWaiter"));
+  let isWaiter = JSON.parse(window.localStorage.getItem("isWaiter"));
   const navigate = useNavigate();
   useEffect(() => {
-    if (!isAwaiter2) {
+    if (!isWaiter) {
       console.log("not a waiter");
       navigate("/home");
     }

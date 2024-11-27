@@ -21,7 +21,6 @@ const CitySelector = (props) => {
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    // console.log(value);
 
     if (value) {
       const newFilteredOptions = options.filter((option) =>
@@ -39,6 +38,7 @@ const CitySelector = (props) => {
     setInputValue(option); // Set input to the selected option
     setShowDropdown(false); // Hide dropdown
     props.setCity(option);
+    props.eventInfo.city = option;
   };
 
   return (

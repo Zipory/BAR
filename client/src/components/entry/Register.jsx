@@ -1,15 +1,14 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import "../../style/Login.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { typeOfUser } from "../../App";
 import { FetchPost } from "../Fetch";
 import { useNavigate } from "react-router-dom";
-import useUserEffect from "../../hooks/useUserEffect";
 
 const postUrl = "http://localhost:4000/register";
 
 /*function to create a new event-manager or a waiter. */
-function Register(props) {
+function Register() {
   /**general ref's*/
   let email = useRef("");
   let password = useRef("");
@@ -32,10 +31,17 @@ function Register(props) {
   const [singupOk, setSingupOk] = useState(false);
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
   const [title, setTitle] = useState(isAwaiter ? "מלצר" : "מנהל אירועים");
-  /** */
+
   /* nav to login after singup. */
   let navigate = useNavigate();
-  useUserEffect(singupOk, navigate, "/login");
+  useEffect(() => {
+    if (singupOk !== null && singupOk !== false) {
+      navigate("/login");
+    }
+  }, [singupOk]);
+
+
+
 
   /*for events-manager: create the post request, and set singup  */
   const managerRegister = (event) => {
@@ -131,6 +137,7 @@ function Register(props) {
           required
         />
         {/* --------- gender -------------- */}
+        {isAwaiter && (
         <div className="gender">
           <label htmlFor="gender">זכר</label>
           <input
@@ -160,6 +167,7 @@ function Register(props) {
             required
           />
         </div>
+         )}
         <div className="password-class">
           <input
             type={showPassword ? "text" : "password"}
@@ -175,7 +183,6 @@ function Register(props) {
           </div>
         </div>
         <div className="password-class">
-          {" "}
           <input
             type={showCorenfinPassword ? "text" : "password"}
             placeholder="אימות סיסמא"

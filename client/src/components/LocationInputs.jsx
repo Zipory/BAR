@@ -5,8 +5,8 @@ const LocatinInputs = (props) => {
     const [city, setCity] = useState("");
     return (
         <div>
-            <Getcity setCity={setCity}/>
-            <Getstreet city={city}/>
+            <Getcity setCity={setCity} eventInfo={props.eventInfo}/>
+            <Getstreet city={city}  eventInfo={props.eventInfo}/>
         </div>
     )
 };
