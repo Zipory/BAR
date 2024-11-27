@@ -38,6 +38,7 @@ const CitySelector = (props) => {
   const handleOptionClick = (option) => {
     setInputValue(option); // Set input to the selected option
     setShowDropdown(false); // Hide dropdown
+    props.eventInfo.street = option;
   };
 
   let noCity = props.city.length < 1;

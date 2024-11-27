@@ -1,10 +1,14 @@
 import React from "react";
+import AdjustMeter from "./AdjustMeter";
+import FractionMeter from "./FractionMeter";
 
 const EventDetails = ({ eventInfo, company }) => {
   return (
     <div className="">
-        <p>ארוע { eventInfo.status === "Canceled" ?"מבוטל" : "קיים "}</p>
-      <h2><strong>{eventInfo.company_name}</strong></h2>
+      <p>ארוע {eventInfo.status === "Canceled" ? "מבוטל" : "קיים "}</p>
+      <h2>
+        <strong>{eventInfo.company_name}</strong>
+      </h2>
       <h2>פרטי הארוע</h2>
       <p>
         <strong>תאור הארוע: </strong>
@@ -28,6 +32,7 @@ const EventDetails = ({ eventInfo, company }) => {
       <p>
         <strong>כמות מלצרים שרשומים:</strong> {eventInfo.approved_waiters ?? 0}
       </p>
+      <FractionMeter  numerator={eventInfo.approved_waiters ?? 0} denominator={eventInfo.waiters_amount}/>
       <p>
         <strong>תשלום:</strong> {eventInfo.salary}
         {eventInfo.is_global ? "גלובלי" : "לשעה"}
