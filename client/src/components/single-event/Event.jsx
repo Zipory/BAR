@@ -7,9 +7,11 @@ import SendRequestButton from "./SendRequestButton";
 import DeleteButton from "./DeleteButton";
 import GetPendingWaiters from "../manager/request/GetPendingWaiters";
 import GetApprovedWaiters from "../manager/request/GetApprovedWaiters";
+import RatingComponent from "../rating/SetRating";
 
 const Event = ({ eventInfo }) => {
   let [token, isWaiter] = getToken();
+  
   //   return for waiter.
   if (isWaiter) {
     return (
@@ -17,6 +19,7 @@ const Event = ({ eventInfo }) => {
         <CancelButton eventID={eventInfo.id} />
         <EventDetails eventInfo={eventInfo} />
         <SendRequestButton eventID={eventInfo.id} />
+        <RatingComponent name={eventInfo.company_name} eventID={eventInfo.id}/>  {/*here!! */}
       </div>
     );
   }
@@ -28,7 +31,6 @@ const Event = ({ eventInfo }) => {
         <EventDetails eventInfo={eventInfo} />
         <GetPendingWaiters eventID={eventInfo.id} />
         <GetApprovedWaiters eventID={eventInfo.id} />
-
       </div>
     );
   }

@@ -1,10 +1,12 @@
 import React from "react";
+import RatingComponent from "../../rating/SetRating";
 
-const WaiterInfo = ({info}) => {
+const WaiterInfo = ({info, eventID}) => {
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
       };
+
   return (
     <div>
       <p>
@@ -25,6 +27,10 @@ const WaiterInfo = ({info}) => {
       <p>
         <strong>ניקוד:</strong> {info.avg_rating ?? "אין דרוג"}
       </p>
+        <RatingComponent 
+        name={ info.first_name + " " +info.last_name} 
+        eventID={eventID} 
+        waiterID={info.id} />
     </div>
   );
 };

@@ -29,13 +29,11 @@ const GetApprovedWaiters = ({ eventID }) => {
 };
 
 const ToggledComponent = ({ requests, eventID }) => {
-//   console.log("hi", requests);
   return (
     <div>
       {requests.map((val, indx) => (
         <li className="li-event" event={val[0]} key={indx}>
-          <WaiterInfo info={val} />
-          {/* <AppendWaiterButton waiterID={val.id} eventID={eventID} /> */}
+          <WaiterInfo info={val} eventID={eventID}/>
         </li>
       ))}
     </div>
