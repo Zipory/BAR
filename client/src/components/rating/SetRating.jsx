@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { getToken } from "../entry/CheckToken";
 
-const RatingComponent = ({ name, onSave }) => {
+const RatingComponent = ({ name, eventID, waiterID, onSave }) => {
+  
   const [rating, setRating] = useState(0);
   let [token, isAwaiter] = getToken();
   const handleRatingChange = (value) => {
@@ -11,6 +12,8 @@ const RatingComponent = ({ name, onSave }) => {
   const handleSave = () => {
     const result = {
       waiterName: name,
+      event_id: eventID,
+      waiter_id: waiterID,
       rating,
     };
     onSave(result);
@@ -21,7 +24,7 @@ const RatingComponent = ({ name, onSave }) => {
      {!isAwaiter && <h3>נא לדרג את השירות של: {name}</h3>}
      {isAwaiter && <h3>נא לדרג את היחס שקבלת מחברת: {name}</h3>}
       <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-        {[...Array(11).keys()].map((value) => (
+        {[...Array(6).keys()].map((value) => (
           <button
             key={value}
             onClick={() => handleRatingChange(value)}
