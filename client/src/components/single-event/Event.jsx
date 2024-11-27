@@ -19,7 +19,7 @@ const Event = ({ eventInfo }) => {
         <CancelButton eventID={eventInfo.id} />
         <EventDetails eventInfo={eventInfo} />
         <SendRequestButton eventID={eventInfo.id} />
-        <RatingComponent name={eventInfo.company_name} eventID={eventInfo.id}/>  {/*here!! */}
+        <RatingComponent name={eventInfo.company_name} eventID={eventInfo.id}/>  
       </div>
     );
   }

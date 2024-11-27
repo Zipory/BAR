@@ -30,13 +30,13 @@ const GetApprovedWaiters = ({ eventID }) => {
 
 const ToggledComponent = ({ requests, eventID }) => {
   return (
-    <div>
+    <ol>
       {requests.map((val, indx) => (
         <li className="li-event" event={val[0]} key={indx}>
           <WaiterInfo info={val} eventID={eventID}/>
         </li>
       ))}
-    </div>
+    </ol>
   );
 };
 
