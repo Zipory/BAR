@@ -4,6 +4,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { typeOfUser } from "../../App";
 import { FetchPost } from "../Fetch";
 import { useNavigate } from "react-router-dom";
+import GoHomeButton from "./GoHomeButton";
 
 const postUrl = "http://localhost:4000/register";
 
@@ -81,10 +82,11 @@ function Register() {
   };
   return (
     <div className="auth-container">
+      <GoHomeButton/>
       <h2>הרשמה כ{title}</h2>
       <form className="myForm">
         {!isAwaiter && (
-          <input type="text" placeholder="שם חברה" ref={companyName} required />
+          <input type="text" placeholder="שם חברה" ref={companyName} autoFocus required />
         )}
         {!isAwaiter && (
           <input
@@ -114,10 +116,10 @@ function Register() {
           />
         )}
         {isAwaiter && (
-          <input type="text" placeholder="שם פרטי" ref={firstName}></input>
+          <input type="text" placeholder="שם פרטי" ref={firstName} autoFocus  required></input>
         )}
         {isAwaiter && (
-          <input type="text" placeholder="שם משפחה" ref={lastName}></input>
+          <input type="text" placeholder="שם משפחה" ref={lastName}  required></input>
         )}
         {isAwaiter && (
           <input
@@ -161,7 +163,6 @@ function Register() {
           <input
             type="radio"
             onChange={handleRadio}
-            // checked={gender === "Robot"}
             value="Other"
             name="gender"
             required
