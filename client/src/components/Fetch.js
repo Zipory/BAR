@@ -169,7 +169,7 @@ export async function FetchNewEvent(url, data, setState, email, token) {
 
 /**----------the new wey to post (new requests from waiters) */
 export async function FetchPP(url, data, token) {
-  console.log("welcom to FetchNewEvent");
+  console.log("welcom to Fetch New Post");
   console.log(29, "url:", url);
   console.log(28, "data:", JSON.stringify(data), typeof data);
   console.log("token:", token[0]);

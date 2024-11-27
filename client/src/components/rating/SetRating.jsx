@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import { getToken } from "../entry/CheckToken";
+import { FetchPP } from "../Fetch";
 
-const RatingComponent = ({ name, eventID, waiterID, onSave }) => {
+const RatingComponent = ({ name, eventID, waiterID}) => {
   
   const [rating, setRating] = useState(0);
   let [token, isAwaiter] = getToken();
+  const ratingUrl = "http://localhost:4000/rating/new-rating";
   const handleRatingChange = (value) => {
     setRating(value);
   };
 
-  const handleSave = () => {
+  function sendRating() {
     const result = {
       waiterName: name,
       event_id: eventID,
       waiter_id: waiterID,
       rating,
     };
-    onSave(result);
-  };
+    FetchPP(ratingUrl, result, getToken());
+  }
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", margin: "20px" }}>
@@ -44,7 +46,7 @@ const RatingComponent = ({ name, eventID, waiterID, onSave }) => {
       </div>
       <div style={{ marginTop: "15px" }}>
         <button
-          onClick={handleSave}
+          onClick={sendRating}
           style={{
             padding: "10px 20px",
             backgroundColor: "#007bff",

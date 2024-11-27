@@ -1,5 +1,4 @@
 import React from "react";
-import AdjustMeter from "./AdjustMeter";
 import FractionMeter from "./FractionMeter";
 
 const EventDetails = ({ eventInfo, company }) => {
