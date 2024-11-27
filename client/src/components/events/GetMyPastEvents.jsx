@@ -30,14 +30,13 @@ const GetMyPastEvents = () => {
   
   const ToggledComponent = ({events}) => {
     return (
-      <div>
+      <ol>
           {events.map((val, indx) => (
         <li className="li-event" event={val[0]} key={indx}>
-          {/* event: <EventDetails eventInfo={val} /> */}
           <Event eventInfo={val}/>
         </li>
       ))}
-      </div>
+      </ol>
     );
   };
 

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { typeOfUser } from "../../App";
 import { FetchPost } from "../Fetch";
 import { userInfo } from "../../App";
+import GoHomeButton from "./GoHomeButton";
 const serverUrl = "http://localhost:4000/login";
 
 /*Components that show the login page, and handle with it. */
@@ -35,6 +36,7 @@ function Login() {
 
   return (
     <div className="auth-container">
+      <GoHomeButton/>
       <h2>התחברות כ{title}</h2>
       <form onSubmit={handleLogin} className="myForm">
         <input
@@ -44,6 +46,7 @@ function Login() {
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="on"
           required
+          autoFocus
         />
         <div className="password-class">
           <input

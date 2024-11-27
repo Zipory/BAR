@@ -30,13 +30,13 @@ const GetMyFutureEvents = () => {
 
 const ToggledComponent = ({ events }) => {
   return (
-    <div>
+    <ol>
       {events.map((val, indx) => (
         <li className="li-event" event={val[0]} key={indx}>
           <Event eventInfo={val} />
         </li>
       ))}
-    </div>
+    </ol>
   );
 };
 

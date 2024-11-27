@@ -1,8 +1,8 @@
 /**----------Fetch get---------------- */
 export async function Fetch(url, token, setState) {
   console.log("welcom to Fetch");
-  console.log(token);
-  console.log("url:", url);
+  // console.log(token);
+  // console.log("url:", url);
   // fetch(url)
   fetch(url, {
     method: "GET",
@@ -17,7 +17,7 @@ export async function Fetch(url, token, setState) {
       if (json.succeed) {
         setState(json.resultsArray);
       }
-      console.log("json:", json.resultsArray);
+      // console.log("json:", json.resultsArray);
     });
 }
 
@@ -26,9 +26,9 @@ export async function Fetch(url, token, setState) {
 export async function FetchToken(url, token, setState) {
   console.log("welcom to FetchToken");
 
-  console.log("url:", url);
-  console.log("Token:", token[0]);
-  console.log("waiter?", JSON.parse(token[1]));
+  // console.log("url:", url);
+  // console.log("Token:", token[0]);
+  // console.log("waiter?", JSON.parse(token[1]));
   fetch(url, {
     method: "GET",
     headers: {
@@ -42,7 +42,7 @@ export async function FetchToken(url, token, setState) {
       if (json?.succeed) {
         setState(json.data);
       }
-      console.log("json:", json);
+      // console.log("json:", json);
     });
 }
 
@@ -50,10 +50,10 @@ export async function FetchToken(url, token, setState) {
 export async function FetchIncludeHeader(url, email, setState, token) {
   console.log("welcom to FetchIncludeHeader");
 
-  console.log("url:", url);
-  console.log("email:", email);
-  console.log("waiter?", token[1]);
-  console.log("token", token[0]);
+  // console.log("url:", url);
+  // console.log("email:", email);
+  // console.log("waiter?", token[1]);
+  // console.log("token", token[0]);
 
   fetch(url, {
     method: "GET",
@@ -65,11 +65,11 @@ export async function FetchIncludeHeader(url, email, setState, token) {
     },
   })
     .then((res) => {
-      console.log(res);
+      // console.log(res);
       return res.json();
     })
     .then((json) => {
-      console.log("json:", json);
+      // console.log("json:", json);
       if (json?.succeed) {
         setState(json.data);
       }
@@ -79,9 +79,9 @@ export async function FetchIncludeHeader(url, email, setState, token) {
 /**----------Fetch post for register/login---------------- */
 export async function FetchPost(url, data, setState, email) {
   console.log("welcom to FetchPost");
-  console.log(82, "data:", data);
-  console.log(83, "url:", url);
-  console.log(84, "email:", data.email);
+  // console.log(82, "data:", data);
+  // console.log(83, "url:", url);
+  // console.log(84, "email:", data.email);
 
   fetch(url, {
     method: "POST",
@@ -102,7 +102,7 @@ export async function FetchPost(url, data, setState, email) {
     })
     .then((json) => {
       if (json) {
-        console.log("json:", json);
+        // console.log("json:", json);
         if (setState) {
           setState(json.data ?? "nav to login");
           if (json.data?.token) {
@@ -121,18 +121,17 @@ export async function FetchPost(url, data, setState, email) {
 }
 
 /**----------Fetch post for new event -------------- */
-export async function FetchNewEvent(url, data, setState, email, token) {
+export async function FetchNewEvent(url, data, setState, token) {
   console.log("welcom to FetchNewEvent");
-  console.log(28, "data:", data);
-  console.log(29, "url:", url);
-  console.log("email:", email);
-  console.log("token:", token[0]);
+  // console.log(28, "data:", data);
+  // console.log(29, "url:", url);
+  // console.log("token:", token[0]);
+  // console.log("token:", token[1]);
 
   fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      email: `${email}`,
       isAwaiter: token[1],
       authorization: token[0],
     },
@@ -149,9 +148,9 @@ export async function FetchNewEvent(url, data, setState, email, token) {
     })
     .then((json) => {
       if (json) {
-        console.log("json:", json);
+        // console.log("json:", json);
         if (setState) {
-          setState(json.data); // todo: replace with json.data
+          setState(json);   //   check tommorow
           if (json.data?.token) {
             window.localStorage.setItem("bar", json.data.token);
             window.localStorage.setItem(
@@ -170,9 +169,9 @@ export async function FetchNewEvent(url, data, setState, email, token) {
 /**----------the new wey to post (new requests from waiters) */
 export async function FetchPP(url, data, token) {
   console.log("welcom to Fetch New Post");
-  console.log(29, "url:", url);
-  console.log(28, "data:", JSON.stringify(data), typeof data);
-  console.log("token:", token[0]);
+  // console.log(29, "url:", url);
+  // console.log(28, "data:", JSON.stringify(data), typeof data);
+  // console.log("token:", token[0]);
 
   fetch(url, {
     method: "POST",
@@ -183,7 +182,7 @@ export async function FetchPP(url, data, token) {
     body: JSON.stringify(data),
   })
     .then((res) => {
-      console.log(res);
+      // console.log(res);
 
       if (res.ok) {
         console.log(43, "new requests created");
@@ -192,21 +191,22 @@ export async function FetchPP(url, data, token) {
         console.error("Failed to create");
       }
     })
-    .then((json) => {
-      if (json) {
-        console.log("json:", json);
-
-        return json;
-      }
+    .then((resData) => {
+      console.log("Parsed Response:",data, resData);
+      return resData; // Return the parsed data
+    })
+    .catch((error) => {
+      console.error("Error in FetchPP:", error);
+      return null; // Handle errors by returning null or another fallback value
     });
 }
 
 /**----------Fetch put---------------- */
 export async function FetchPut(url, data, setState, email, token) {
   console.log("welcom to FetchPut");
-  console.log(28, "data:", data);
-  console.log(29, "url:", url);
-  console.log("email:", email);
+  // console.log(28, "data:", data);
+  // console.log(29, "url:", url);
+  // console.log("email:", email);
   fetch(url, {
     method: "PUT",
     headers: {
@@ -227,7 +227,7 @@ export async function FetchPut(url, data, setState, email, token) {
     })
     .then((json) => {
       if (json) {
-        console.log("json", json);
+        // console.log("json", json);
         if (setState) {
           setState(json);
         }
@@ -239,9 +239,9 @@ export async function FetchPut(url, data, setState, email, token) {
 export async function FetchDelete(url, email, id, token) {
   console.log("welcom to FetchDelete");
 
-  console.log(76, "url:", url);
-  console.log("email:", email);
-  console.log("id:", id);
+  // console.log(76, "url:", url);
+  // console.log("email:", email);
+  // console.log("id:", id);
   fetch(url, {
     method: "DELETE",
     headers: {
@@ -262,7 +262,7 @@ export async function FetchDelete(url, email, id, token) {
     })
     .then((json) => {
       if (json) {
-        console.log("json:", json);
+        // console.log("json:", json);
       }
     });
 }
@@ -270,9 +270,9 @@ export async function FetchDelete(url, email, id, token) {
 /**---------Fetch new delete ---------- */
 export async function FetchDD(url, data, token) {
   console.log("welcom to FetchDD");
-  console.log(29, "url:", url);
-  console.log(28, "data:", JSON.stringify(data));
-  console.log("token:", token[0]);
+  // console.log(29, "url:", url);
+  // console.log(28, "data:", JSON.stringify(data));
+  // console.log("token:", token[0]);
 
   fetch(url, {
     method: "DELETE",
@@ -283,7 +283,7 @@ export async function FetchDD(url, data, token) {
     body: JSON.stringify(data),
   })
     .then((res) => {
-      console.log(res);
+      // console.log(res);
 
       if (res.ok) {
         console.log(43, "new requests created");
@@ -294,7 +294,7 @@ export async function FetchDD(url, data, token) {
     })
     .then((json) => {
       if (json) {
-        console.log("json:", json);
+        // console.log("json:", json);
 
         return json;
       }

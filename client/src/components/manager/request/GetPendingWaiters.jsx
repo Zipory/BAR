@@ -8,7 +8,6 @@ const GetPendingWaiters = ({ eventID }) => {
   const [pendingWaiters, setPendingWaiters] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   let status = "pending";
-  // let id = { event_id: eventID };
   const pendingWaitersApi = `http://localhost:4000/requests/get-requests/${status}/${eventID}`;
   useEffect(() => {
     FetchToken(pendingWaitersApi, getToken(), setPendingWaiters);
@@ -31,16 +30,15 @@ const GetPendingWaiters = ({ eventID }) => {
 };
 
 const ToggledComponent = ({ requests, eventID }) => {
-  // console.log("hi", requests);
   return (
-    <div>
+    <ol>
       {requests.map((val, indx) => (
         <li className="li-event" event={val[0]} key={indx}>
           <WaiterInfo info={val} />
           <AppendWaiterButton waiterID={val.id} eventID={eventID} />
         </li>
       ))}
-    </div>
+    </ol>
   );
 };
 
