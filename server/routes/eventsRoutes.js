@@ -381,51 +381,183 @@ async function deleteEvent(req, res) {
 
 router.delete("/delete-event", authenticateToken, deleteEvent);
 
-router.put("/update-event", authenticateToken, (req, res) => {
-  const userEmail = req.header("email");
-  const event = req.body;
-  const [arrayField, arrayContent] = arrayToSet(event);
-  // console.log("event: ", event);
+async function updateEvent(req, res) {
+  try {
+    //Extracting user details
+    const user = await extractingUserDetails(req.headers["authorization"]);
+    //Extracting event details
+    const details = req.body;
 
-  sqlQuerySelect(
-    "id",
-    "companies",
-    ["email"],
-    "=",
-    [userEmail],
-    0,
-    (err, results) => {
-      if (err) {
-        res.status(500).json({
-          message: "Error finding employer ID inside database",
+    //if the user is not a company, return an error
+    if (user.isAwaiter) {
+      return res.status(401).json({
+        message: "You are not allowed to update this event",
+        succeed: false,
+      });
+    }
+    //selecting the event
+    let results = await pool.query(
+      `SELECT id, e_date, e_time FROM events WHERE id = ? AND company_id = ?;`,
+      [details.event_id, user.id]
+    );
+    //if the event does not exist, return an error
+    if (results[0].length === 0) {
+      return res.status(401).json({
+        message: "You don't have an event with this event id",
+        succeed: false,
+      });
+    }
+    //cutting the iso date & save it in a variable
+    const resultsDate = cutIsoDate(results[0][0].e_date);
+    const resultsTime = results[0][0].e_time;
+    //if the event is in the past, return an error
+
+    if (
+      compareDates(resultsDate, "<", getCurrentDate()) ||
+      (compareDates(resultsDate, "=", getCurrentDate()) &&
+        compareTimes(resultsTime, "<", getCurrentTime()))
+    ) {
+      return res.status(401).json({
+        message: "You can't edit this event because it's in the past",
+        succeed: false,
+      });
+    }
+    //if the provided date is in the past, return an error
+    if (details.time && details.date) {
+      //if the provided date or time isn't valid, return an error
+      if (!isValidDate(details.date) || !isValidTime(details.time)) {
+        return res.status(401).json({
+          message: "Please enter a valid date and time",
           succeed: false,
         });
-      } else {
-        sqlQueryUpdate(
-          "events",
-          arrayField,
-          arrayContent,
-          ["id", "company_id"],
-          "=",
-          [event.event_id, results[0].id],
-          (err, results) => {
-            if (err) {
-              res.status(500).json({
-                message: "Error during updating event",
-                succeed: false,
-              });
-            } else {
-              res.status(200).json({
-                message: "Event updated successfully",
-                succeed: true,
-              });
-            }
-          }
-        );
+      }
+      //if the provided date or time is in the past, return an error
+      if (
+        compareDates(details.date, "<", getCurrentDate()) ||
+        (compareDates(details.date, "=", getCurrentDate()) &&
+          compareTimes(details.time, "<", getCurrentTime()))
+      ) {
+        return res.status(401).json({
+          message: "You can't edit this event with a date in the past",
+          succeed: false,
+        });
+      }
+    } else if (details.time) {
+      //if the provided time isn't valid, return an error
+      if (!isValidTime(details.time)) {
+        return res.status(401).json({
+          message: "Please enter a valid time",
+          succeed: false,
+        });
+      }
+      //if the provided time is in the past, return an error
+      if (
+        compareDates(resultsDate, "=", getCurrentDate()) &&
+        compareTimes(details.time, "<", getCurrentTime())
+      ) {
+        return res.status(401).json({
+          message: "You can't edit this event with a time in the past",
+          succeed: false,
+        });
+      }
+    } else if (details.date) {
+      //if the provided date isn't valid, return an error
+      if (!isValidDate(details.date)) {
+        return res.status(401).json({
+          message: "Please enter a valid date",
+          succeed: false,
+        });
+      }
+      //if the provided date is in the past, return an error
+      if (compareDates(details.date, "<", getCurrentDate())) {
+        return res.status(401).json({
+          message: "You can't edit this event with a date in the past",
+          succeed: false,
+        });
       }
     }
-  );
-});
+    //Creating the update array
+    const [arrayField, arrayContent] = await arrayToSet(details);
+    console.log(arrayField, arrayContent);
+
+    //if there is no field to update, return an error
+    if (arrayField.length === 0) {
+      return res.status(400).json({
+        message: "Please enter at least one field to update",
+        succeed: false,
+      });
+    }
+    //Creating the update query
+    const updateQuery = `
+      UPDATE events 
+      SET ${arrayField.map((field) => `${field} = ?`).join(", ")} 
+      WHERE id = ? AND company_id = ?;
+    `;
+    //Updating the event
+    await pool.query(updateQuery, [...arrayContent, details.event_id, user.id]);
+    //Sending the response
+    return res.status(200).json({
+      message: "Updated successfully",
+      succeed: true,
+    });
+  } catch (err) {
+    //If there is an error, return an error
+    console.error(err);
+
+    return res.status(500).json({
+      message: "Error fetching data" + " => " + err.sqlMessage,
+      succeed: false,
+    });
+  }
+}
+
+router.put("/update-event", authenticateToken, updateEvent);
+
+// router.put("/update-event", authenticateToken, (req, res) => {
+//   const userEmail = req.header("email");
+//   const event = req.body;
+//   const [arrayField, arrayContent] = arrayToSet(event);
+//   // console.log("event: ", event);
+
+//   sqlQuerySelect(
+//     "id",
+//     "companies",
+//     ["email"],
+//     "=",
+//     [userEmail],
+//     0,
+//     (err, results) => {
+//       if (err) {
+//         res.status(500).json({
+//           message: "Error finding employer ID inside database",
+//           succeed: false,
+//         });
+//       } else {
+//         sqlQueryUpdate(
+//           "events",
+//           arrayField,
+//           arrayContent,
+//           ["id", "company_id"],
+//           "=",
+//           [event.event_id, results[0].id],
+//           (err, results) => {
+//             if (err) {
+//               res.status(500).json({
+//                 message: "Error during updating event",
+//                 succeed: false,
+//               });
+//             } else {
+//               res.status(200).json({
+//                 message: "Event updated successfully",
+//                 succeed: true,
+//               });
+//             }
+//           }
+//         );
+//       }
+//     }
+//   );
+// });
 
 export default router;
 
@@ -473,8 +605,12 @@ function arrayToSet(event) {
     arrayField.push("has_sleep");
     arrayContent.push(event.has_sleep);
   }
-  console.log("arrayField: ", arrayField);
-  console.log("arrayContent: ", arrayContent);
+  if (event.status === "Active" || event.status === "Canceled") {
+    arrayField.push("status");
+    arrayContent.push(event.status);
+  }
+  // console.log("arrayField: ", arrayField);
+  // console.log("arrayContent: ", arrayContent);
 
   return [arrayField, arrayContent];
 }
