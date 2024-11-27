@@ -1,11 +1,9 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../style/ManagerDashboard.css";
 import Info from "./manager/Info";
 import GetAllFutureEvents from "./events/GetAllFutureEvents.jsx";
 import GetMyFutureEvents from "./events/GetMyFutureEvents.jsx";
 import GetMyPastEvents from "./events/GetMyPastEvents.jsx";
-import Futureevents from "./manager/Futureevents.jsx";
-import { userInfo } from "../App";
 import Newevent from "./manager/Newevent.jsx";
 import { useNavigate } from "react-router-dom";
 const ManagerDashboard = () => {
@@ -49,10 +47,6 @@ const ManagerDashboard = () => {
           <Newevent setShowModal={setShowModal} eventStatus={"new-event"} />
         )}
       </div>
-
-      {/* <div className="meter" dir="ltr">
-        <div className="inner-meter">4 / 6</div>
-      </div> */}
 
       {/* ----------------------new way to see the events---------------------------- */}
       <section>

@@ -1,10 +1,14 @@
 import React from "react";
+import RatingComponent from "../../rating/SetRating";
 
 const WaiterInfo = ({info}) => {
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
       };
+      function sendRating(result) {
+        console.log(result);
+      }
   return (
     <div>
       <p>
@@ -25,6 +29,7 @@ const WaiterInfo = ({info}) => {
       <p>
         <strong>ניקוד:</strong> {info.avg_rating ?? "אין דרוג"}
       </p>
+        <RatingComponent name={ info.first_name + " " +info.last_name} onSave={sendRating}/>
     </div>
   );
 };
