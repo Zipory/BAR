@@ -12,8 +12,7 @@ import { CheckToken } from "./components/entry/CheckToken.js";
 import GetUserInfo from "./components/entry/GetUserInfo.jsx";
 import FirstNav from "./components/entry/FirstNav.jsx";
 import Logout from "./components/entry/Logout.jsx";
-import filterEvents from "./components/extra/filterEvents.js";
-import HomePage from "./components/web-manager/HomePage.jsx";
+// import filterEvents from "./components/extra/filterEvents.js";
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",
   "יש לך זמן פנוי שאתה רוצה לעבוד בו?",
@@ -55,7 +54,6 @@ function App() {
             <GetUserInfo />
             <Routes>
               <Route path="/" element={<FirstNav/>}/>
-              <Route path="/web-manager" element={<HomePage />} />
               <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
