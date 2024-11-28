@@ -247,19 +247,19 @@ async function isItPossibleToRate(req, res) {
         !compareDates(updatedDate, "=", getCurrentDate()) &&
         updatedTime < getCurrentTime()
       ) {
-        return res.status(401).json({
+        return res.status(200).json({
           message: "You can't rate this request yet, please try again later",
           succeed: false,
         });
       }
       //select the request
       results = await pool.query(
-        `SELECT id,status,rating_c FROM requests WHERE waiter_id = ? AND event_id = ? AND status = 'Approved' AND rating_w IS NULL`,
+        `SELECT id,status,rating_c FROM requests WHERE waiter_id = ? AND event_id = ? AND status = 'Approved' AND rating_c IS NULL`,
         [user.id, event.event_id]
       );
       if (results[0].length === 0) {
-        return res.status(401).json({
-          message: "This request is not found",
+        return res.status(200).json({
+          message: "This request is not found or you have already rated it",
           succeed: false,
         });
       }
@@ -300,19 +300,19 @@ async function isItPossibleToRate(req, res) {
         !compareDates(updatedDate, "=", getCurrentDate()) &&
         updatedTime < getCurrentTime()
       ) {
-        return res.status(401).json({
+        return res.status(200).json({
           message: "You can't rate this request yet, please try again later",
           succeed: false,
         });
       }
 
       results = await pool.query(
-        `SELECT id,status,rating_c FROM requests WHERE event_id = ? AND waiter_id = ? AND status = 'Approved' AND rating_c IS NULL`,
+        `SELECT id,status,rating_c FROM requests WHERE event_id = ? AND waiter_id = ? AND status = 'Approved' AND rating_w IS NULL`,
         [event.event_id, event.waiter_id]
       );
       if (results[0].length === 0) {
-        return res.status(401).json({
-          message: "This request is not found maybe you rate it already ",
+        return res.status(200).json({
+          message: "This request is not found or you have already rated it ",
           succeed: false,
         });
       }

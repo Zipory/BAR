@@ -3,6 +3,7 @@ import mysql from "mysql2";
 import express from "express";
 import { connection, pool } from "../connection.js";
 import dotenv from "dotenv";
+import { sendMail } from "../Gmail sender/send.js";
 import {
   getCurrentDate,
   getCurrentTime,
@@ -40,7 +41,7 @@ async function getAllEvents(req, res) {
        WHERE ((e.e_date > CURDATE()) 
        OR (e.e_date = CURDATE() AND e.e_time > CURTIME()))
        AND e.status = 'Active'
-       ORDER BY e.e_date, e.e_time;`
+       ORDER BY e.e_date, e.e_time ;`
     );
     let resultsArray = [...results[0]];
 
@@ -317,56 +318,96 @@ async function deleteEvent(req, res) {
   let connection;
 
   try {
+    //extracting user details
     const user = await extractingUserDetails(req.headers["authorization"]);
-    const isAwaiter = user.isAwaiter;
     const event = req.body;
     const company_id = user.id;
+    //if there is no event id
     if (!event.event_id) {
       return res
         .status(401)
         .send({ message: "Please enter event id", succeed: false });
     }
-    if (isAwaiter) {
+    //if user is not a company
+    if (user.isAwaiter) {
       return res.status(401).send({
         message: "You are not allowed to delete this event",
         succeed: false,
       });
     }
+    //begin transaction
     connection = await pool.getConnection();
-
     await connection.beginTransaction();
+
+    //check if event exists
     let results = await connection.query(
-      `SELECT id,status FROM events WHERE id = ? AND company_id = ?`,
+      `SELECT id,status,e_date,e_time,location FROM events WHERE id = ? AND company_id = ?`,
       [event.event_id, company_id]
     );
+    //if event does not exist
     if (results[0].length === 0) {
       return res.status(401).send({
         message: "There is no event with this id",
         succeed: false,
       });
     }
-
+    //check if event is already canceled
     if (results[0][0].status === "Canceled") {
       return res.status(401).send({
         message: "This event is already canceled",
         succeed: false,
       });
     }
+    //cancel event
     await connection.query(
       `UPDATE events SET status = 'Canceled' WHERE id = ? AND company_id = ?`,
       [event.event_id, company_id]
     );
-
+    //select waiters id
+    let waiters_ids = await connection.query(
+      `SELECT waiter_id FROM requests WHERE event_id = ? AND status = 'Approved'`,
+      [event.event_id]
+    );
+    //reject all requests
     await connection.query(
       `UPDATE requests SET status = 'Rejected' WHERE event_id = ?`,
       [event.event_id]
     );
 
+    waiters_ids = waiters_ids[0].map((row) => row.waiter_id);
+
+    //select waiters details
+    let waiters = await connection.query(
+      `SELECT CONCAT(first_name, ' ', last_name) AS name, email FROM waiters WHERE id IN (?)`,
+      [waiters_ids]
+    );
+    waiters = waiters[0].map((row) => {
+      return {
+        name: row.name,
+        email: row.email,
+      };
+    });
+    //send email for each waiter
+    waiters.forEach((waiter) => {
+      console.log("waiter:", waiter.email);
+      let message = `הי ${waiter.name}
+האירוע שלך
+בתאריך ${results[0][0].e_date}
+בשעה ${results[0][0].e_time}
+מקום ${results[0][0].location}
+בוטל.`;
+      sendMail(waiter.email, "אירוע בוטל", true, message);
+    });
+
+    //commit
     await connection.commit();
     res
       .status(200)
       .json({ message: "Event deleted successfully", succeed: true });
   } catch (error) {
+    //rollback
+    console.log(error);
+
     if (connection) {
       await connection.rollback();
     }
@@ -374,6 +415,7 @@ async function deleteEvent(req, res) {
       .status(500)
       .json({ message: "Error deleting event" + " " + error, succeed: false });
   } finally {
+    //release connection
     if (connection) {
       connection.release();
     }
@@ -398,7 +440,7 @@ async function updateEvent(req, res) {
     }
     //selecting the event
     let results = await pool.query(
-      `SELECT id, e_date, e_time FROM events WHERE id = ? AND company_id = ?;`,
+      `SELECT id, e_date, e_time,location,waiters_amount,approved_waiters FROM events WHERE id = ? AND company_id = ?;`,
       [details.event_id, user.id]
     );
     //if the event does not exist, return an error
@@ -423,6 +465,7 @@ async function updateEvent(req, res) {
         succeed: false,
       });
     }
+
     //if the provided date is in the past, return an error
     if (details.time && details.date) {
       //if the provided date or time isn't valid, return an error
@@ -487,6 +530,60 @@ async function updateEvent(req, res) {
         message: "Please enter at least one field to update",
         succeed: false,
       });
+    }
+
+    //if the waiters amount is less than the approved waiters, update the requests
+    if (details.waiters_amount) {
+      //if the waiters amount is less than 1, return an error
+      if (details.waiters_amount < 1) {
+        return res.status(400).json({
+          message: "Please enter a valid number of waiters",
+          succeed: false,
+        });
+      }
+      //if the waiters amount is less than the approved waiters, update the requests
+      if (details.waiters_amount < results[0][0].approved_waiters) {
+        let waiters_id = await pool.query(
+          `SELECT waiter_id FROM requests WHERE event_id = ? AND status = 'Approved' ORDER BY id DESC;`,
+          [details.event_id]
+        );
+        //extracting the waiters id
+        waiters_id = waiters_id[0].map((row) => row.waiter_id);
+        //getting the number of waiters to reject
+        const numToReject =
+          results[0][0].approved_waiters - details.waiters_amount;
+
+        //cutting the waiters id
+        waiters_id = waiters_id.slice(0, numToReject);
+
+        //getting the waiters details
+        let waiters = await pool.query(
+          `SELECT CONCAT(first_name,' ',last_name) AS name ,email FROM waiters WHERE id IN (?);`,
+          [waiters_id]
+        );
+
+        //updating the waiters array
+        waiters = waiters[0].map((row) => {
+          return { name: row.name, email: row.email };
+        });
+        //updating the waiters array
+        await pool.query(
+          `UPDATE requests SET status = 'Rejected' WHERE waiter_id IN (?) AND event_id = ?`,
+          [waiters_id, details.event_id]
+        );
+
+        waiters = waiters.map((waiter) => {
+          let message = `הי ${waiter.name}
+בוטלת מעבודה שאושרת אליה
+בתאריך ${results[0][0].e_date}
+בשעה ${results[0][0].e_time}
+במיקום ${results[0][0].location}
+המשך יום נעים
+`;
+
+          sendMail(waiter.email, ` בוטלת מעבודה שאושרת אליה`, true, message);
+        });
+      }
     }
     //Creating the update query
     const updateQuery = `
@@ -566,11 +663,11 @@ function arrayToSet(event) {
   let arrayField = [];
   let arrayContent = [];
 
-  if (event.date && event.date >= getCurrentDate()) {
+  if (event.date) {
     arrayField.push("e_date");
     arrayContent.push(event.date);
   }
-  if (event.time && event.time > getCurrentTime()) {
+  if (event.time) {
     arrayField.push("e_time");
     arrayContent.push(event.time);
   }
