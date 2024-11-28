@@ -23,16 +23,18 @@ const Event = ({ eventInfo }) => {
       waiter_id: 3,
     };
     useEffect(() => {
-      FetchPP(posibleToRateApi, myInfo).then((res) => {
-        // if (res.succeede) {
+      if (isWaiter) {
+        FetchPP(posibleToRateApi, myInfo).then((res) => {
+          if (res?.succeed) {
           console.log(res);
-          
-          // setPossible(true);
-        // }
-      });
+
+          setPossible(true);
+          }
+        });
+      }
     }, [possible]);
   }
-  // CheckPossibility();
+  CheckPossibility();
   //   return for waiter.
   if (isWaiter) {
     return (
@@ -40,7 +42,7 @@ const Event = ({ eventInfo }) => {
         <CancelButton eventID={eventInfo.id} />
         <EventDetails eventInfo={eventInfo} />
         <SendRequestButton eventID={eventInfo.id} />
-        <RatingComponent name={eventInfo.company_name} eventID={eventInfo.id} />
+      {possible && <RatingComponent name={eventInfo.company_name} eventID={eventInfo.id} />}
       </div>
     );
   }
