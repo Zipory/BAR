@@ -18,7 +18,7 @@ const RatingComponent = ({ name, eventID, waiterID}) => {
       waiter_id: waiterID,
       rating,
     };
-    FetchPP(ratingUrl, result, getToken());
+    FetchPP(ratingUrl, result);
   }
 
   return (

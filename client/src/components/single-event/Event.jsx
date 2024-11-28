@@ -23,7 +23,7 @@ const Event = ({ eventInfo }) => {
       waiter_id: 3,
     };
     useEffect(() => {
-      FetchPP(posibleToRateApi, myInfo, getToken()).then((res) => {
+      FetchPP(posibleToRateApi, myInfo).then((res) => {
         // if (res.succeede) {
           console.log(res);
           

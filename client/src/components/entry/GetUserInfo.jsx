@@ -1,6 +1,6 @@
 import React, { useEffect, useContext} from 'react'
 import { useNavigate } from 'react-router-dom';
-import {CheckToken,  getToken } from '../entry/CheckToken'
+import {CheckToken} from '../entry/CheckToken'
 import { userInfo } from "../../App";
 import { FetchToken } from '../Fetch';
 
@@ -14,8 +14,7 @@ const GetUserInfo = () => {
         if(!CheckToken()) {
         navigate("/home");
       } else {
-        const token = getToken();
-        FetchToken(serverUrl, token, setUser);
+        FetchToken(serverUrl, setUser);
       }
     }, []);
    

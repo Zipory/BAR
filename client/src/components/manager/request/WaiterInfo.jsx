@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import RatingComponent from "../../rating/SetRating";
-import { getToken } from "../../entry/CheckToken";
 import { FetchNewEvent, FetchPP } from "../../Fetch";
 
 const WaiterInfo = ({info, eventID}) => {
@@ -8,17 +7,14 @@ const WaiterInfo = ({info, eventID}) => {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
       };
-
       const [possible, setPossible] = useState(false);
-      let [token, isWaiter] = getToken();
-    
       const posibleToRateApi = "http://localhost:4000/rating/possible-to-rate";
         let myInfo = {
           event_id: eventID,
           waiter_id: info.id,
         };
         useEffect(() => {
-         FetchNewEvent(posibleToRateApi, myInfo, setPossible, getToken());
+         FetchNewEvent(posibleToRateApi, myInfo, setPossible);
         }, []);
   return (
     <div>

@@ -4,7 +4,6 @@ import Calendar from "./Calender";
 import { FetchNewEvent, FetchPut } from "../Fetch";
 import LocatinInputs from "../LocationInputs";
 import { userInfo } from "../../App";
-import { getToken } from "../entry/CheckToken";
 const Newevent = ({ setShowModal, eventStatus }) => {
   const apiUrl = `http://localhost:4000/events/new-event`;
   const urlEdit = "http://localhost:4000/events/update-event";
@@ -33,11 +32,11 @@ const Newevent = ({ setShowModal, eventStatus }) => {
         apiUrl,
         eventInfo,
         setSendOk,
-        getToken()
       ).then(() => setShowModal(false));
     }
     if (eventStatus === "update-event") {
-      FetchPut(urlEdit, undefined, undefined, user.email, getToken());
+      // TODO:  need to continue.
+      // FetchPut(urlEdit, undefined, undefined);
     }
   }
   return (
