@@ -57,7 +57,7 @@ function Register() {
       about: about.current.value,
       isAwaiter: isAwaiter,
     };
-    FetchPost(postUrl, allInputs, setSingupOk, allInputs["email"]);
+    FetchPost(postUrl, allInputs, setSingupOk);
   };
 
   /*for waiter: create the post request, and set singup  */
@@ -75,7 +75,7 @@ function Register() {
       isAwaiter: isAwaiter,
       gender : gender
     };
-    FetchPost(postUrl, allInputs, setSingupOk, allInputs["email"]);
+    FetchPost(postUrl, allInputs, setSingupOk);
   };
   const handleRadio = (event) => {
     setGender(() => event.target.value);

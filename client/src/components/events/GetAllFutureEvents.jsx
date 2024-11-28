@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import { FetchToken } from '../Fetch';
-import { getToken } from '../entry/CheckToken';
 import Event from '../single-event/Event';
 
 /**getting future events of all users. */
@@ -10,7 +9,7 @@ const GetAllFutureEvents = () => {
     /* api to get all events event. */
     const apiUrl = "http://localhost:4000/events";
     useEffect(() => {
-      FetchToken(apiUrl, getToken(), setEvents);
+      FetchToken(apiUrl, setEvents);
     }, []);
 
     const toggleVisibility = () => {

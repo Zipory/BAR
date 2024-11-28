@@ -1,12 +1,11 @@
 import React from "react";
 import { FetchDD } from "../Fetch";
-import { getToken } from "../entry/CheckToken";
 
 const CancelButton = ({ eventID }) => {
   const newReqApi = "http://localhost:4000/requests/cancel-request";
   const handleCancel = () => {
     let id = { event_id: eventID };
-    FetchDD(newReqApi, id, getToken());
+    FetchDD(newReqApi, id);
   };
 
   return (

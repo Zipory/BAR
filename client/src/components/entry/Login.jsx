@@ -21,8 +21,13 @@ function Login() {
   const handleLogin = (event) => {
     document.querySelector(".myForm").checkVisibility();
     event.preventDefault();
-    console.log("Logging in with:", { email, password });
-    let res = FetchPost(serverUrl, { email, password, isAwaiter }, setUser, email);
+    let data = {
+      email: email,
+      password: password,
+      isAwaiter: isAwaiter
+    }
+    console.log("Logging in with:", data);
+    FetchPost(serverUrl, data, setUser);
   };
   
   /*A good way to use navaget in if statement. */

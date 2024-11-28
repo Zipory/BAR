@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { getToken } from "../../entry/CheckToken";
 import { FetchToken } from "../../Fetch";
 import WaiterInfo from "./WaiterInfo";
 
@@ -9,7 +8,7 @@ const GetApprovedWaiters = ({ eventID }) => {
   let status = "approved";
   const approvedWaitersApi = `http://localhost:4000/requests/get-requests/${status}/${eventID}`;
   useEffect(() => {
-    FetchToken(approvedWaitersApi, getToken(), setApprovedWaiters);
+    FetchToken(approvedWaitersApi, setApprovedWaiters);
   }, []);
 
   const toggleVisibility = () => {

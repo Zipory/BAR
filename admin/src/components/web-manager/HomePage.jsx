@@ -1,5 +1,4 @@
 import React from 'react'
-import Login from '../entry/Login'
 
 const HomePage = () => {
   return (

@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react'
 import { FetchToken } from '../Fetch';
-import { getToken } from '../entry/CheckToken';
 import Event from '../single-event/Event';
 
 /** Getting the events that the waiter is pending for. */
@@ -11,7 +10,7 @@ const PendingEvents = () => {
     /* api to get the pending event. */
     const apiUrl = `http://localhost:4000/events/my-events/${status}`;
     useEffect(() => {
-      FetchToken(apiUrl, getToken(), setEvents);
+      FetchToken(apiUrl, setEvents);
     }, []);
 
     const toggleVisibility = () => {
