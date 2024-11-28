@@ -254,7 +254,7 @@ async function isItPossibleToRate(req, res) {
       }
       //select the request
       results = await pool.query(
-        `SELECT id,status,rating_c FROM requests WHERE waiter_id = ? AND event_id = ? AND status = 'Approved' AND rating_c IS NULL`,
+        `SELECT id,status,rating_c FROM requests WHERE waiter_id = ? AND event_id = ? AND status = 'Approved' AND rating_w IS NULL`,
         [user.id, event.event_id]
       );
       if (results[0].length === 0) {

@@ -37,8 +37,9 @@ async function getAllEvents(req, res) {
     let results = await pool.query(
       `SELECT e.*, c.company_name FROM events e
        JOIN companies c ON e.company_id = c.id 
-       WHERE (e.e_date > CURDATE()) 
-       OR (e.e_date = CURDATE() AND e.e_time > CURTIME()) 
+       WHERE ((e.e_date > CURDATE()) 
+       OR (e.e_date = CURDATE() AND e.e_time > CURTIME()))
+       AND e.status = 'Active'
        ORDER BY e.e_date, e.e_time;`
     );
     let resultsArray = [...results[0]];
