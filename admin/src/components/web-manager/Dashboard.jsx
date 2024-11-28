@@ -5,7 +5,6 @@ const Dashboard = () => {
   return (
     <div className="main-content">
       <Header />
-      {/* Dashboard Section */}
       <section className="dashboard">
         <div className="widget">
           <h3>כמות החברות</h3>

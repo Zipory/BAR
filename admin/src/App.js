@@ -1,15 +1,18 @@
 import React from "react";
-import "./HomePage.css"; 
+import { Route, Routes, Navigate } from "react-router-dom";
+import "./HomePage.css";
 import Sidebar from "./components/web-manager/Sidebar";
 import Dashboard from "./components/web-manager/Dashboard";
 
-const HomePage = () => {
+const App = () => {
   return (
     <div className="admin-container">
       <Sidebar />
-      <Dashboard />
+      <Routes>
+      <Route path="/" element={  <Dashboard />}/>
+      </Routes>
     </div>
   );
 };
 
-export default HomePage;
+export default App;

@@ -3,8 +3,6 @@ const tie = require("../img/tie.png");
 const Logo = () => {
   return (
     <header>
-      <h1>
-        BAR
         <img
           className="rotate-90"
           src={tie}
@@ -12,8 +10,8 @@ const Logo = () => {
           width="120px"
           height="80px"
           objectfit="cover"
-        />
-      </h1>
+          />
+          <h1> BAR</h1>
     </header>
   );
 };
