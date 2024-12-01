@@ -42,18 +42,20 @@ function App() {
     <>
       <header></header>
       <main>
-        <div className="logo logo-website">
+        <div className="sub-header">
           <Logo />
-          <h2>{slogan[Math.floor(Math.random() * slogan.length)]}</h2>
-          <h2>
-            <u>בר</u>, הפלטפורמה שמחברת בין מעסיקים למלצרים!
-          </h2>
+          <div>
+            <h2>{slogan[Math.floor(Math.random() * slogan.length)]}</h2>
+            <h2>
+              <u>בר</u>, הפלטפורמה שמחברת בין מעסיקים למלצרים!
+            </h2>
+          </div>
         </div>
         <typeOfUser.Provider value={[isAwaiter, setIsAwaiter]}>
           <userInfo.Provider value={[user, setUser]}>
             <GetUserInfo />
             <Routes>
-              <Route path="/" element={<FirstNav/>}/>
+              <Route path="/" element={<FirstNav />} />
               <Route path="/home" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />

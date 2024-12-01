@@ -26,9 +26,9 @@ const Event = ({ eventInfo }) => {
       if (isWaiter) {
         FetchPP(posibleToRateApi, myInfo).then((res) => {
           if (res?.succeed) {
-          console.log(res);
+            console.log(res);
 
-          setPossible(true);
+            setPossible(true);
           }
         });
       }
@@ -42,7 +42,12 @@ const Event = ({ eventInfo }) => {
         <CancelButton eventID={eventInfo.id} />
         <EventDetails eventInfo={eventInfo} />
         <SendRequestButton eventID={eventInfo.id} />
-      {possible && <RatingComponent name={eventInfo.company_name} eventID={eventInfo.id} />}
+        {possible && (
+          <RatingComponent
+            name={eventInfo.company_name}
+            eventID={eventInfo.id}
+          />
+        )}
       </div>
     );
   }
