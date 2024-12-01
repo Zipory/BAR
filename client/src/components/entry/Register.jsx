@@ -5,6 +5,7 @@ import { typeOfUser } from "../../App";
 import { FetchPost } from "../Fetch";
 import { useNavigate } from "react-router-dom";
 import GoHomeButton from "./GoHomeButton";
+import ProfileImageUpload from "./ProfileImageUpload";
 
 const postUrl = "http://localhost:4000/register";
 
@@ -26,6 +27,7 @@ function Register() {
   let phoneNumber = useRef("");
   let waiterAge = useRef("");
   let [gender, setGender] = useState("");
+  let image = useRef("");
   /** hooks*/
   const [showPassword, setShowPassword] = useState(false);
   const [showCorenfinPassword, setShowCorenfinPassword] = useState(false);
@@ -73,9 +75,12 @@ function Register() {
       phone: phoneNumber.current.value,
       birthday: waiterAge.current.value,
       isAwaiter: isAwaiter,
-      gender : gender
+      gender : gender,
+      image : image.current.value
     };
     FetchPost(postUrl, allInputs, setSingupOk);
+    console.log(allInputs);
+    
   };
   const handleRadio = (event) => {
     setGender(() => event.target.value);
@@ -197,7 +202,9 @@ function Register() {
             {(showCorenfinPassword && <FaEyeSlash />) || <FaEye />}
           </div>
         </div>
-
+        {isAwaiter && (
+         <ProfileImageUpload image={image}/>
+        )}
         <button
           type="submit"
           className="register-btn"
@@ -211,5 +218,8 @@ function Register() {
     </div>
   );
 }
-
+function doit(event) {
+  console.log(event.target.value);
+  
+}
 export default Register;
