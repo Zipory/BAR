@@ -31,6 +31,8 @@ import {
   company_Fields_Select,
 } from "./sources/variables.js";
 import { register } from "module";
+import { createFaceUrl } from "./cloudinary-management/createFaceUrl.js";
+import { log } from "console";
 dotenv.config();
 // const { log } = require("console");
 // const bcrypt = require("bcrypt");
@@ -162,8 +164,11 @@ async function registerFunction(req, res) {
           succeed: false,
         });
       }
+      if (user.image) {
+      user.faceImage = await createFaceUrl(user.image);
+      }
       await pool.query(
-        `INSERT INTO waiters (first_name, last_name, phone, birthday, email, w_password, gender,avg_rating, status) VALUES (?, ?, ?, ?, ?, ?, ?,?,?);`,
+        `INSERT INTO waiters (first_name, last_name, phone, birthday, email, w_password, gender, avg_rating, status, face_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
         [
           user.first_name,
           user.last_name,
@@ -174,6 +179,7 @@ async function registerFunction(req, res) {
           user.gender,
           0,
           "Pending",
+          user.faceImage,
         ]
       );
       return res.status(200).json({
@@ -413,3 +419,6 @@ app.listen(port, () => {
 //     next();
 //   });
 // }
+
+// let faceUrl = await createFaceUrl("C:/Users/itamar/Downloads/boy.jpg");
+// console.log(faceUrl);

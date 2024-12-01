@@ -1,17 +1,21 @@
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 dotenv.config();
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-/** upload to cloudinary, and transformat it to foucos on face.*/
-(async function () {
+
+/** upload to cloudinary, and transformat it to foucos on face.
+ * return the url of the face img.
+*/
+async function createFaceUrl(image)  {
   try {
-    const result = await cloudinary.uploader.upload("./images/littleNoa.jpg"); // TODO: here i need to switch with the img that the user send to the server.
+    const result = await cloudinary.uploader.upload(image); 
     // console.log(result);
-  const url = cloudinary.url(result.public_id, {
+  const url = cloudinary.url(result.public_id, {  
       transformation: [
           {
               quality: "auto",
@@ -25,9 +29,12 @@ cloudinary.config({
           }
       ]
   })
-  console.log(url);
+//   console.log(url);
+return url;
 } catch (error) {
     console.error("Url Error:", error);
   }
-  //   DOTO: here i need to save the url inside the DB.
-})();
+};
+
+export {createFaceUrl};
+
