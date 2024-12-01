@@ -49,15 +49,17 @@ const ManagerDashboard = () => {
       </div>
 
       {/* ----------------------new way to see the events---------------------------- */}
-      <section>
-        <GetAllFutureEvents />
-      </section>
-      <section>
-        <GetMyFutureEvents />
-      </section>
-      <section>
-        <GetMyPastEvents />
-      </section>
+      <div className="buttons">
+        <section>
+          <GetAllFutureEvents />
+        </section>
+        <section>
+          <GetMyFutureEvents />
+        </section>
+        <section>
+          <GetMyPastEvents />
+        </section>
+      </div>
     </div>
   );
 };

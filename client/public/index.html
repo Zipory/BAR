@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
   <head>
     <meta charset="utf-8" />
@@ -23,22 +23,30 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+
+    <!--google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Rubik+Moonrocks&family=Rubik+Wet+Paint&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet" />
     <title>BAR</title>
   </head>
   <body>
-    <div id="bthn" lang="he"></div><script>
+    <div id="bthn" lang="he"></div>
+    <script>
       (function () {
-         var script = document.createElement("script");
-         script.type = "text/javascript";
-         script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
-         script.setAttribute(
-           "integrity",
-           "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
-         );
-         script.setAttribute("crossorigin", "anonymous");
-         document.getElementsByTagName("head")[0].appendChild(script);
-       })();
-      </script>
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://bringthemhomenow.net/1.1.0/hostages-ticker.js";
+        script.setAttribute(
+          "integrity",
+          "sha384-DHuakkmS4DXvIW79Ttuqjvl95NepBRwfVGx6bmqBJVVwqsosq8hROrydHItKdsne"
+        );
+        script.setAttribute("crossorigin", "anonymous");
+        document.getElementsByTagName("head")[0].appendChild(script);
+      })();
+    </script>
     <div id="root"></div>
     <!--
       This HTML file is a template.
