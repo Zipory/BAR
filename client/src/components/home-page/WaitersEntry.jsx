@@ -7,9 +7,11 @@ const WaitersEntry = () => {
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
 
   return (
-    <div className="waiters entry right"  onClick={() => {
-      setIsAwaiter(true);
-    }}>
+    <div
+      className="waiters entry right"
+      onClick={() => {
+        setIsAwaiter(true);
+      }}>
       <Link to={"/login"} style={{ textDecoration: "none", color: "inherit" }}>
         <h1 className="subject">כניסת מלצרים</h1>
       </Link>

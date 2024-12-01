@@ -1,57 +1,132 @@
-
 :root {
   --shadow-color: rgba(0, 0, 0, 0.3);
-  --black-background-color: #343131;
-  --old-red-color: #A04747;
-  --braun-gold-color: #D8A25E;
-  --yellow-color: #EEDF7A;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+/* body */
 
-.flex-container {
+body {
+  width: 100%;
+  height: 100vh;
+  font-family: "Lunasima", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+/* header */
+header {
+  color: black;
+  text-align: center;
+  margin: 2vh 0 2vh 0;
+  font-size: 70px;
+  font-family: "Rubik Moonrocks", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.sub-header {
+  color: black;
+  text-align: center;
+  margin: 2vh 0 2vh 0;
+  font-size: 40px;
+}
+.sub-header:hover {
+  color: var(--shadow-color);
+}
+/* footer */
+.footer {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--shadow-color);
+  padding: 20px;
+  text-align: center;
+  color: #333;
+  width: 100%;
+  position: sticky;
+  bottom: 0; /* הדבק את הפוטר לתחתית */
+  z-index: 10;
+  font-size: large;
+}
+.footer p {
+  margin: 0;
+  margin-bottom: 10px;
+}
+.footer p:last-child {
+  margin-bottom: 0;
+}
+.footer p:hover {
+  color: white;
+}
+.footer ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.footer li {
+  display: inline-block;
+}
+.footer a {
+  color: #333;
+  text-decoration: none;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+.subject {
+  /* text-decoration: none !important;
+  color: black; */
+}
+/* entry windows */
+.entry-windows {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.home h2 {
   margin-top: 2vh;
+}
+
+.entry {
+  border-radius: 10px;
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  /* padding: 5vh 5vh 5vh 5vh; */
+  padding: 2%;
+  margin-top: 5vh;
+  width: 30%;
+  height: 75vh;
+  overflow: hidden;
+}
+.entry p,
+.entry h1 {
+  text-align: center;
+  text-shadow: 2px 2px 5px var(--shadow-color);
+}
+.entry h1 {
   margin-bottom: 2vh;
 }
-
-.flex-container .about-us {
-  width: 50%;
+.entry p {
   margin-top: 2vh;
-  border-radius: 0;
-  border-bottom: 4px double gray;
-  text-align: center;
 }
-
-.flex-container .left {
-  display: flex;
-  justify-content: flex-end;
+.entry img {
+  width: 95%;
+  margin: 0;
 }
-
-.flex-container .right {
-  justify-content: flex-start;
-}
-
-.logo {
-  /* margin-top: 10px; */
-  text-align: center;
-  font-size: 3em;
-}
-
-
+/* about */
 .about-us {
-  font-size: 2.5em;
-}
-
-footer {
-  background-color: var(--black-background-color);
-  color: whitesmoke;
-  font-size: 1.1em;
   text-align: center;
+  margin: 2vh 0 2vh 0;
+  font-size: 25px;
+  font-family: "Rubik Moonrocks", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
-
-a {
-  color: var(--braun-gold-color);
+.about-us :hover {
+  text-shadow: 2px 2px 5px var(--shadow-color);
 }
-
-
