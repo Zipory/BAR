@@ -3,25 +3,25 @@ import { FetchToken } from "../Fetch";
 import Event from "../single-event/Event";
 
 /**getting future events that connect to the user. */
-const GetMyFutureEvents = () => {
-  const [events, setEvents] = useState([]);
-  const [isVisible, setIsVisible] = useState(false);
-  let status = "future";
-  /* api to get the future event. */
-  const apiUrl = `http://localhost:4000/events/my-events/${status}`;
-  useEffect(() => {
-    FetchToken(apiUrl, setEvents);
-  }, []);
+const GetMyFutureEvents = ({isVisible, events}) => {
+  // const [events, setEvents] = useState([]);
+  // const [isVisible, setIsVisible] = useState(false);
+  // let status = "future";
+  // /* api to get the future event. */
+  // const apiUrl = `http://localhost:4000/events/my-events/${status}`;
+  // useEffect(() => {
+  //   FetchToken(apiUrl, setEvents);
+  // }, []);
 
-  const toggleVisibility = () => {
-    setIsVisible((prevState) => !prevState);
-  };
+  // const toggleVisibility = () => {
+  //   setIsVisible((prevState) => !prevState);
+  // };
 
   return (
     <div>
-      <button onClick={toggleVisibility}>
+      {/* <button onClick={toggleVisibility}>
         {isVisible ? "הסתר" : "הראה"} אירועים עתידיים
-      </button>
+      </button> */}
       {isVisible && <ToggledComponent events={events} />}
     </div>
   );

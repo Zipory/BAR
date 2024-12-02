@@ -5,7 +5,7 @@ const Info = () => {
   return (
     user && (
       <div className="manager-info">
-        <h2>ברוך הבא המנהל {user["manager"]}</h2>
+        <h2>המנהל {user["manager"]}</h2>
         <p>קייטרינג: {user["company_name"]}</p>
         <p>מייל: {user["email"]}</p>
       <p>פלא': {user["manager_phone"]}</p>
