@@ -15,3 +15,13 @@ ol {
   display: flex;
   flex-wrap: wrap;
 }
+
+.dashboard {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+}
+
+.name {
+  text-align: center;
+}

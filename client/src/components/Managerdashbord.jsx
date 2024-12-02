@@ -28,23 +28,17 @@ const ManagerDashboard = () => {
   }, []);
 
 
-  /* api to get all events, and set them on Allevents. */
+  /* api to get all events, and set them on there state. */
   const apiUrlAllEvents = "http://localhost:4000/events";
+  const apiUrlFutureEvents = `http://localhost:4000/events/my-events/future`;
+  const apiUrl = `http://localhost:4000/events/my-events/past`;
   useEffect(() => {
     FetchToken(apiUrlAllEvents, setAllEvents);
+    FetchToken(apiUrlFutureEvents, setfutureEvents);
+    FetchToken(apiUrl, setPastEvents);
   }, []);
 
-/**api to get manager future events, and set them on futureEvents.  */
-const apiUrlFutureEvents = `http://localhost:4000/events/my-events/future`;
-useEffect(() => {
-  FetchToken(apiUrlFutureEvents, setfutureEvents);
-}, []);
 
-/**api to get manager past events, and set them on pastEvents */
-const apiUrl = `http://localhost:4000/events/my-events/past`;
-useEffect(() => {
-  FetchToken(apiUrl, setPastEvents);
-}, []);
   const toggleVisibilityOfAllEvents = () => {
     setAlleventsIsVisible((prevState) => !prevState);
   };
@@ -55,6 +49,7 @@ useEffect(() => {
   const toggleVisibilityofPastEvents = () => {
     setPastEventsIsVisible((prevState) => !prevState);
   };
+
 /**for the new event modal. */
   useEffect(() => {
     // Attach event listener on component mount
@@ -67,14 +62,14 @@ useEffect(() => {
 /**go out from the modal when click outside. */
   const handleClickOutside = (event) => {
     if (divRef.current && !divRef.current.contains(event.target)) {
-      // console.log(27, "hi");
       setShowModal(false);
     }
   };
+
   return (
     <div className="manager-dashboard">
       {/* <Info /> */}
-      <h1>{user.company_name}</h1>
+      <h1>{user?.company_name}</h1>
         {/* Create New Event Button */}
       <button className="big-button" onClick={() => setShowModal(true)}>
         ליצירת אירוע חדש
