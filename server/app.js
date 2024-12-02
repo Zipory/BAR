@@ -18,6 +18,8 @@ import {
   sqlQuerySelect,
   generateToken,
   authenticateToken,
+  hashPassword,
+  comparePassword,
 } from "./sources/function.js";
 import {
   waiter_ditails,
@@ -75,8 +77,8 @@ const port = 4000;
 async function loginFunction(req, res) {
   try {
     const user = req.body;
-    console.log("user:", user);
-    console.log(!user.email);
+    // console.log("user:", user);
+    // console.log(!user.email);
 
     //check if the user enter email and password
     if (!user.email || !user.password) {
@@ -85,16 +87,39 @@ async function loginFunction(req, res) {
         succeed: false,
       });
     }
-
     //check if the user exist
     let results = await pool.query(
-      `SELECT ${
-        user.isAwaiter ? waiter_Fields_Select : company_Fields_Select
-      } FROM ${user.isAwaiter ? "waiters" : "companies"} WHERE email = ? AND ${
-        user.isAwaiter ? " w_password" : " e_password"
-      } = ? AND status = 'active';`,
-      [user.email, user.password]
+      `SELECT * FROM ${
+        user.isAwaiter ? "waiters" : "companies"
+      } WHERE email = ? AND status = 'active';`,
+      [user.email]
     );
+    const password = user.isAwaiter
+      ? results[0][0].W_password
+      : results[0][0].e_password;
+
+    const isPasswordCorrect = await comparePassword(user.password, password);
+    if (!isPasswordCorrect) {
+      return res.status(500).json({
+        message: "The password is incorrect",
+        succeed: false,
+      });
+    }
+
+    if (results[0].length == 0) {
+      return res.status(500).json({
+        message: "There is no account with this details",
+        succeed: false,
+      });
+    }
+
+    if (!isPasswordCorrect) {
+      return res.status(500).json({
+        message: "The password is incorrect",
+        succeed: false,
+      });
+    }
+
     //if the user exist
     if (results[0].length > 0) {
       //generate token
@@ -165,8 +190,9 @@ async function registerFunction(req, res) {
         });
       }
       if (user.image) {
-      user.faceImage = await createFaceUrl(user.image);
+        user.faceImage = await createFaceUrl(user.image);
       }
+      const hashedPassword = await hashPassword(user.password);
       await pool.query(
         `INSERT INTO waiters (first_name, last_name, phone, birthday, email, w_password, gender, avg_rating, status, face_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
         [
@@ -175,7 +201,7 @@ async function registerFunction(req, res) {
           user.phone,
           user.birthday,
           user.email,
-          user.password,
+          hashedPassword,
           user.gender,
           0,
           "Pending",
@@ -211,6 +237,8 @@ async function registerFunction(req, res) {
           succeed: false,
         });
       }
+      const hashedPassword = await hashPassword(user.password);
+
       await pool.query(
         `INSERT INTO companies (company_name, manager, manager_phone, email, e_password, about,avg_rating, status) VALUES (?, ?, ?, ?, ?,?, ?, ?);`,
         [
@@ -218,7 +246,7 @@ async function registerFunction(req, res) {
           user.manager,
           user.manager_phone,
           user.email,
-          user.password,
+          hashedPassword,
           user.about,
           0,
           "Pending",
