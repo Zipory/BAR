@@ -2,7 +2,7 @@ import "../style/waiterDashboard.css";
 import React, { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserInfo from "./waiter/info";
-import GetAllFutureEvents from "./events/GetAllFutureEvents";
+import ListOfEvents from "./events/ListOfEvents";
 import { userInfo } from "../App";
 import { FetchToken } from "./Fetch";
 const WaiterDashboard = () => {
@@ -78,28 +78,22 @@ const WaiterDashboard = () => {
       {/* ----------------new way to see the events---------------------- */}
       <div className="buttons">
         <section>
-          <GetAllFutureEvents
-            isVisible={allEventsIsVisible}
-            events={allEvents}
-          />
+          <ListOfEvents isVisible={allEventsIsVisible} events={allEvents} />
         </section>
         <section>
-          <GetAllFutureEvents
+          <ListOfEvents
             isVisible={futureEventsIsVisible}
             events={futureEvents}
           />
         </section>
         <section>
-          <GetAllFutureEvents
+          <ListOfEvents
             isVisible={pendingEventsIsVisible}
             events={pendingEvents}
           />
         </section>
         <section>
-          <GetAllFutureEvents
-            isVisible={pastEventsIsVisible}
-            events={pastEvents}
-          />
+          <ListOfEvents isVisible={pastEventsIsVisible} events={pastEvents} />
         </section>
       </div>
     </>
