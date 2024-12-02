@@ -10,3 +10,8 @@
   font-size: "1.5em";
   margin-bottom: "12px";
 }
+
+ol {
+  display: flex;
+  flex-wrap: wrap;
+}
