@@ -10,3 +10,18 @@
   font-size: "1.5em";
   margin-bottom: "12px";
 }
+
+ol {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+}
+
+.name {
+  text-align: center;
+}
