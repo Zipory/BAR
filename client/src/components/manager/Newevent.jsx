@@ -64,7 +64,7 @@ const Newevent = ({ setShowModal, eventStatus }) => {
         <input name="suite" type="text" placeholder="מספר בית" required />
         <textarea
           name="description"
-          placeholder="description about the event"
+          placeholder="תאור קצר על האירוע"
         />
         <input
           name="waiters_amount"
@@ -73,7 +73,7 @@ const Newevent = ({ setShowModal, eventStatus }) => {
           required
         />
         <br />
-        <input name="salary" type="number" placeholder="payment" required />
+        <input name="salary" type="number" placeholder="סכום לתשלום" required />
         <div>
           <input
             type="radio"

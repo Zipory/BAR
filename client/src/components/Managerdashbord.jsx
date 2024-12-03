@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import "../style/ManagerDashboard.css";
 import Info from "./manager/Info";
-import GetAllFutureEvents from "./events/GetAllFutureEvents.jsx";
+import ListOfEvents from "./events/ListOfEvents.jsx";
 import Newevent from "./manager/Newevent.jsx";
 import { useNavigate } from "react-router-dom";
 import { userInfo } from "../App";
@@ -27,7 +27,6 @@ const ManagerDashboard = () => {
     }
   }, []);
 
-
   /* api to get all events, and set them on there state. */
   const apiUrlAllEvents = "http://localhost:4000/events";
   const apiUrlFutureEvents = `http://localhost:4000/events/my-events/future`;
@@ -37,7 +36,6 @@ const ManagerDashboard = () => {
     FetchToken(apiUrlFutureEvents, setfutureEvents);
     FetchToken(apiUrl, setPastEvents);
   }, []);
-
 
   const toggleVisibilityOfAllEvents = () => {
     setAlleventsIsVisible((prevState) => !prevState);
@@ -50,7 +48,7 @@ const ManagerDashboard = () => {
     setPastEventsIsVisible((prevState) => !prevState);
   };
 
-/**for the new event modal. */
+  /**for the new event modal. */
   useEffect(() => {
     // Attach event listener on component mount
     document.addEventListener("mousedown", handleClickOutside);
@@ -59,7 +57,7 @@ const ManagerDashboard = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-/**go out from the modal when click outside. */
+  /**go out from the modal when click outside. */
   const handleClickOutside = (event) => {
     if (divRef.current && !divRef.current.contains(event.target)) {
       setShowModal(false);
@@ -70,7 +68,7 @@ const ManagerDashboard = () => {
     <div className="manager-dashboard">
       {/* <Info /> */}
       <h1>{user?.company_name}</h1>
-        {/* Create New Event Button */}
+      {/* Create New Event Button */}
       <button className="big-button" onClick={() => setShowModal(true)}>
         ליצירת אירוע חדש
       </button>
@@ -80,30 +78,34 @@ const ManagerDashboard = () => {
         )}
       </div>
       <section>
-      {/* {button to see all events} */}
-      <button onClick={toggleVisibilityOfAllEvents} >
-      {allEventsIsVisible ? "הסתר" : "הראה"}   אירועים כלליים
-        </button>
         {/* {button to see future events} */}
         <button onClick={toggleVisibilityofFutureEvents}>
-        {futureEventsIsVisible ? "הסתר" : "הראה"} אירועים עתידיים
-      </button>
-          {/* {button to see past events} */}
-          <button onClick={toggleVisibilityofPastEvents} >
-          {pastEventsIsVisible ? 'הסתר' : 'הראה'} אירועים שעברו
+          {futureEventsIsVisible ? "הסתר" : "הראה"} <strong>{futureEvents.length}</strong>   אירועים עתידיים
         </button>
-        </section>
-    
+        {/* {button to see past events} */}
+        <button onClick={toggleVisibilityofPastEvents}>
+          {pastEventsIsVisible ? "הסתר" : "הראה"} <strong>{pastEvents.length}</strong>   אירועים שעברו
+        </button>
+        {/* {button to see all events} */}
+        <button onClick={toggleVisibilityOfAllEvents}>
+          {allEventsIsVisible ? "הסתר" : "הראה"} <strong>{allEvents.length}</strong>   אירועים כלליים
+       
+        </button>
+      </section>
+
       {/* ----------------------new way to see the events---------------------------- */}
       <div className="buttons">
         <section>
-          <GetAllFutureEvents isVisible={allEventsIsVisible} events={allEvents}/>
+          <ListOfEvents isVisible={allEventsIsVisible} events={allEvents} />
         </section>
         <section>
-          <GetAllFutureEvents  isVisible={futureEventsIsVisible} events={futureEvents}/>
+          <ListOfEvents
+            isVisible={futureEventsIsVisible}
+            events={futureEvents}
+          />
         </section>
         <section>
-          <GetAllFutureEvents  isVisible={pastEventsIsVisible} events={pastEvents}/>
+          <ListOfEvents isVisible={pastEventsIsVisible} events={pastEvents} />
         </section>
       </div>
     </div>

@@ -2,7 +2,7 @@ import "../style/waiterDashboard.css";
 import React, { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserInfo from "./waiter/info";
-import GetAllFutureEvents from "./events/GetAllFutureEvents";
+import ListOfEvents from "./events/ListOfEvents";
 import { userInfo } from "../App";
 import { FetchToken } from "./Fetch";
 const WaiterDashboard = () => {
@@ -60,46 +60,40 @@ const WaiterDashboard = () => {
         <section>
           {/* {button to see all events} */}
           <button onClick={toggleVisibilityOfAllEvents}>
-            {allEventsIsVisible ? "הסתר" : "הראה"} אירועים כלליים
+            {allEventsIsVisible ? "הסתר" : "הראה"} <strong>{allEvents.length}</strong>  אירועים כלליים
           </button>
           {/* {button to see future events} */}
           <button onClick={toggleVisibilityofFutureEvents}>
-            {futureEventsIsVisible ? "הסתר" : "הראה"} אירועים עתידיים
+            {futureEventsIsVisible ? "הסתר" : "הראה"} <strong>{futureEvents.length}</strong>  אירועים עתידיים
           </button>
           {/* {button to see past events} */}
           <button onClick={toggleVisibilityofPastEvents}>
-            {pastEventsIsVisible ? "הסתר" : "הראה"} אירועים שעברו
+            {pastEventsIsVisible ? "הסתר" : "הראה"} <strong>{pastEvents.length}</strong>  אירועים שעברו
           </button>
           <button onClick={toggleVisibilityOfPendingEvents}>
-            {pendingEventsIsVisible ? "הסתר" : "הראה"} אירועים בהמתנה
+            {pendingEventsIsVisible ? "הסתר" : "הראה"} <strong>{pendingEvents.length}</strong>  אירועים בהמתנה
           </button>
         </section>
       </div>
       {/* ----------------new way to see the events---------------------- */}
       <div className="buttons">
         <section>
-          <GetAllFutureEvents
-            isVisible={allEventsIsVisible}
-            events={allEvents}
-          />
+          <ListOfEvents isVisible={allEventsIsVisible} events={allEvents} />
         </section>
         <section>
-          <GetAllFutureEvents
+          <ListOfEvents
             isVisible={futureEventsIsVisible}
             events={futureEvents}
           />
         </section>
         <section>
-          <GetAllFutureEvents
+          <ListOfEvents
             isVisible={pendingEventsIsVisible}
             events={pendingEvents}
           />
         </section>
         <section>
-          <GetAllFutureEvents
-            isVisible={pastEventsIsVisible}
-            events={pastEvents}
-          />
+          <ListOfEvents isVisible={pastEventsIsVisible} events={pastEvents} />
         </section>
       </div>
     </>

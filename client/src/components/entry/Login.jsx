@@ -47,7 +47,7 @@ function Login() {
         <input
           type="email"
           placeholder="כתובת דואר אלקטרוני"
-          value={email || "uri@gourmetcatering.com"}
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="on"
           required
@@ -57,7 +57,7 @@ function Login() {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="סיסמא"
-            value={password || "gourmetPass123"}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
