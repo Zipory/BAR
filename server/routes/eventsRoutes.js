@@ -36,7 +36,7 @@ async function getAllEvents(req, res) {
   try {
     // get all future events with company name
     let results = await pool.query(
-      `SELECT e.*, c.company_name FROM events e
+      `SELECT e.*, c.company_name,c.avg_rating FROM events e
        JOIN companies c ON e.company_id = c.id 
        WHERE ((e.e_date > CURDATE()) 
        OR (e.e_date = CURDATE() AND e.e_time > CURTIME()))
