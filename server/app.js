@@ -53,8 +53,9 @@ async function loginFunction(req, res) {
       } WHERE email = ? AND status = 'active';`,
       [user.email]
     );
+
     const password = user.isAwaiter
-      ? results[0][0].W_password
+      ? results[0][0].w_password
       : results[0][0].e_password;
 
     const isPasswordCorrect = await comparePassword(user.password, password);
@@ -106,8 +107,10 @@ async function loginFunction(req, res) {
         data: { token: null },
       });
     }
-  } catch {
+  } catch (err) {
     //if there is an error
+    console.log(err);
+
     return res.status(500).json({
       message: "Error fetching data from the database",
       succeed: false,
