@@ -80,16 +80,16 @@ const ManagerDashboard = () => {
       <section>
         {/* {button to see future events} */}
         <button onClick={toggleVisibilityofFutureEvents}>
-          {futureEventsIsVisible ? "הסתר" : "הראה"} אירועים עתידיים
+          {futureEventsIsVisible ? "הסתר" : "הראה"} <strong>{futureEvents.length}</strong>   אירועים עתידיים
         </button>
         {/* {button to see past events} */}
         <button onClick={toggleVisibilityofPastEvents}>
-          {pastEventsIsVisible ? "הסתר" : "הראה"} אירועים שעברו
+          {pastEventsIsVisible ? "הסתר" : "הראה"} <strong>{pastEvents.length}</strong>   אירועים שעברו
         </button>
         {/* {button to see all events} */}
         <button onClick={toggleVisibilityOfAllEvents}>
-          {allEventsIsVisible ? "הסתר" : "הראה"} אירועים כלליים
-          {allEvents.length}
+          {allEventsIsVisible ? "הסתר" : "הראה"} <strong>{allEvents.length}</strong>   אירועים כלליים
+       
         </button>
       </section>
 

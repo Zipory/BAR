@@ -157,6 +157,11 @@ button:hover {
   color: var(--primary-color);
 }
 
+ol {
+  list-style: none;
+  gap: 30px;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
