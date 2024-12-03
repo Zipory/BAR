@@ -1,5 +1,6 @@
 import { connection, pool } from "../connection.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 function getCurrentDate() {
   const date = new Date();
@@ -301,6 +302,22 @@ async function extractingUserDetails(token) {
 
   return userDe;
 }
+/**-----------------bcrypt functions---------------- */
+//hash password - using bcrypt
+
+async function hashPassword(password) {
+  const serverKey = process.env.SECRET_PASS;
+  const combine = password + serverKey;
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(combine, saltRounds);
+  return hashedPassword;
+}
+//compare password - using bcrypt
+async function comparePassword(password, hashedPassword) {
+  const serverKey = process.env.SECRET_PASS;
+  const combine = password + serverKey;
+  return bcrypt.compare(combine, hashedPassword);
+}
 /**-----------------export functions---------------- */
 export {
   getCurrentDate,
@@ -311,13 +328,19 @@ export {
   compareTimes,
   isValidDate,
   isValidTime,
+  capitalizeFirstLetter,
+  //sql functions
   sqlQueryInsert,
   sqlQuerySelect,
   sqlQueryDelete,
   sqlQueryUpdate,
   selectCompanies,
-  capitalizeFirstLetter,
+
+  //jwt functions
   generateToken,
   authenticateToken,
   extractingUserDetails,
+  //bcrypt functions
+  hashPassword,
+  comparePassword,
 };
