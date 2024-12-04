@@ -156,20 +156,35 @@ async function approveRequest(req, res) {
       [request.waiter_id]
     );
     //send an email to the waiter
+    //     let message = `
+    // שלום ${waiter_email_details[0][0].name}
+    // צוות בר שמח לבשר לך כי אושרת לעבודה
+    // בתאריך : ${eventDate}
+    // בשעה : ${eventTime}
+    // בכתובת : ${eventLocation}
+    // אירוע : ${eventDescription}
+    // בהצלחה
+    // `;
+    let message = `
+<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 400px; margin: 0 auto; padding: 20px; background-color: #f0f9f0; border: 1px solid #cce5cc; border-radius: 8px;" dir="rtl" lang="he">
+  <h2 style="color: #28a745; text-align: center;">בשורות משמחות!</h2>
+  <p>שלום <strong>${waiter_email_details[0][0].name}</strong>,</p>
+  <p>צוות בר שמח לבשר לך כי <strong>אושרת לעבודה</strong>:</p>
+  <ul style="list-style: none; padding: 0;">
+    <li><strong>תאריך:</strong> ${eventDate}</li>
+    <li><strong>שעה:</strong> ${eventTime}</li>
+    <li><strong>כתובת:</strong> ${eventLocation}</li>
+    <li><strong>אירוע:</strong> ${eventDescription}</li>
+  </ul>
+  <p style="text-align: center; font-weight: bold; color: #28a745;">בהצלחה!</p>
+</div>
+`;
 
     sendMail(
       waiter_email_details[0][0].email,
       "ברכות, אושרת לעבודה",
-      true,
-      `
-      שלום ${waiter_email_details[0][0].name}
-      צוות בר שמח לבשר לך כי אושרת לעבודה 
-      בתאריך : ${eventDate}
-      בשעה : ${eventTime}
-      בכתובת : ${eventLocation}
-      אירוע : ${eventDescription}
-      בהצלחה
-      `
+      false,
+      message
     );
   } catch {
     res.status(500).json({
