@@ -111,7 +111,10 @@ button:hover {
 }
 
 .buttons {
-  margin-bottom: 50px;
+  /* display: flex;
+  gap: 20px; */
+  margin-bottom: 10vh;
+  justify-content: center;
 }
 
 /* Modal */
@@ -127,7 +130,9 @@ button:hover {
   z-index: 1000;
   width: 80%;
   max-width: 600px;
+  max-height: 90vh;
   animation: fadeIn 0.3s ease-out;
+  overflow-y: auto;
 }
 
 .overlay {
@@ -157,16 +162,30 @@ button:hover {
 ol {
   list-style: none;
   gap: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  margin-top: 5vh;
 }
+ol li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+/* .li-event:hover {
+  border: 2.5px solid var(--primary-color);
+} */
 .manager-btn {
   display: flex;
   /* flex-direction: column; */
 }
 .clicked {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
-  border: 2px solid #4CAF50; 
-  transition: background-color 0.3s ease, color 0.3s ease; 
+  border: 2px solid #4caf50;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @keyframes fadeIn {
