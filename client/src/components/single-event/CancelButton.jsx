@@ -10,11 +10,11 @@ const CancelButton = ({ eventID }) => {
 
   return (
     <h2>
-      <button type="button" onClick={handleCancel}>
-        בטל זימון
+      <button type="button" onClick={handleCancel} className="log-out">
+       בטל זימון<br/>
+        <small>(לחיצה כפולה)</small>
       </button>
     </h2>
   );
 };
-
 export default CancelButton;

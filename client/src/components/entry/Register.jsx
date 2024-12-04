@@ -164,7 +164,7 @@ function Register() {
             name="gender"
             required
           />
-          <label htmlFor="gender">רובוט</label>
+          <label htmlFor="gender">אחר</label>
           <input
             type="radio"
             onChange={handleRadio}

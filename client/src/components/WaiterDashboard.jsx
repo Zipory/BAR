@@ -16,6 +16,7 @@ const WaiterDashboard = () => {
   const [futureEventsIsVisible, setFutureEventsIsVisible] = useState(false);
   const [pendingEvents, setpendingEvents] = useState([]);
   const [pendingEventsIsVisible, setpendingEventsIsVisible] = useState(false);
+  const appendButton = true;
   const navigate = useNavigate();
   useEffect(() => {
     if (!isWaiter) {
@@ -36,19 +37,23 @@ const WaiterDashboard = () => {
     FetchToken(apiUrlPendingEvents, setpendingEvents);
   }, []);
 
-  const toggleVisibilityOfAllEvents = () => {
+  const toggleVisibilityOfAllEvents = (event) => {
     setAlleventsIsVisible((prevState) => !prevState);
+    event.currentTarget.classList.toggle('clicked');
   };
 
-  const toggleVisibilityofFutureEvents = () => {
+  const toggleVisibilityofFutureEvents = (event) => {
     setFutureEventsIsVisible((prevState) => !prevState);
+    event.currentTarget.classList.toggle('clicked');
   };
-  const toggleVisibilityofPastEvents = () => {
+  const toggleVisibilityofPastEvents = (event) => {
     setPastEventsIsVisible((prevState) => !prevState);
+    event.currentTarget.classList.toggle('clicked');
   };
 
-  const toggleVisibilityOfPendingEvents = () => {
+  const toggleVisibilityOfPendingEvents = (event) => {
     setpendingEventsIsVisible((prevState) => !prevState);
+    event.currentTarget.classList.toggle('clicked');
   };
   return (
     <>
@@ -59,26 +64,26 @@ const WaiterDashboard = () => {
         {/* <UserInfo /> */}
         <section>
           {/* {button to see all events} */}
-          <button onClick={toggleVisibilityOfAllEvents}>
+          <button onClick={(event) => toggleVisibilityOfAllEvents(event)}>
             {allEventsIsVisible ? "הסתר" : "הראה"} <strong>{allEvents.length}</strong>  אירועים כלליים
           </button>
           {/* {button to see future events} */}
-          <button onClick={toggleVisibilityofFutureEvents}>
+          <button onClick={(event) => toggleVisibilityofFutureEvents(event)}>
             {futureEventsIsVisible ? "הסתר" : "הראה"} <strong>{futureEvents.length}</strong>  אירועים עתידיים
           </button>
           {/* {button to see past events} */}
-          <button onClick={toggleVisibilityofPastEvents}>
-            {pastEventsIsVisible ? "הסתר" : "הראה"} <strong>{pastEvents.length}</strong>  אירועים שעברו
-          </button>
-          <button onClick={toggleVisibilityOfPendingEvents}>
+          <button onClick={(event) => toggleVisibilityOfPendingEvents(event)}>
             {pendingEventsIsVisible ? "הסתר" : "הראה"} <strong>{pendingEvents.length}</strong>  אירועים בהמתנה
+          </button>
+          <button onClick={(event) => toggleVisibilityofPastEvents(event)}>
+            {pastEventsIsVisible ? "הסתר" : "הראה"} <strong>{pastEvents.length}</strong>  אירועים שעברו
           </button>
         </section>
       </div>
       {/* ----------------new way to see the events---------------------- */}
       <div className="buttons">
         <section>
-          <ListOfEvents isVisible={allEventsIsVisible} events={allEvents} />
+          <ListOfEvents isVisible={allEventsIsVisible} events={allEvents} appendButton={appendButton}/>
         </section>
         <section>
           <ListOfEvents

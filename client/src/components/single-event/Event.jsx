@@ -10,7 +10,7 @@ import GetApprovedWaiters from "../manager/request/GetApprovedWaiters";
 import RatingComponent from "../rating/SetRating";
 import { FetchPP } from "../Fetch";
 
-const Event = ({ eventInfo }) => {
+const Event = ({ eventInfo, appendButton }) => {
   const [possible, setPossible] = useState(false);
   let [token, isWaiter] = getToken();
 
@@ -27,7 +27,6 @@ const Event = ({ eventInfo }) => {
         FetchPP(posibleToRateApi, myInfo).then((res) => {
           if (res?.succeed) {
             console.log(res);
-
             setPossible(true);
           }
         });
@@ -39,9 +38,12 @@ const Event = ({ eventInfo }) => {
   if (isWaiter) {
     return (
       <div className="waiter-event event-details">
-        <CancelButton eventID={eventInfo.id} />
         <EventDetails eventInfo={eventInfo} />
+        {appendButton&& <div className="waiter-btn"> 
         <SendRequestButton eventID={eventInfo.id} />
+           <CancelButton eventID={eventInfo.id} />
+        </div>}
+   
         {possible && (
           <RatingComponent
             name={eventInfo.company_name}
@@ -55,10 +57,12 @@ const Event = ({ eventInfo }) => {
   else {
     return (
       <div className="manager-event event-details">
-        <DeleteButton eventID={eventInfo.id} />
         <EventDetails eventInfo={eventInfo} />
+        {appendButton&& <div  className="manager-btn">
         <GetPendingWaiters eventID={eventInfo.id} />
         <GetApprovedWaiters eventID={eventInfo.id} />
+        <DeleteButton eventID={eventInfo.id} />
+        </div>}
       </div>
     );
   }

@@ -26,6 +26,14 @@ header {
   font-style: normal;
 }
 
+.log-out {
+  background-color: #FA4032;
+  color: whitesmoke;
+}
+.log-out:hover {
+  background-color: #c51508;
+  color: whitesmoke;
+}
 .sub-header {
   color: black;
   text-align: center;
@@ -129,4 +137,21 @@ header {
 }
 .about-us :hover {
   text-shadow: 2px 2px 5px var(--shadow-color);
+}
+
+/* Styles for screens larger than 768px (e.g., tablets) */
+@media (max-width: 600px) {
+  .body {
+    width: 80%;
+    margin: 0 auto;
+    padding: 40px;
+  }
+}
+
+/* Styles for screens larger than 1024px (e.g., desktops) */
+@media (min-width: 1024px) {
+  .body{
+    width: 60%;
+    padding: 60px;
+  }
 }
