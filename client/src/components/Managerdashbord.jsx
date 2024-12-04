@@ -16,6 +16,7 @@ const ManagerDashboard = () => {
   const [pastEventsIsVisible, setPastEventsIsVisible] = useState(false);
   const [futureEvents, setfutureEvents] = useState([]);
   const [futureEventsIsVisible, setFutureEventsIsVisible] = useState(false);
+  const appendButton = true;
   // check that the user is event-manager.
   const navigate = useNavigate();
   let isWaiter = JSON.parse(window.localStorage.getItem("isWaiter"));
@@ -37,15 +38,18 @@ const ManagerDashboard = () => {
     FetchToken(apiUrl, setPastEvents);
   }, []);
 
-  const toggleVisibilityOfAllEvents = () => {
+  const toggleVisibilityOfAllEvents = (event) => {
     setAlleventsIsVisible((prevState) => !prevState);
+    event.currentTarget.classList.toggle('clicked');
   };
 
-  const toggleVisibilityofFutureEvents = () => {
+  const toggleVisibilityofFutureEvents = (event) => {
     setFutureEventsIsVisible((prevState) => !prevState);
+    event.currentTarget.classList.toggle('clicked');
   };
-  const toggleVisibilityofPastEvents = () => {
+  const toggleVisibilityofPastEvents = (event) => {
     setPastEventsIsVisible((prevState) => !prevState);
+    event.currentTarget.classList.toggle('clicked');
   };
 
   /**for the new event modal. */
@@ -79,17 +83,16 @@ const ManagerDashboard = () => {
       </div>
       <section>
         {/* {button to see future events} */}
-        <button onClick={toggleVisibilityofFutureEvents}>
-          {futureEventsIsVisible ? "הסתר" : "הראה"} <strong>{futureEvents.length}</strong>   אירועים עתידיים
+        <button onClick={(event) => toggleVisibilityofFutureEvents(event)}>
+          {futureEventsIsVisible ? "הסתר" : "הראה"} <strong>{futureEvents.length}</strong> אירועים עתידיים
         </button>
         {/* {button to see past events} */}
-        <button onClick={toggleVisibilityofPastEvents}>
-          {pastEventsIsVisible ? "הסתר" : "הראה"} <strong>{pastEvents.length}</strong>   אירועים שעברו
+        <button onClick={(event) => toggleVisibilityofPastEvents(event)}>
+          {pastEventsIsVisible ? "הסתר" : "הראה"} <strong>{pastEvents.length}</strong> אירועים שעברו
         </button>
         {/* {button to see all events} */}
-        <button onClick={toggleVisibilityOfAllEvents}>
-          {allEventsIsVisible ? "הסתר" : "הראה"} <strong>{allEvents.length}</strong>   אירועים כלליים
-       
+        <button onClick={(event) => toggleVisibilityOfAllEvents(event)}>
+          {allEventsIsVisible ? "הסתר" : "הראה"} <strong>{allEvents.length}</strong> אירועים כלליים
         </button>
       </section>
 
@@ -102,6 +105,7 @@ const ManagerDashboard = () => {
           <ListOfEvents
             isVisible={futureEventsIsVisible}
             events={futureEvents}
+            appendButton={appendButton}
           />
         </section>
         <section>

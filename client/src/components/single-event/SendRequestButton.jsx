@@ -9,7 +9,7 @@ const SendRequestButton = ({eventID}) => {
  }
 
   return (
-    <h2><button type="button" onClick={handlePending}>+</button></h2>
+    <h2><button type="button" onClick={handlePending} className='plus-btn'>+</button></h2>
   )
 }
 

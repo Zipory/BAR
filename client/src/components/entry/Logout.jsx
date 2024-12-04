@@ -10,7 +10,7 @@ const Logout = () => {
     setUser(() => null);
     navigate("/home");
   }
-  return <button onClick={logout}>Logout</button>;
+  return <button onClick={logout} className="log-out">יציאה</button>;
 };
 
 export default Logout;

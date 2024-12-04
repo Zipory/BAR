@@ -44,12 +44,14 @@ function App() {
       <main>
         <div className="sub-header">
           <Logo />
-          <div>
-            <h2>{slogan[Math.floor(Math.random() * slogan.length)]}</h2>
-            <h2>
-              <u>בר</u>, הפלטפורמה שמחברת בין מעסיקים למלצרים!
-            </h2>
-          </div>
+          {window.location.href === "http://localhost:3000/home" && (
+            <div>
+              <h2>{slogan[Math.floor(Math.random() * slogan.length)]}</h2>
+              <h2>
+                <u>בר</u>, הפלטפורמה שמחברת בין מעסיקים למלצרים!
+              </h2>
+            </div>
+          )}
         </div>
         <typeOfUser.Provider value={[isAwaiter, setIsAwaiter]}>
           <userInfo.Provider value={[user, setUser]}>
