@@ -296,9 +296,9 @@ async function isItPossibleToRate(req, res) {
       );
       //check if the time to rate the request has come
       if (
-        !compareDates(updatedDate, "<", getCurrentDate()) &&
-        !compareDates(updatedDate, "=", getCurrentDate()) &&
-        updatedTime < getCurrentTime()
+        !compareDates(updatedDate, "<", getCurrentDate()) ||
+        (!compareDates(updatedDate, "=", getCurrentDate()) &&
+          updatedTime < getCurrentTime())
       ) {
         return res.status(200).json({
           message: "You can't rate this request yet, please try again later",
