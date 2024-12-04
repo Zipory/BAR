@@ -7,7 +7,7 @@ const Footer = () => {
       <p>phone: +9720123456789</p>
       <p>משרדי החברה: יגאל אלון 23 בית-שמש</p>
       <p>© 2023 BAR. All rights reserved.</p>
-      <ul>
+      <ul className="social-networks">
         <li>
           <a href="https://facebook.com">Facebook</a>
         </li>
