@@ -21,8 +21,9 @@ const WaitersEntry = () => {
       <p className="waiters-register-p">
         <Link
           to={"/register"}
-          style={{ textDecoration: "none", color: "inherit" }}>
-          {" "}
+          style={{ textDecoration: "none", color: "inherit" , border: " 3px solid rgba(0, 0, 0, 0.3)",
+            padding: "3px"
+          }}>
           לא רשום? הירשם עכשיו!
         </Link>
       </p>

@@ -3,8 +3,8 @@ import "../style/footer.css";
 const Footer = () => {
   return (
     <footer className="footer">
-      <p>email: example@email.com</p>
-      <p>phone: +97201234567890</p>
+      <p>email: bar.final.project@gmail.com</p>
+      <p>phone: +9720123456789</p>
       <p>משרדי החברה: יגאל אלון 23 בית-שמש</p>
       <p>© 2023 BAR. All rights reserved.</p>
       <ul>
