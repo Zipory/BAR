@@ -7,6 +7,10 @@
   --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
+.waiters-register-p {
+   border:  3px solid rgba(0, 0, 0, 0.3);
+  padding: 3px;
+}
 /**------------- testing zone------------------*/
 
 /* .logo-website {

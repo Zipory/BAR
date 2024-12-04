@@ -29,8 +29,7 @@ const EmployersEntry = () => {
         }}>
         <Link
           to={"/register"}
-          style={{ textDecoration: "none", color: "inherit" , border: " 3px solid rgba(0, 0, 0, 0.3)",
-            padding: "3px"}}>
+          style={{ textDecoration: "none", color: "inherit"}}>
           לא רשום? הירשם עכשיו!
         </Link>
       </p>
