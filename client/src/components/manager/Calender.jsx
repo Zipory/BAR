@@ -20,7 +20,6 @@ function Calendar({setDate}) {
 
   return (
     <div className="calendar-container">
-          <button onClick={addHoliday}>הוסף חופשה</button>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -28,7 +27,6 @@ function Calendar({setDate}) {
         selectable={true}  // Allow date selection
         dateClick={(info) =>  setDate(info.dateStr)}  // Example interaction
       />
-    
     </div>
   );
 }
