@@ -15,20 +15,10 @@ const slogan = [
 const Home = () => {
   return (
     <div>
-      {/* <div className="logo logo-website">
-        <Logo />
-        <h2>{slogan[Math.floor(Math.random() * slogan.length)]}</h2>
-        <h2>
-          <u>בר</u>, הפלטפורמה שמחברת בין מעסיקים למלצרים!
-        </h2>
-      </div> */}
-
       <div className="entry-windows">
         <WaitersEntry />
         <EmployersEntry />
       </div>
-      {/* <Login />
-      <Register /> */}
       <About />
     </div>
   );

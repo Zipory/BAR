@@ -14,10 +14,12 @@ body {
   font-family: "Lunasima", sans-serif;
   font-weight: 400;
   font-style: normal;
+  cursor: default;
+  user-select: none; 
 }
 /* header */
 header {
-  color: black;
+  color: rgb(78, 78, 78);
   text-align: center;
   margin: 2vh 0 2vh 0;
   font-size: 70px;
@@ -87,10 +89,10 @@ header {
 .footer a:hover {
   text-decoration: underline;
 }
-.subject {
-  /* text-decoration: none !important;
-  color: black; */
-}
+/*.subject {
+   text-decoration: none !important;
+  color: black; 
+}*/
 /* entry windows */
 .entry-windows {
   display: flex;
@@ -108,7 +110,7 @@ header {
   padding: 2%;
   margin-top: 5vh;
   width: 30%;
-  height: 75vh;
+  /* height: 75vh; */
   overflow: hidden;
 }
 .entry p,
@@ -139,6 +141,11 @@ header {
   text-shadow: 2px 2px 5px var(--shadow-color);
 }
 
+.created {
+  color: gold;
+  padding-top: 5px;
+}
+
 /* Styles for screens larger than 768px (e.g., tablets) */
 @media (max-width: 600px) {
   .body {
@@ -146,9 +153,24 @@ header {
     margin: 0 auto;
     padding: 40px;
   }
+  .sub-header {
+    font-size: 1.5em;
+  }
+  .about-us {
+    font-size: 1em;
+  }
+  .header {
+    font-size: 1.5em;
+  }
+  .footer {
+    font-size: 1em;
+  }
+  .subject {
+     font-size: 1em;
+  }
 }
 
-/* Styles for screens larger than 1024px (e.g., desktops) */
+
 @media (min-width: 1024px) {
   .body{
     width: 60%;

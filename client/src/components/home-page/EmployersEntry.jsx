@@ -29,7 +29,7 @@ const EmployersEntry = () => {
         }}>
         <Link
           to={"/register"}
-          style={{ textDecoration: "none", color: "inherit" }}>
+          style={{ textDecoration: "none", color: "inherit"}}>
           לא רשום? הירשם עכשיו!
         </Link>
       </p>

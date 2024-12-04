@@ -40,7 +40,6 @@ function App() {
   const [user, setUser] = useState(null);
   return (
     <>
-      <header></header>
       <main>
         <div className="sub-header">
           <Logo />

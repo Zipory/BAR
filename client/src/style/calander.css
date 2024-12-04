@@ -1,7 +1,30 @@
-.calendar-container {
-    /* overflow: hidden; */
-    width: 30vw;
-    height: 30vw;
+/* .calendar-container {
+    
+    max-width: 30vw;
+    height: 50vw;
     margin: 0 auto;
     margin-bottom: 10vh;
-}
+} */
+
+
+.calendar-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+  }
+  
+  @media  only screen and  (max-width: 768px) {
+    .fc-toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .fc-toolbar .fc-toolbar-chunk {
+      margin-bottom: 10px;
+    }
+  
+    .fc .fc-daygrid-day-top {
+      display: flex;
+      justify-content: center;
+    }
+  }

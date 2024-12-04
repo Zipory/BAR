@@ -49,7 +49,7 @@ const Newevent = ({ setShowModal, eventStatus }) => {
       >
         <h1>יצירת אירוע חדש</h1>
         <Calendar setDate={setDate} />
-        <input name="date" type="date" disabled value={date} required />
+        <input name="date" type="date" disabled value={date} required placeholder="בחר תאריך"/>
         <label htmlFor="start-time">שעת התחלה:</label>
         <input name="time" type="time" id="start-time" required />
         <input
