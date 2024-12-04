@@ -66,8 +66,6 @@ async function getAllEvents(req, res) {
 router.get("/", authenticateToken, getAllEvents);
 
 async function getSoonEvents(req, res) {
-  //TODO : add a variable for rating status per event for waiters
-  //TODO : add a variable for rating status per event and waiter for companies
   try {
     // get all events for user sorted by status and date
     const user = await extractingUserDetails(req.headers["authorization"]);
@@ -125,15 +123,26 @@ async function getSoonEvents(req, res) {
           .json({ message: "Invalid status", succeed: false });
       }
       //created a query for each status
-      const future = `events.e_date > '${getCurrentDate()}' OR events.e_date = '${getCurrentDate()}' AND events.e_time >' ${getCurrentTime()}'`;
-      const past = `e_date < '${getCurrentDate()}' OR e_date = '${getCurrentDate()}' AND e_time < '${getCurrentTime()}'`;
+      const future = `(
+        events.e_date > '${getCurrentDate()}' OR 
+        (events.e_date = '${getCurrentDate()}' AND events.e_time > '${getCurrentTime()}')
+      )`;
+
+      const past = `(
+        events.e_date < '${getCurrentDate()}' OR 
+        (events.e_date = '${getCurrentDate()}' AND events.e_time < '${getCurrentTime()}')
+      )`;
+
       //run query
       let results = await pool.query(
-        `SELECT * FROM events WHERE company_id = ? AND ${
-          status === "Future" ? future : past
-        }`,
+        `SELECT * 
+         FROM events 
+         WHERE company_id = ? 
+         AND ${status === "Future" ? future : past} 
+         AND status = 'Active';`,
         [user.id]
       );
+
       //cut iso date
       let resultsArray = [...results[0]];
 
@@ -255,64 +264,6 @@ async function newEvent(req, res) {
 
 router.post("/new-event", authenticateToken, newEvent);
 
-// router.post("/new-event", authenticateToken, (req, res) => {
-//   //   console.log(req.body);
-//   console.log("req.body: ", req.body);
-
-//   const newEvent = req.body;
-//   const userEmail = req.header("email");
-//   const eventsArray = [
-//     newEvent.date,
-//     newEvent.time,
-//     Number(newEvent.e_duration),
-//     newEvent.location,
-//     newEvent.suite,
-//     newEvent.description,
-//     Number(newEvent.waiters_amount),
-//     Number(newEvent.salary),
-//     newEvent.is_global,
-//     newEvent.has_sleep,
-//   ];
-//   console.log("email: ", userEmail);
-
-//   sqlQuerySelect(
-//     "id",
-//     "companies",
-//     ["email"],
-//     "=",
-//     [userEmail],
-//     0,
-//     (err, results) => {
-//       if (err) {
-//         res.status(500).json({
-//           message: "Error finding employer ID inside database",
-//           succeed: false,
-//         });
-//       } else if (results.length > 0) {
-//         //   res.status(200).send(JSON.stringify(results[0].id));
-//         eventsArray.unshift(Number(results[0].id));
-//         sqlQueryInsert("events", events_Fields, eventsArray, (err, results) => {
-//           if (err) {
-//             res
-//               .status(500)
-//               .json({ message: "Error creating event", succeed: false });
-//           } else {
-//             res.status(200).json({
-//               message: "Event created successfully",
-//               succeed: true,
-//             });
-//           }
-//         });
-//       } else {
-//         res.status(200).json({
-//           message: "There is no company with this email",
-//           succeed: false,
-//         });
-//       }
-//     }
-//   );
-// });
-
 /**---------------------------------------------------------- */
 async function deleteEvent(req, res) {
   let connection;
@@ -390,13 +341,22 @@ async function deleteEvent(req, res) {
     //send email for each waiter
     waiters.forEach((waiter) => {
       console.log("waiter:", waiter.email);
-      let message = `הי ${waiter.name}
-האירוע שלך
-בתאריך ${results[0][0].e_date}
-בשעה ${results[0][0].e_time}
-מקום ${results[0][0].location}
-בוטל.`;
-      sendMail(waiter.email, "אירוע בוטל", true, message);
+
+      let message = `
+<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 400px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;" dir="rtl" lang="he-IL">
+  <h2 style="color: #d9534f; text-align: center;">הודעה חשובה</h2>
+  <p>הי <strong>${waiter.name}</strong>,</p>
+  <p>האירוע שלך:</p>
+  <ul style="list-style: none; padding: 0;">
+    <li><strong>תאריך:</strong> ${cutIsoDate(results[0][0].e_date)}</li>
+    <li><strong>שעה:</strong> ${results[0][0].e_time}</li>
+    <li><strong>מיקום:</strong> ${results[0][0].location}</li>
+  </ul>
+  <p style="color: #d9534f; font-weight: bold;">בוטל.</p>
+</div>
+`;
+
+      sendMail(waiter.email, "אירוע בוטל", false, message);
     });
 
     //commit
@@ -573,15 +533,21 @@ async function updateEvent(req, res) {
         );
 
         waiters = waiters.map((waiter) => {
-          let message = `הי ${waiter.name}
-בוטלת מעבודה שאושרת אליה
-בתאריך ${results[0][0].e_date}
-בשעה ${results[0][0].e_time}
-במיקום ${results[0][0].location}
-המשך יום נעים
+          let message = `
+<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 400px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;" dir="rtl" lang="he">
+  <h2 style="color: #d9534f; text-align: center;">הודעה חשובה</h2>
+  <p>הי <strong>${waiter.name}</strong>,</p>
+  <p>בוטלת מעבודה שאושרת אליה:</p>
+  <ul style="list-style: none; padding: 0;">
+    <li><strong>תאריך:</strong> ${cutIsoDate(results[0][0].e_date)}</li>
+    <li><strong>שעה:</strong> ${results[0][0].e_time}</li>
+    <li><strong>מיקום:</strong> ${results[0][0].location}</li>
+  </ul>
+  <p>אנו מאחלים לך <strong>המשך יום נעים</strong>.</p>
+</div>
 `;
 
-          sendMail(waiter.email, ` בוטלת מעבודה שאושרת אליה`, true, message);
+          sendMail(waiter.email, ` בוטלת מעבודה שאושרת אליה`, false, message);
         });
       }
     }
