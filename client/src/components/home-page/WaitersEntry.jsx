@@ -13,7 +13,7 @@ const WaitersEntry = () => {
         setIsAwaiter(true);
       }}>
       <Link to={"/login"} style={{ textDecoration: "none", color: "inherit" }}>
-        <h1 className="subject">כניסת מלצרים</h1>
+        <h1 className="subject"><span className="logo">BAR</span> למלצרים</h1>
       </Link>
       <Link to={"/login"}>
         <img src={waiter} alt="waiter " />
