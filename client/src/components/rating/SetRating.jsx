@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { getToken } from "../entry/CheckToken";
 import { FetchPP } from "../Fetch";
-
 const RatingComponent = ({ name, eventID, waiterID}) => {
   
   const [rating, setRating] = useState(0);
   let [token, isAwaiter] = getToken();
-  const ratingUrl = "http://localhost:4000/rating/new-rating";
+  const ratingUrl = `/rating/new-rating`;
   const handleRatingChange = (value) => {
     setRating(value);
   };

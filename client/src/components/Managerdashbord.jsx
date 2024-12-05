@@ -29,13 +29,13 @@ const ManagerDashboard = () => {
   }, []);
 
   /* api to get all events, and set them on there state. */
-  const apiUrlAllEvents = "http://localhost:4000/events";
-  const apiUrlFutureEvents = `http://localhost:4000/events/my-events/future`;
-  const apiUrl = `http://localhost:4000/events/my-events/past`;
+  const apiUrlAllEvents = "/events";
+  const apiUrlFutureEvents = `/events/my-events/future`;
+  const apiUrlPastEvents = `/events/my-events/past`;
   useEffect(() => {
     FetchToken(apiUrlAllEvents, setAllEvents);
     FetchToken(apiUrlFutureEvents, setfutureEvents);
-    FetchToken(apiUrl, setPastEvents);
+    FetchToken(apiUrlPastEvents, setPastEvents);
   }, []);
 
   const toggleVisibilityOfAllEvents = (event) => {

@@ -2,20 +2,21 @@ import React, { useEffect, useState } from "react";
 import RatingComponent from "../../rating/SetRating";
 import { FetchNewEvent, FetchPP } from "../../Fetch";
 
-const WaiterInfo = ({ info, eventID }) => {
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "numeric", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-  const [possible, setPossible] = useState(false);
-  const posibleToRateApi = "http://localhost:4000/rating/possible-to-rate";
-  let myInfo = {
-    event_id: eventID,
-    waiter_id: info.id,
-  };
-  useEffect(() => {
-    FetchNewEvent(posibleToRateApi, myInfo, setPossible);
-  }, []);
+const WaiterInfo = ({info, eventID}) => {
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      };
+      const [possible, setPossible] = useState(false);
+      const posibleToRateApi = `/rating/possible-to-rate`;
+        let myInfo = {
+          event_id: eventID,
+          waiter_id: info.id,
+        };
+        useEffect(() => {
+         FetchNewEvent(posibleToRateApi, myInfo, setPossible);
+        }, []);
+
   useEffect(() => {
     console.log("possible: ", possible);
     if (possible?.succeed != undefined) {
@@ -26,6 +27,7 @@ const WaiterInfo = ({ info, eventID }) => {
       }
     }
   }, [possible]);
+
 
   return (
     <div>

@@ -9,12 +9,11 @@ import GetPendingWaiters from "../manager/request/GetPendingWaiters";
 import GetApprovedWaiters from "../manager/request/GetApprovedWaiters";
 import RatingComponent from "../rating/SetRating";
 import { FetchPP } from "../Fetch";
-
 const Event = ({ eventInfo, appendButton }) => {
   const [possible, setPossible] = useState(false);
   let [token, isWaiter] = getToken();
 
-  const posibleToRateApi = "http://localhost:4000/rating/possible-to-rate";
+  const posibleToRateApi = `/rating/possible-to-rate`;
   async function CheckPossibility() {
     console.log("hi");
 
