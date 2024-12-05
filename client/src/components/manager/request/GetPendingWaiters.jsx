@@ -14,29 +14,42 @@ const GetPendingWaiters = ({ eventID }) => {
   const toggleVisibility = () => {
     setIsVisible((prevState) => !prevState);
   };
+  const openModal = () => setIsVisible(true);
 
+  // פונקציה לסגירת המודאל
+  const closeModal = () => setIsVisible(false);
   return (
     <div>
-      <button onClick={toggleVisibility}>
+      <button onClick={toggleVisibility} disabled={pendingWaiters.length === 0}>
         {isVisible ? "הסתר" : "הראה"} בקשות הצטרפות
       </button>
       {isVisible && (
-        <ToggledComponent requests={pendingWaiters} eventID={eventID} />
+        <ToggledComponent
+          requests={pendingWaiters}
+          eventID={eventID}
+          closeModal={closeModal}
+        />
       )}
     </div>
   );
 };
 
-const ToggledComponent = ({ requests, eventID }) => {
+const ToggledComponent = ({ requests, eventID, closeModal }) => {
   return (
-    <ol>
-      {requests.map((val, indx) => (
-        <li className="li-event" event={val[0]} key={indx}>
-          <WaiterInfo info={val} />
-          <AppendWaiterButton waiterID={val.id} eventID={eventID} />
-        </li>
-      ))}
-    </ol>
+    <>
+      <div className="overlay" onClick={closeModal}></div>
+      <ol className="modal">
+        <span className="close-btn" onClick={closeModal}>
+          &times;
+        </span>
+        {requests.map((val, indx) => (
+          <li className="li-event" event={val[0]} key={indx}>
+            <WaiterInfo info={val} />
+            <AppendWaiterButton waiterID={val.id} eventID={eventID} />
+          </li>
+        ))}
+      </ol>
+    </>
   );
 };
 

@@ -38,11 +38,13 @@ const Event = ({ eventInfo, appendButton }) => {
     return (
       <div className="waiter-event event-details">
         <EventDetails eventInfo={eventInfo} />
-        {appendButton&& <div className="waiter-btn"> 
-        <SendRequestButton eventID={eventInfo.id} />
-           <CancelButton eventID={eventInfo.id} />
-        </div>}
-   
+        {appendButton && (
+          <div className="waiter-btn">
+            <SendRequestButton eventID={eventInfo.id} />
+            <CancelButton eventID={eventInfo.id} />
+          </div>
+        )}
+
         {possible && (
           <RatingComponent
             name={eventInfo.company_name}
@@ -56,12 +58,14 @@ const Event = ({ eventInfo, appendButton }) => {
   else {
     return (
       <div className="manager-event event-details">
-        <EventDetails eventInfo={eventInfo} />
-        {appendButton&& <div  className="manager-btn">
-        <GetPendingWaiters eventID={eventInfo.id} />
-        <GetApprovedWaiters eventID={eventInfo.id} />
-        <DeleteButton eventID={eventInfo.id} />
-        </div>}
+        <EventDetails eventInfo={eventInfo} appendButton={appendButton} />
+        {appendButton && (
+          <div className="manager-btn">
+            <GetPendingWaiters eventID={eventInfo.id} />
+            <GetApprovedWaiters eventID={eventInfo.id} />
+            <DeleteButton eventID={eventInfo.id} />
+          </div>
+        )}
       </div>
     );
   }

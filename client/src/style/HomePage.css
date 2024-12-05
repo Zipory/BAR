@@ -6,10 +6,19 @@
 :root {
   --shadow-color: rgba(0, 0, 0, 0.3);
 }
+header {
+  background-image: url("https://img.freepik.com/premium-vector/design-elements-wave-many-glittering-lines-abstract-vertical-glow-wavy-stripes-white-background-isolated-creative-line-art-vector-illustration-eps-10-art-deco-style-wedding-invitation_299644-8709.jpg");
+}
 
 .waiters-register-p {
    border:  3px solid rgba(0, 0, 0, 0.3);
   padding: 3px;
+  border-radius: 15px;
+}
+.waiters-register-p:hover,
+ .waiters:hover,
+ .employers:hover {
+ box-shadow: 4px 4px 5px var(--shadow-color);
 }
 /**------------- testing zone------------------*/
 

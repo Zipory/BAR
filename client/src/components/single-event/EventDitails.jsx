@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import FractionMeter from "./FractionMeter";
 
-const EventDetails = ({ eventInfo, company }) => {
+const EventDetails = ({ eventInfo, company, appendButton }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // פונקציה לפתיחת המודאל
@@ -9,12 +9,13 @@ const EventDetails = ({ eventInfo, company }) => {
 
   // פונקציה לסגירת המודאל
   const closeModal = () => setIsModalOpen(false);
-
+  if (eventInfo.avg_rating == null) eventInfo.avg_rating = "עוד לא דורג";
   return (
     <div className="event-details-show">
       {/* מציג את כל פרטי האירוע */}
       <div className="event-item" onClick={openModal}>
         <h2>{eventInfo.company_name}</h2>
+        <p>{appendButton ?? "⭐" + eventInfo.avg_rating}</p>
         <p>סטטוס: {eventInfo.status === "Canceled" ? "מבוטל" : "קיים"}</p>
         <p>📅 תאריך: {eventInfo.e_date}</p>
         <p>⏲️ שעה: {eventInfo.e_time}</p>
@@ -37,6 +38,7 @@ const EventDetails = ({ eventInfo, company }) => {
               &times;
             </span>
             <h2>פרטי הארוע</h2>
+            <p>{appendButton ?? "⭐" + eventInfo.avg_rating}</p>
             <p>
               <strong>סטטוס: </strong>
               {eventInfo.status === "Canceled" ? "מבוטל" : "קיים"}
