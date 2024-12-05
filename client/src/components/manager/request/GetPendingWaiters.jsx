@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { FetchToken } from "../../Fetch";
 import WaiterInfo from "./WaiterInfo";
 import AppendWaiterButton from "./AppendWaiterButton";
-
 const GetPendingWaiters = ({ eventID }) => {
   const [pendingWaiters, setPendingWaiters] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   let status = "pending";
-  const pendingWaitersApi = `http://localhost:4000/requests/get-requests/${status}/${eventID}`;
+  const pendingWaitersApi = `/requests/get-requests/${status}/${eventID}`;
   useEffect(() => {
     FetchToken(pendingWaitersApi, setPendingWaiters);
   }, []);

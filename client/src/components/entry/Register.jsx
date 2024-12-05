@@ -6,8 +6,7 @@ import { FetchPost } from "../Fetch";
 import { useNavigate } from "react-router-dom";
 import GoHomeButton from "./GoHomeButton";
 import ProfileImageUpload from "./ProfileImageUpload";
-
-const postUrl = "http://localhost:4000/register";
+const postUrl = `/register`;
 
 /*function to create a new event-manager or a waiter. */
 function Register() {

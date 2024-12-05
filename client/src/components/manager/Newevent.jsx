@@ -5,8 +5,8 @@ import { FetchNewEvent, FetchPut } from "../Fetch";
 import LocatinInputs from "../LocationInputs";
 import { userInfo } from "../../App";
 const Newevent = ({ setShowModal, eventStatus }) => {
-  const apiUrl = `http://localhost:4000/events/new-event`;
-  const urlEdit = "http://localhost:4000/events/update-event";
+  const apiUrl = `/events/new-event`;
+  const urlEdit = `/events/update-event`;
   const [user, setUser] = useContext(userInfo);
   const [date, setDate] = useState(new Date());
   const [sendOk, setSendOk] = useState(false);

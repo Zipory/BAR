@@ -6,7 +6,7 @@ const GetApprovedWaiters = ({ eventID }) => {
   const [approvedWaiters, setApprovedWaiters] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   let status = "approved";
-  const approvedWaitersApi = `http://localhost:4000/requests/get-requests/${status}/${eventID}`;
+  const approvedWaitersApi = `/requests/get-requests/${status}/${eventID}`;
   useEffect(() => {
     FetchToken(approvedWaitersApi, setApprovedWaiters);
   }, []);

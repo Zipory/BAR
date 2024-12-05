@@ -1,32 +1,16 @@
+/**get the token of the user. */
 import { getToken } from "./entry/CheckToken";
 
-/**----------Fetch get---------------- */
-// export async function Fetch(url, setState) {
-//   let [token, isWaiter] = getToken();
-//   console.log("welcom to Fetch");
-//   fetch(url, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//       authorization: token,
-//       isAwaiter: isWaiter,
-//     },
-//   })
-//     .then((res) => res.json())
-//     .then((json) => {
-//       if (json.succeed) {
-//         setState(json.resultsArray);
-//       }
-//       // console.log("json:", json.resultsArray);
-//     });
-// }
+/**get the server-host from the .env file */
+const server = process.env.REACT_APP_SERVER;
 
 /**--Fetch send token in header,
  * and set the state with the data respons-- */
 export async function FetchToken(url, setState) {
   let [token, isWaiter] = getToken();
+  let realUrl = server + url;
   console.log("welcom to FetchToken");
-  fetch(url, {
+  fetch(realUrl, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -43,44 +27,16 @@ export async function FetchToken(url, setState) {
     });
 }
 
-/**----------Fetch get + header ---------------- */
-// export async function FetchIncludeHeader(url, email, setState, token) {
-//   console.log("welcom to FetchIncludeHeader");
-
-//   // console.log("url:", url);
-//   // console.log("email:", email);
-//   // console.log("waiter?", token[1]);
-//   // console.log("token", token[0]);
-
-//   fetch(url, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//       email: email,
-//       isAwaiter: token[1],
-//       authorization: token[0],
-//     },
-//   })
-//     .then((res) => {
-//       // console.log(res);
-//       return res.json();
-//     })
-//     .then((json) => {
-//       // console.log("json:", json);
-//       if (json?.succeed) {
-//         setState(json.data);
-//       }
-//     });
-// }
 
 /**----------Fetch post for register/login---------------- */
 export async function FetchPost(url, data, setState) {
+  let realUrl = server + url;
   console.log("welcom to FetchPost");
   console.log(82, "data:", data);
   // console.log(83, "url:", url);
   // console.log(84, "email:", data.email);
 
-  fetch(url, {
+  fetch(realUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -119,9 +75,10 @@ export async function FetchPost(url, data, setState) {
 
 /**----------Fetch post for new event -------------- */
 export async function FetchNewEvent(url, data, setState) {
+  let realUrl = server + url;
   console.log("welcom to FetchNewEvent");
   let [token, isWaiter] = getToken();
-  fetch(url, {
+  fetch(realUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -159,10 +116,11 @@ export async function FetchNewEvent(url, data, setState) {
 
 /**----------the new wey to post (new requests from waiters) */
 export async function FetchPP(url, data) {
+  let realUrl = server + url;
   console.log("welcom to Fetch New Post");
   let [token, isWaiter] = getToken();
 
-  fetch(url, {
+  fetch(realUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -192,9 +150,10 @@ export async function FetchPP(url, data) {
 
 /**----------Fetch put---------------- */
 export async function FetchPut(url, data, setState) {
+  let realUrl = server + url;
   console.log("welcom to FetchPut");
   let [token, isWaiter] = getToken();
-  fetch(url, {
+  fetch(realUrl, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -220,38 +179,14 @@ export async function FetchPut(url, data, setState) {
     });
 }
 
-/**----------Fetch delete---------------- */
-// export async function FetchDelete(url, id) {
-//   console.log("welcom to FetchDelete");
-//   let [token, isWaiter] = getToken();
-//   fetch(url, {
-//     method: "DELETE",
-//     headers: {
-//       "Content-Type": "application/json",
-//       isAwaiter: isWaiter,
-//       authorization: token,
-//     },
-//     body: JSON.stringify(id),
-//   })
-//     .then((res) => {
-//       if (res.ok) {
-//         console.log("deleted");
-//       } else {
-//         console.error("Failed to delete");
-//       }
-//       return res.json();
-//     })
-//     .then((json) => {
-//         // console.log("json:", json);
-//         return json;
-//     });
-// }
+
 
 /**---------Fetch new delete ---------- */
 export async function FetchDD(url, data) {
+  let realUrl = server + url;
   console.log("welcom to FetchDD");
   let [token, isWaiter] = getToken();
-  fetch(url, {
+  fetch(realUrl, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
