@@ -15,7 +15,7 @@ body {
   font-weight: 400;
   font-style: normal;
   cursor: default;
-  user-select: none; 
+  user-select: none;
 }
 /* header */
 header {
@@ -29,7 +29,7 @@ header {
 }
 
 .log-out {
-  background-color: #FA4032;
+  background-color: #fa4032;
   color: whitesmoke;
 }
 .log-out:hover {
@@ -145,6 +145,15 @@ header {
   color: gold;
   padding-top: 5px;
 }
+/*subject*/
+.events-title {
+  text-align: center;
+  margin: 2vh 0 2vh 0;
+  font-size: 25px;
+  font-family: "Rubik Moonrocks", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
 
 /* Styles for screens larger than 768px (e.g., tablets) */
 @media (max-width: 600px) {
@@ -166,13 +175,12 @@ header {
     font-size: 1em;
   }
   .subject {
-     font-size: 1em;
+    font-size: 1em;
   }
 }
 
-
 @media (min-width: 1024px) {
-  .body{
+  .body {
     width: 60%;
     padding: 60px;
   }
