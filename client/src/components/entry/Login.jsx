@@ -6,7 +6,7 @@ import { typeOfUser } from "../../App";
 import { FetchPost } from "../Fetch";
 import { userInfo } from "../../App";
 import GoHomeButton from "./GoHomeButton";
-const serverUrl = "http://localhost:4000/login";
+const url = `/login`;
 
 /*Components that show the login page, and handle with it. */
 function Login() {
@@ -27,7 +27,7 @@ function Login() {
       isAwaiter: isAwaiter
     }
     console.log("Logging in with:", data);
-    FetchPost(serverUrl, data, setUser);
+    FetchPost(url, data, setUser);
   };
   
   /*A good way to use navaget in if statement. */

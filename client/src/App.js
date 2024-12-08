@@ -14,8 +14,8 @@ import FirstNav from "./components/entry/FirstNav.jsx";
 import Logout from "./components/entry/Logout.jsx";
 // import filterEvents from "./components/extra/filterEvents.js";
 const slogan = [
-  "תמיד חלמת לעבוד בזמנים שלך?",
-  "יש לך זמן פנוי שאתה רוצה לעבוד בו?",
+  "תמיד חלמת לסגור שיבוץ לאירוע שבוע מראש?",
+  "עם BAR ניתן להשלים הכנסה מתי ואיך שנוח, ללא התחיבות וללא צורך בניסיון קודם",
   "שובר את הראש בגיוס מלצרים בכל אירוע מחדש?",
 ];
 export const typeOfUser = createContext(null);
@@ -47,7 +47,7 @@ function App() {
             <div>
               <h2>{slogan[Math.floor(Math.random() * slogan.length)]}</h2>
               <h2>
-                <u>בר</u>, הפלטפורמה שמחברת בין מעסיקים למלצרים!
+                <span className="logo">BAR</span> פלטפורמה דיגיטלית המחברת בין מנהלי האירועים למלצרים!
               </h2>
             </div>
           )}

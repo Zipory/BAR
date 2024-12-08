@@ -27,10 +27,10 @@ const WaiterDashboard = () => {
   }, []);
 
   /* api to get all events lists, and set them on there state. */
-  const apiUrlAllEvents = "http://localhost:4000/events";
-  const apiUrlFutureEvents = `http://localhost:4000/events/my-events/future`;
-  const apiUrlPastEvents = `http://localhost:4000/events/my-events/past`;
-  const apiUrlPendingEvents = `http://localhost:4000/events/my-events/pending`;
+  const apiUrlAllEvents = "/events";
+  const apiUrlFutureEvents = `/events/my-events/future`;
+  const apiUrlPastEvents = `/events/my-events/past`;
+  const apiUrlPendingEvents = `/events/my-events/pending`;
   useEffect(() => {
     FetchToken(apiUrlAllEvents, setAllEvents);
     FetchToken(apiUrlFutureEvents, setfutureEvents);

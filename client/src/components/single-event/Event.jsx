@@ -12,6 +12,7 @@ import { FetchPP, FetchToken } from "../Fetch";
 import MessageButton from "../single-event/MessageButton";
 
 const Event = ({ eventInfo, appendButton, requestList }) => {
+
   const [possible, setPossible] = useState(false);
   let [token, isWaiter] = getToken();
   const [requestCon, setRequestCon] = useState(null);
@@ -27,6 +28,7 @@ const Event = ({ eventInfo, appendButton, requestList }) => {
     (req) => req.event_id == eventInfo.id
   )[0];
 
+  const posibleToRateApi = `/rating/possible-to-rate`;
   async function CheckPossibility() {
     // console.log("hi");
 
