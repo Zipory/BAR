@@ -1,5 +1,5 @@
 import "../../style/eventDetails.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import EventDetails from "./EventDitails";
 import { getToken } from "../entry/CheckToken";
 import CancelButton from "./CancelButton";
@@ -10,44 +10,46 @@ import GetApprovedWaiters from "../manager/request/GetApprovedWaiters";
 import RatingComponent from "../rating/SetRating";
 import { FetchPP, FetchToken } from "../Fetch";
 import MessageButton from "../single-event/MessageButton";
-
+import { userInfo } from "../../App";
 const Event = ({ eventInfo, appendButton, requestList }) => {
+// console.log(eventInfo);
+
 
   const [possible, setPossible] = useState(false);
   let [token, isWaiter] = getToken();
   const [requestCon, setRequestCon] = useState(null);
   const [cancelCon, setCancelCon] = useState(null);
-
+  const [user, setUser] = useContext(userInfo);
+  // console.log(user);
   // useEffect(() => {
   //   const waiterRequest = "http://localhost:4000/events/my-events//";
   //   FetchToken(waiterRequest + "future", setRequestCon);
   //   FetchToken(waiterRequest + "pending", setCancelCon);
   // }, []);
-  const posibleToRateApi = "http://localhost:4000/rating/possible-to-rate";
   const eventRequest = requestList.filter(
     (req) => req.event_id == eventInfo.id
   )[0];
 
   const posibleToRateApi = `/rating/possible-to-rate`;
-  async function CheckPossibility() {
-    // console.log("hi");
+  // async function CheckPossibility() {
+  //   // console.log("hi");
 
-    let myInfo = {
-      event_id: 3,
-      waiter_id: 3,
-    };
-    useEffect(() => {
-      if (isWaiter) {
-        FetchPP(posibleToRateApi, myInfo).then((res) => {
-          if (res?.succeed) {
-            console.log(res);
-            setPossible(true);
-          }
-        });
-      }
-    }, [possible]);
-  }
-  CheckPossibility();
+  //   let myInfo = {
+  //     event_id: eventInfo.id,
+  //     waiter_id: 10,
+  //   };
+  //   useEffect(() => {
+  //     if (isWaiter) {
+  //       FetchPP(posibleToRateApi, myInfo).then((res) => {
+  //         if (res?.succeed) {
+  //           console.log(res);
+  //           setPossible(true);
+  //         }
+  //       });
+  //     }
+  //   }, [possible]);
+  // }
+  // CheckPossibility();
 
   //   return for waiter.
   if (isWaiter) {
@@ -69,12 +71,13 @@ const Event = ({ eventInfo, appendButton, requestList }) => {
           </div>
         )}
 
-        {possible && (
+      {/* will show only in past events, then the user don't have buttons. */}
+        {!appendButton && (
           <RatingComponent
             name={eventInfo.company_name}
             eventID={eventInfo.id}
           />
-        )}
+          )}  
       </div>
     );
   }

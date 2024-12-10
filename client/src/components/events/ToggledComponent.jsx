@@ -7,7 +7,7 @@ const ToggledComponent = ({ events, appendButton, title, setSomeChange }) => {
   const [requestList, setRequestList] = useState([]);
 
   useEffect(() => {
-    FetchToken("http://localhost:4000/requests/all-requests", setRequestList);
+    FetchToken("/requests/all-requests", setRequestList);
   }, []);
 
   return (

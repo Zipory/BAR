@@ -8,7 +8,7 @@ const server = process.env.REACT_APP_SERVER;
  * and set the state with the data respons-- */
 export async function FetchToken(url, setState) {
   let [token, isWaiter] = getToken();
-  let realUrl = server + url;
+  let realUrl = `${server}${url}`;
   console.log("welcom to FetchToken");
   fetch(realUrl, {
     method: "GET",
@@ -27,20 +27,20 @@ export async function FetchToken(url, setState) {
     });
 }
 
-
 /**----------Fetch post for register/login---------------- */
 export async function FetchPost(url, data, setState) {
   let realUrl = server + url;
   console.log("welcom to FetchPost");
-  console.log(82, "data:", data);
-  // console.log(83, "url:", url);
+  // console.log(35, "data:", data);
+  // console.log(36, "url:", url);
+  // console.log(37, "realurl:", realUrl);
   // console.log(84, "email:", data.email);
 
   fetch(realUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      email:  data["email"],
+      email: data["email"],
     },
     body: JSON.stringify(data),
   })
@@ -76,6 +76,8 @@ export async function FetchPost(url, data, setState) {
 /**----------Fetch post for new event -------------- */
 export async function FetchNewEvent(url, data, setState) {
   let realUrl = server + url;
+ 
+  
   console.log("welcom to FetchNewEvent");
   let [token, isWaiter] = getToken();
   fetch(realUrl, {
@@ -117,7 +119,9 @@ export async function FetchNewEvent(url, data, setState) {
 /**----------the new wey to post (new requests from waiters) */
 export async function FetchPP(url, data) {
   let realUrl = server + url;
-  console.log("welcom to Fetch New Post");
+  console.log(realUrl);
+  console.log(data);
+  console.log("welcom to Fetch PP");
   let [token, isWaiter] = getToken();
 
   fetch(realUrl, {
@@ -178,8 +182,6 @@ export async function FetchPut(url, data, setState) {
       return json;
     });
 }
-
-
 
 /**---------Fetch new delete ---------- */
 export async function FetchDD(url, data) {

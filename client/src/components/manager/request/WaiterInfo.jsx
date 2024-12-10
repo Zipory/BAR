@@ -13,6 +13,8 @@ const WaiterInfo = ({info, eventID}) => {
           event_id: eventID,
           waiter_id: info.id,
         };
+        console.log("info",myInfo);
+        
         useEffect(() => {
          FetchNewEvent(posibleToRateApi, myInfo, setPossible);
         }, []);
@@ -49,13 +51,13 @@ const WaiterInfo = ({info, eventID}) => {
       <p>
         <strong>ממוצע ניקוד:</strong> {info.avg_rating ?? "אין דרוג"}
       </p>
-      {possible && (
+      {/* {possible && ( */}
         <RatingComponent
           name={info.first_name + " " + info.last_name}
           eventID={eventID}
           waiterID={info.id}
         />
-      )}
+      {/* )} */}
     </div>
   );
 };
