@@ -31,9 +31,9 @@ export async function FetchToken(url, setState) {
 export async function FetchPost(url, data, setState) {
   let realUrl = server + url;
   console.log("welcom to FetchPost");
-  console.log(35, "data:", data);
-  console.log(36, "url:", url);
-  console.log(37, "realurl:", realUrl);
+  // console.log(35, "data:", data);
+  // console.log(36, "url:", url);
+  // console.log(37, "realurl:", realUrl);
   // console.log(84, "email:", data.email);
 
   fetch(realUrl, {
@@ -76,6 +76,8 @@ export async function FetchPost(url, data, setState) {
 /**----------Fetch post for new event -------------- */
 export async function FetchNewEvent(url, data, setState) {
   let realUrl = server + url;
+ 
+  
   console.log("welcom to FetchNewEvent");
   let [token, isWaiter] = getToken();
   fetch(realUrl, {
@@ -117,7 +119,9 @@ export async function FetchNewEvent(url, data, setState) {
 /**----------the new wey to post (new requests from waiters) */
 export async function FetchPP(url, data) {
   let realUrl = server + url;
-  console.log("welcom to Fetch New Post");
+  console.log(realUrl);
+  console.log(data);
+  console.log("welcom to Fetch PP");
   let [token, isWaiter] = getToken();
 
   fetch(realUrl, {
