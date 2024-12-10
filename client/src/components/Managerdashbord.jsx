@@ -86,16 +86,17 @@ const ManagerDashboard = () => {
         {/* {button to see future events} */}
         <button
           disabled={disableButton(futureEvents)}
-          onClick={(event) => toggleVisibilityofFutureEvents(event)}
-        >
+          onClick={(event) => toggleVisibilityofFutureEvents(event)}>
           {futureEventsIsVisible ? "הסתר" : "הראה "}
-          <strong>{futureEvents.length  > 0 ? futureEvents.length : " "}</strong> אירועים עתידיים
+          <strong>
+            {futureEvents.length > 0 ? futureEvents.length : " "}
+          </strong>{" "}
+          אירועים עתידיים
         </button>
         {/* {button to see past events} */}
         <button
           disabled={disableButton(pastEvents)}
-          onClick={(event) => toggleVisibilityofPastEvents(event)}
-        >
+          onClick={(event) => toggleVisibilityofPastEvents(event)}>
           {pastEventsIsVisible ? "הסתר " : "הראה "}
           <strong>{pastEvents.length > 0 ? pastEvents.length : " "}</strong>
           אירועים שעברו
@@ -103,27 +104,36 @@ const ManagerDashboard = () => {
         {/* {button to see all events} */}
         <button
           disabled={disableButton(allEvents)}
-          onClick={(event) => toggleVisibilityOfAllEvents(event)}
-        >
+          onClick={(event) => toggleVisibilityOfAllEvents(event)}>
           {allEventsIsVisible ? "הסתר" : "הראה "}
-          <strong>{allEvents.length > 0 ? allEvents.length : " "}</strong> אירועים כלליים
+          <strong>{allEvents.length > 0 ? allEvents.length : " "}</strong>{" "}
+          אירועים כלליים
         </button>
       </section>
 
       {/* ----------------------new way to see the events---------------------------- */}
       <div className="buttons">
         <section>
-          <ListOfEvents isVisible={allEventsIsVisible} events={allEvents} />
+          <ListOfEvents
+            title={"אירועים כלליים"}
+            isVisible={allEventsIsVisible}
+            events={allEvents}
+          />
         </section>
         <section>
           <ListOfEvents
+            title={"אירועים עתידיים"}
             isVisible={futureEventsIsVisible}
             events={futureEvents}
             appendButton={appendButton}
           />
         </section>
         <section>
-          <ListOfEvents isVisible={pastEventsIsVisible} events={pastEvents} />
+          <ListOfEvents
+            title={"אירועים שעברו"}
+            isVisible={pastEventsIsVisible}
+            events={pastEvents}
+          />
         </section>
       </div>
     </div>

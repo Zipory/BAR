@@ -340,3 +340,31 @@ async function cancelRequest(req, res) {
 }
 router.delete("/cancel-request", authenticateToken, cancelRequest);
 export default router;
+
+async function getAllRequests(req, res) {
+  try {
+    const user = await extractingUserDetails(req.headers["authorization"]);
+    if (!user.isAwaiter) {
+      return res.status(401).send({
+        message: "You are not allowed to view this data",
+        succeed: false,
+      });
+    }
+
+    const results = await pool.query(
+      `SELECT * FROM requests WHERE waiter_id = ${user.id};`
+    );
+    res.status(200).json({
+      message: "Data fetched successfully",
+      data: results[0],
+      succeed: true,
+    });
+  } catch {
+    res.status(500).json({
+      message: "Error fetching data from the database",
+      succeed: false,
+    });
+  }
+}
+
+router.get("/all-requests", authenticateToken, getAllRequests);
