@@ -23,7 +23,6 @@ const Event = ({ eventInfo, appendButton, requestList }) => {
   //   FetchToken(waiterRequest + "future", setRequestCon);
   //   FetchToken(waiterRequest + "pending", setCancelCon);
   // }, []);
-  const posibleToRateApi = "http://localhost:4000/rating/possible-to-rate";
   const eventRequest = requestList.filter(
     (req) => req.event_id == eventInfo.id
   )[0];
