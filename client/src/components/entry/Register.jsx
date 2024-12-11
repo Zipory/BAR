@@ -6,6 +6,7 @@ import { FetchPost } from "../Fetch";
 import { useNavigate } from "react-router-dom";
 import GoHomeButton from "./GoHomeButton";
 import ProfileImageUpload from "./ProfileImageUpload";
+import CloudinaryHandle from "../waiter/profile/CloudinaryHandle";
 const postUrl = `/register`;
 
 /*function to create a new event-manager or a waiter. */
@@ -32,6 +33,7 @@ function Register() {
   const [showCorenfinPassword, setShowCorenfinPassword] = useState(false);
   const [singupOk, setSingupOk] = useState(false);
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
+  const [cloudinaryUrl, setCloudinaryUrl] = useState(null)
   const [title, setTitle] = useState(isAwaiter ? "מלצר" : "מנהל אירועים");
 
   /* nav to login after singup. */
@@ -75,7 +77,7 @@ function Register() {
       birthday: waiterAge.current.value,
       isAwaiter: isAwaiter,
       gender : gender,
-      image : image.current.value
+      image : cloudinaryUrl
     };
     FetchPost(postUrl, allInputs, setSingupOk);
     console.log(allInputs);
@@ -202,7 +204,8 @@ function Register() {
           </div>
         </div>
         {isAwaiter && (
-         <ProfileImageUpload image={image}/>
+        //  <ProfileImageUpload image={image}/>
+        <CloudinaryHandle setCloudinaryUrl={setCloudinaryUrl}/>
         )}
         <button
           type="submit"
