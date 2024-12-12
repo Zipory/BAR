@@ -76,8 +76,7 @@ export async function FetchPost(url, data, setState) {
 /**----------Fetch post for new event -------------- */
 export async function FetchNewEvent(url, data, setState) {
   let realUrl = server + url;
- 
-  
+
   console.log("welcom to FetchNewEvent");
   let [token, isWaiter] = getToken();
   fetch(realUrl, {

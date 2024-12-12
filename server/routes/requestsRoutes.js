@@ -155,16 +155,7 @@ async function approveRequest(req, res) {
       `SELECT email,CONCAT(first_name,' ',last_name) as name FROM waiters WHERE id = ?`,
       [request.waiter_id]
     );
-    //send an email to the waiter
-    //     let message = `
-    // שלום ${waiter_email_details[0][0].name}
-    // צוות בר שמח לבשר לך כי אושרת לעבודה
-    // בתאריך : ${eventDate}
-    // בשעה : ${eventTime}
-    // בכתובת : ${eventLocation}
-    // אירוע : ${eventDescription}
-    // בהצלחה
-    // `;
+
     let message = `
 <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 400px; margin: 0 auto; padding: 20px; background-color: #f0f9f0; border: 1px solid #cce5cc; border-radius: 8px;" dir="rtl" lang="he">
   <h2 style="color: #28a745; text-align: center;">בשורות משמחות!</h2>
@@ -339,7 +330,6 @@ async function cancelRequest(req, res) {
   }
 }
 router.delete("/cancel-request", authenticateToken, cancelRequest);
-export default router;
 
 async function getAllRequests(req, res) {
   try {
@@ -368,3 +358,5 @@ async function getAllRequests(req, res) {
 }
 
 router.get("/all-requests", authenticateToken, getAllRequests);
+
+export default router;
