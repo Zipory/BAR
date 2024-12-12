@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import "../style/ManagerDashboard.css";
-import Info from "./manager/Info";
 import ListOfEvents from "./events/ListOfEvents.jsx";
 import Newevent from "./manager/Newevent.jsx";
 import { useNavigate } from "react-router-dom";

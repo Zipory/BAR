@@ -1,7 +1,6 @@
 import "../style/waiterDashboard.css";
 import React, { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UserInfo from "./waiter/info";
 import ListOfEvents from "./events/ListOfEvents";
 import { userInfo } from "../App";
 import { FetchToken } from "./Fetch";
@@ -36,6 +35,7 @@ const WaiterDashboard = () => {
     FetchToken(apiUrlFutureEvents, setfutureEvents);
     FetchToken(apiUrlPastEvents, setPastEvents);
     FetchToken(apiUrlPendingEvents, setpendingEvents);
+    console.log(user);
   }, []);
 
   const toggleVisibilityOfAllEvents = (event) => {
@@ -62,6 +62,14 @@ const WaiterDashboard = () => {
   return (
     <>
       <h1 className="name">
+      {user?.face_url && (
+        <div>
+          <img className="profil"
+            src={user.face_url}
+            alt="תמונת פרופיל"
+          />
+        </div>
+          )}
         {user?.first_name} {user?.last_name}
       </h1>
       <div className="dashboard">
