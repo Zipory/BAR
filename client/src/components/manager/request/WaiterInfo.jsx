@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RatingComponent from "../../rating/SetRating";
 import { FetchNewEvent, FetchPP } from "../../Fetch";
-
+const  defaultProfil = require("../../../images/SmileyFace.png") 
 const WaiterInfo = ({info, eventID}) => {
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -23,7 +23,8 @@ const WaiterInfo = ({info, eventID}) => {
     console.log("possible: ", possible);
     if (possible?.succeed != undefined) {
       console.log("inside possible succeed");
-
+      if (!info.face_url) info.face_url = defaultProfil;
+      let shortName = `${info.first_name[0]}${info.last_name[0]}`;
       if (possible.succeed == false) {
         setPossible(false);
       }
@@ -33,6 +34,14 @@ const WaiterInfo = ({info, eventID}) => {
 
   return (
     <div>
+        <div>
+          <img className="profil"
+            src={info.face_url}
+            alt="תמונת פרופיל"
+            width="50px"
+            height="50px"
+          />
+        </div>
       <p>
         <strong>שם:</strong> {info.first_name} {info.last_name}
       </p>
