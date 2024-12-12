@@ -18,6 +18,7 @@ const waiter_Fields_Select = [
   "email",
   "gender",
   "avg_rating",
+  "face_url",
 ];
 
 const employers_Fields_Select = [
