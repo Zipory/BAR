@@ -1,5 +1,4 @@
 import React from "react";
-const tie = require("../images/tie.png");
 const Logo = () => {
   return (
     <header className="header">

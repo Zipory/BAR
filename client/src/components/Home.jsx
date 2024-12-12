@@ -2,9 +2,6 @@ import React from "react";
 import About from "./home-page/About";
 import WaitersEntry from "./home-page/WaitersEntry";
 import EmployersEntry from "./home-page/EmployersEntry";
-import Login from "./entry/Login";
-import Register from "./entry/Register";
-import Logo from "./Logo";
 
 const slogan = [
   "תמיד חלמת לעבוד בזמנים שלך?",

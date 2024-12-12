@@ -31,6 +31,9 @@ ol {
   display: flex;
 }
 
+.profile {
+  border-radius: 50%;
+}
 .clicked {
   background-color: #4CAF50;
   color: white;
