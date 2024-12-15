@@ -16,6 +16,7 @@ const ManagerDashboard = () => {
   const [futureEvents, setfutureEvents] = useState([]);
   const [futureEventsIsVisible, setFutureEventsIsVisible] = useState(false);
   const appendButton = true;
+  const timeToRate = true;
   // check that the user is event-manager.
   const navigate = useNavigate();
   let isWaiter = JSON.parse(window.localStorage.getItem("isWaiter"));
@@ -132,6 +133,7 @@ const ManagerDashboard = () => {
             title={"אירועים שעברו"}
             isVisible={pastEventsIsVisible}
             events={pastEvents}
+            timeToRate={timeToRate}
           />
         </section>
       </div>

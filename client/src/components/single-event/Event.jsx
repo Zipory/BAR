@@ -11,9 +11,8 @@ import RatingComponent from "../rating/SetRating";
 import { FetchPP, FetchToken } from "../Fetch";
 import MessageButton from "../single-event/MessageButton";
 import { userInfo } from "../../App";
-const Event = ({ eventInfo, appendButton, requestList }) => {
-// console.log(eventInfo);
-
+const Event = ({ eventInfo, appendButton, requestList, timeToRate }) => {
+  // console.log(eventInfo);
 
   const [possible, setPossible] = useState(false);
   let [token, isWaiter] = getToken();
@@ -71,13 +70,13 @@ const Event = ({ eventInfo, appendButton, requestList }) => {
           </div>
         )}
 
-      {/* will show only in past events, then the user don't have buttons. */}
+        {/* will show only in past events, then the user don't have buttons. */}
         {!appendButton && (
           <RatingComponent
             name={eventInfo.company_name}
             eventID={eventInfo.id}
           />
-          )}  
+        )}
       </div>
     );
   }
@@ -91,6 +90,11 @@ const Event = ({ eventInfo, appendButton, requestList }) => {
             <GetPendingWaiters eventID={eventInfo.id} />
             <GetApprovedWaiters eventID={eventInfo.id} />
             <DeleteButton eventID={eventInfo.id} />
+          </div>
+        )}
+        {timeToRate && (
+          <div className="manager-btn">
+            <GetApprovedWaiters eventID={eventInfo.id} timeToRate={timeToRate} />
           </div>
         )}
       </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FetchToken } from "../../Fetch";
 import WaiterInfo from "./WaiterInfo";
 
-const GetApprovedWaiters = ({ eventID }) => {
+const GetApprovedWaiters = ({ eventID, timeToRate }) => {
   const [approvedWaiters, setApprovedWaiters] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   let status = "approved";
@@ -31,13 +31,14 @@ const GetApprovedWaiters = ({ eventID }) => {
           requests={approvedWaiters}
           eventID={eventID}
           closeModal={closeModal}
+          timeToRate={timeToRate}
         />
       )}
     </div>
   );
 };
 
-const ToggledComponent = ({ requests, eventID, closeModal }) => {
+const ToggledComponent = ({ requests, eventID, closeModal, timeToRate }) => {
   return (
     <>
       <div className="overlay" onClick={closeModal}></div>
@@ -47,7 +48,7 @@ const ToggledComponent = ({ requests, eventID, closeModal }) => {
         </span>
         {requests.map((val, indx) => (
           <li className="li-event" event={val[0]} key={indx}>
-            <WaiterInfo info={val} eventID={eventID} />
+            <WaiterInfo info={val} eventID={eventID} timeToRate={timeToRate}/>
           </li>
         ))}
       </ol>
