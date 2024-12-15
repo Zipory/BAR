@@ -8,6 +8,7 @@ const ListOfEvents = ({
   appendButton,
   title,
   setSomeChange,
+  timeToRate,
 }) => {
   return (
     <>
@@ -18,6 +19,7 @@ const ListOfEvents = ({
             events={events}
             appendButton={appendButton}
             setSomeChange={setSomeChange}
+            timeToRate={timeToRate}
           />
         )}
       </div>

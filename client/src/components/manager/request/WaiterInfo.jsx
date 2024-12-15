@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import RatingComponent from "../../rating/SetRating";
 import { FetchNewEvent, FetchPP } from "../../Fetch";
 const  defaultProfil = require("../../../images/SmileyFace.png") 
-const WaiterInfo = ({info, eventID}) => {
+const WaiterInfo = ({info, eventID, timeToRate}) => {
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
@@ -60,13 +60,13 @@ const WaiterInfo = ({info, eventID}) => {
       <p>
         <strong>ממוצע ניקוד:</strong> {info.avg_rating ?? "אין דרוג"}
       </p>
-      {/* {possible && ( */}
+      {timeToRate && (
         <RatingComponent
           name={info.first_name + " " + info.last_name}
           eventID={eventID}
           waiterID={info.id}
         />
-      {/* )} */}
+       )} 
     </div>
   );
 };
