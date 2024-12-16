@@ -79,7 +79,11 @@ const ManagerDashboard = () => {
       </button>
       <div ref={divRef}>
         {showModal && (
-          <Newevent setShowModal={setShowModal} eventStatus={"new-event"} />
+          <Newevent
+            setShowModal={setShowModal}
+            eventStatus={"new-event"}
+            setFutureEventsIsVisible={setFutureEventsIsVisible}
+          />
         )}
       </div>
       <section>

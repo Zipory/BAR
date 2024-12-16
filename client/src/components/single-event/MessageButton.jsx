@@ -1,17 +1,20 @@
 import React from "react";
 
-const MessageButton = () => {
+const MessageButton = ({ text, alertText }) => {
   return (
     <h2>
       <button
         type="button"
         onClick={() =>
           alert(
-            "אינך יכול להירשם שוב מכיוון שכבר נרשמת לאירוע וביטלת/נדחית על ידי המנהל"
+            alertText
+              ? alertText
+              : "אינך יכול להירשם שוב מכיוון שכבר נרשמת לאירוע וביטלת/נדחית על ידי המנהל"
           )
         }
-        className="log-out">
-        אינך יכול להירשם שוב{" "}
+        className="log-out"
+        style={{ backgroundColor: "gray" }}>
+        {text ? text : "אינך יכול להירשם שוב"}
       </button>
     </h2>
   );
