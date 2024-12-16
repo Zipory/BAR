@@ -139,9 +139,14 @@ async function getSoonEvents(req, res) {
          FROM events 
          WHERE company_id = ? 
          AND ${status === "Future" ? future : past} 
-         AND status = 'Active';`,
+         AND status = 'Active' ORDER BY ${
+           status === "Future"
+             ? "e_date ASC, e_time ASC"
+             : "e_date DESC, e_time DESC"
+         };`,
         [user.id]
       );
+      console.log(results[0][0]);
 
       //cut iso date
       let resultsArray = [...results[0]];

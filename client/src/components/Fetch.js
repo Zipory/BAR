@@ -22,6 +22,8 @@ export async function FetchToken(url, setState) {
     .then((json) => {
       if (json?.succeed) {
         setState(json.data);
+      } else {
+        // alert(json?.message);
       }
       // console.log("json:", json);
     });
@@ -51,6 +53,7 @@ export async function FetchPost(url, data, setState) {
         return res.json();
       } else {
         console.error("Failed to create");
+        // alert(res?.message);
       }
     })
     .then((json) => {

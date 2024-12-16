@@ -1,8 +1,8 @@
 import React from "react";
 import { FetchDD } from "../Fetch";
 import { useState } from "react";
-const CancelButton = ({ eventID, toSet }) => {
-  const [increment, setIncrement] = toSet;
+const CancelButton = ({ eventID, toSetRequests }) => {
+  const [increment, setIncrement] = toSetRequests;
 
   const newReqApi = `/requests/cancel-request`;
   const handleCancel = () => {
