@@ -1,0 +1,46 @@
+ersion: "3.8"
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: node_server
+    ports:
+      - "4000:4000"
+    env_file:
+      - "./server/.env"
+    environment:
+      - GMAIL_ADDRESS="wordpress"
+      - GMAIL_PASSWORD="wordpress"
+      - EMAIL_SERVICE="wordpress"
+      - DB_HOST="172.24.32.1"
+      - DB_PORT="3306" # Correct MySQL port
+      - DB_USER="wordpress"
+      - DB_PASS="wordpress"
+      - DB_NAME="wordpress"
+      - SECRET_KEY="wordpress"
+      - CLOUDINARY_NAME="wordpress"
+      - CLOUDINARY_API_KEY="wordpress"
+      - CLOUDINARY_API_SECRET="wordpress"
+      - SECRET_PASS="wordpress"
+    networks:
+      - app-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: react_client
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    environment:
+      - REACT_APP_SERVER="http://server:4000" # Use the container name 'server' to connect
+    depends_on:
+      - server
+
+networks:
+  app-network:
+    driver: bridge
