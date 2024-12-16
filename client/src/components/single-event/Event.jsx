@@ -11,7 +11,7 @@ import RatingComponent from "../rating/SetRating";
 import { FetchPP, FetchToken } from "../Fetch";
 import MessageButton from "../single-event/MessageButton";
 import { userInfo } from "../../App";
-const Event = ({ eventInfo, appendButton, requestList, timeToRate }) => {
+const Event = ({ eventInfo, appendButton, requestList, timeToRate, toSet }) => {
   // console.log(eventInfo);
 
   const [possible, setPossible] = useState(false);
@@ -60,12 +60,12 @@ const Event = ({ eventInfo, appendButton, requestList, timeToRate }) => {
             {eventRequest?.status ? (
               eventRequest.status === "Pending" ||
               eventRequest.status === "Approved" ? (
-                <CancelButton eventID={eventInfo.id} />
+                <CancelButton eventID={eventInfo.id} toSet={toSet} />
               ) : (
                 <MessageButton />
               )
             ) : (
-              <SendRequestButton eventID={eventInfo.id} />
+              <SendRequestButton eventID={eventInfo.id} toSet={toSet} />
             )}
           </div>
         )}
@@ -94,7 +94,10 @@ const Event = ({ eventInfo, appendButton, requestList, timeToRate }) => {
         )}
         {timeToRate && (
           <div className="manager-btn">
-            <GetApprovedWaiters eventID={eventInfo.id} timeToRate={timeToRate} />
+            <GetApprovedWaiters
+              eventID={eventInfo.id}
+              timeToRate={timeToRate}
+            />
           </div>
         )}
       </div>
