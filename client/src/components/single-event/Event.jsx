@@ -25,6 +25,7 @@ const Event = ({
   const [requestCon, setRequestCon] = useState(null);
   const [cancelCon, setCancelCon] = useState(null);
   const [user, setUser] = useContext(userInfo);
+  const [rating, setRating] = useState([]);
   // console.log(user);
   // useEffect(() => {
   //   const waiterRequest = "http://localhost:4000/events/my-events//";
@@ -36,6 +37,33 @@ const Event = ({
   )[0];
 
   const posibleToRateApi = `/rating/possible-to-rate`;
+  useEffect(() => {
+    if (isWaiter) {
+      async function getResData() {
+        try {
+          const resData = await FetchPP(posibleToRateApi, {
+            event_id: eventInfo.id,
+          });
+          // console.log("resData:", resData.succeed);
+
+          setPossible(resData.succeed); // לדוגמה, אם אתה רוצה להגדיר את זה ב-state
+          console.log("possible:", possible);
+        } catch (error) {
+          console.error("Error fetching resData:", error);
+        }
+      }
+
+      // קריאה לפונקציה
+      getResData();
+
+      // FetchPP(posibleToRateApi, { event_id: eventInfo.id }).then((res) => {
+      //   console.log("res", res);
+      // });
+    }
+  }, []);
+  // useEffect(() => {
+  //   // console.log("rating", rating);
+  // }, [rating]);
   // async function CheckPossibility() {
   //   // console.log("hi");
 
@@ -58,9 +86,6 @@ const Event = ({
 
   //   return for waiter.
   if (isWaiter) {
-    console.log("event info: ", eventInfo);
-    //approved_waiters
-    //waiters_amount
     return (
       <div className="waiter-event event-details">
         <EventDetails eventInfo={eventInfo} />
@@ -94,7 +119,7 @@ const Event = ({
         )}
 
         {/* will show only in past events, then the user don't have buttons. */}
-        {!appendButton && (
+        {!appendButton && possible && (
           <RatingComponent
             name={eventInfo.company_name}
             eventID={eventInfo.id}

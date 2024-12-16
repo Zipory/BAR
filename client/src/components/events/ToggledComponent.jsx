@@ -13,8 +13,6 @@ const ToggledComponent = ({
   const [requestList, setRequestList] = useState([]);
   const [increment, setIncrement] = useState(0);
   useEffect(() => {
-    console.log("im in use effect");
-
     FetchToken("/requests/all-requests", setRequestList);
   }, [increment]);
 

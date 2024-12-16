@@ -207,11 +207,12 @@ router.post("/new-rating", authenticateToken, newRating);
 //check if the user can rate the request
 async function isItPossibleToRate(req, res) {
   try {
+    // console.log("event_id:", req.body);
+
     //extract user details
     const user = await extractingUserDetails(req.headers["authorization"]);
     const event = req.body;
     //check if the user is an awaiter\
-    console.log(user);
 
     if (user.isAwaiter) {
       if (!Number(event.event_id)) {
