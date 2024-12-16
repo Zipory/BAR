@@ -3,12 +3,18 @@ import Event from "../single-event/Event";
 import { FetchToken } from "../Fetch";
 import { useState, useEffect } from "react";
 
-const ToggledComponent = ({ events, appendButton, title, setSomeChange, timeToRate }) => {
+const ToggledComponent = ({
+  events,
+  appendButton,
+  title,
+  setSomeChange,
+  timeToRate,
+}) => {
   const [requestList, setRequestList] = useState([]);
-
+  const [increment, setIncrement] = useState(0);
   useEffect(() => {
     FetchToken("/requests/all-requests", setRequestList);
-  }, []);
+  }, [increment]);
 
   return (
     <>
@@ -22,6 +28,7 @@ const ToggledComponent = ({ events, appendButton, title, setSomeChange, timeToRa
               requestList={requestList}
               setSomeChange={setSomeChange}
               timeToRate={timeToRate}
+              toSet={[increment, setIncrement]}
             />
           </li>
         ))}

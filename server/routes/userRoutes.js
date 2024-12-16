@@ -11,6 +11,8 @@ dotenv.config();
 const router = express.Router();
 //get user info
 async function getUser(req, res) {
+  console.log("here");
+
   try {
     const user = await extractingUserDetails(req.headers["authorization"]);
     if (!user)
