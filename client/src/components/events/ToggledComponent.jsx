@@ -9,7 +9,9 @@ const ToggledComponent = ({ events, appendButton, title, setSomeChange, timeToRa
   useEffect(() => {
     FetchToken("/requests/all-requests", setRequestList);
   }, []);
-
+  useEffect(() => {
+    
+  }, [requestList]);
   return (
     <>
       {title && <h2 className="events-title">{title}</h2>}

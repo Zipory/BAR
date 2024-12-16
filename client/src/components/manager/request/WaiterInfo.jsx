@@ -31,6 +31,9 @@ const WaiterInfo = ({info, eventID, timeToRate}) => {
     }
   }, [possible]);
 
+  function transformGender(gender) {
+   return gender === "Other" ? "אחר" : gender === "Female" ? "נקבה" : "זכר"
+  }
 
   return (
     <div>
@@ -55,7 +58,7 @@ const WaiterInfo = ({info, eventID, timeToRate}) => {
         <strong>תאריך לידה:</strong> {formatDate(info.birthday)}
       </p>
       <p>
-        <strong>מגדר:</strong> {info.gender}
+        <strong>מגדר:</strong> {transformGender( info.gender)}
       </p>
       <p>
         <strong>ממוצע ניקוד:</strong> {info.avg_rating ?? "אין דרוג"}
