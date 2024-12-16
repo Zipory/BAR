@@ -11,7 +11,13 @@ import RatingComponent from "../rating/SetRating";
 import { FetchPP, FetchToken } from "../Fetch";
 import MessageButton from "../single-event/MessageButton";
 import { userInfo } from "../../App";
-const Event = ({ eventInfo, appendButton, requestList, timeToRate }) => {
+const Event = ({
+  eventInfo,
+  appendButton,
+  requestList,
+  timeToRate,
+  toSetRequests,
+}) => {
   // console.log(eventInfo);
 
   const [possible, setPossible] = useState(false);
@@ -19,6 +25,7 @@ const Event = ({ eventInfo, appendButton, requestList, timeToRate }) => {
   const [requestCon, setRequestCon] = useState(null);
   const [cancelCon, setCancelCon] = useState(null);
   const [user, setUser] = useContext(userInfo);
+  const [rating, setRating] = useState([]);
   // console.log(user);
   // useEffect(() => {
   //   const waiterRequest = "http://localhost:4000/events/my-events//";
@@ -30,6 +37,33 @@ const Event = ({ eventInfo, appendButton, requestList, timeToRate }) => {
   )[0];
 
   const posibleToRateApi = `/rating/possible-to-rate`;
+  useEffect(() => {
+    if (isWaiter) {
+      async function getResData() {
+        try {
+          const resData = await FetchPP(posibleToRateApi, {
+            event_id: eventInfo.id,
+          });
+          // console.log("resData:", resData.succeed);
+
+          setPossible(resData.succeed); // לדוגמה, אם אתה רוצה להגדיר את זה ב-state
+          console.log("possible:", possible);
+        } catch (error) {
+          console.error("Error fetching resData:", error);
+        }
+      }
+
+      // קריאה לפונקציה
+      getResData();
+
+      // FetchPP(posibleToRateApi, { event_id: eventInfo.id }).then((res) => {
+      //   console.log("res", res);
+      // });
+    }
+  }, []);
+  // useEffect(() => {
+  //   // console.log("rating", rating);
+  // }, [rating]);
   // async function CheckPossibility() {
   //   // console.log("hi");
 
@@ -57,21 +91,35 @@ const Event = ({ eventInfo, appendButton, requestList, timeToRate }) => {
         <EventDetails eventInfo={eventInfo} />
         {appendButton && (
           <div className="waiter-btn">
-            {eventRequest?.status ? (
-              eventRequest.status === "Pending" ||
-              eventRequest.status === "Approved" ? (
-                <CancelButton eventID={eventInfo.id} />
-              ) : (
-                <MessageButton />
-              )
+            {(eventInfo?.waiters_amount === eventInfo?.approved_waiters ? (
+              <MessageButton
+                text={"האירוע מאוייש"}
+                alertText={"מכיוון שהמנהל כבר אישר את כמות המלצרים הדרושה לו"}
+              />
             ) : (
-              <SendRequestButton eventID={eventInfo.id} />
-            )}
+              ""
+            )) ||
+              (eventRequest?.status ? (
+                eventRequest.status === "Pending" ||
+                eventRequest.status === "Approved" ? (
+                  <CancelButton
+                    eventID={eventInfo.id}
+                    toSetRequests={toSetRequests}
+                  />
+                ) : (
+                  <MessageButton />
+                )
+              ) : (
+                <SendRequestButton
+                  eventID={eventInfo.id}
+                  toSetRequests={toSetRequests}
+                />
+              ))}
           </div>
         )}
 
         {/* will show only in past events, then the user don't have buttons. */}
-        {!appendButton && (
+        {!appendButton && possible && (
           <RatingComponent
             name={eventInfo.company_name}
             eventID={eventInfo.id}
@@ -94,7 +142,10 @@ const Event = ({ eventInfo, appendButton, requestList, timeToRate }) => {
         )}
         {timeToRate && (
           <div className="manager-btn">
-            <GetApprovedWaiters eventID={eventInfo.id} timeToRate={timeToRate} />
+            <GetApprovedWaiters
+              eventID={eventInfo.id}
+              timeToRate={timeToRate}
+            />
           </div>
         )}
       </div>

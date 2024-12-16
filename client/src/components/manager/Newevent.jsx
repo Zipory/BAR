@@ -4,7 +4,7 @@ import Calendar from "./Calender";
 import { FetchNewEvent, FetchPut } from "../Fetch";
 import LocatinInputs from "../LocationInputs";
 import { userInfo } from "../../App";
-const Newevent = ({ setShowModal, eventStatus }) => {
+const Newevent = ({ setShowModal, eventStatus, setFutureEventsIsVisible }) => {
   const apiUrl = `/events/new-event`;
   const urlEdit = `/events/update-event`;
   const [user, setUser] = useContext(userInfo);
@@ -28,11 +28,10 @@ const Newevent = ({ setShowModal, eventStatus }) => {
     eventInfo["location"] = eventInfo["city"] + " " + eventInfo["street"];
     // console.log(eventInfo);
     if (eventStatus === "new-event") {
-      FetchNewEvent(
-        apiUrl,
-        eventInfo,
-        setSendOk,
-      ).then(() => setShowModal(false));
+      FetchNewEvent(apiUrl, eventInfo, setSendOk).then(() => {
+        setShowModal(false);
+        setFutureEventsIsVisible(true);
+      });
     }
     if (eventStatus === "update-event") {
       // TODO:  need to continue.
@@ -45,11 +44,17 @@ const Newevent = ({ setShowModal, eventStatus }) => {
       <form
         className="eventForm modalStyle"
         onInput={handleForm}
-        onSubmit={sendForm}
-      >
+        onSubmit={sendForm}>
         <h1>יצירת אירוע חדש</h1>
         <Calendar setDate={setDate} />
-        <input name="date" type="date" disabled value={date} required placeholder="בחר תאריך"/>
+        <input
+          name="date"
+          type="date"
+          disabled
+          value={date}
+          required
+          placeholder="בחר תאריך"
+        />
         <label htmlFor="start-time">שעת התחלה:</label>
         <input name="time" type="time" id="start-time" required />
         <input
@@ -60,12 +65,9 @@ const Newevent = ({ setShowModal, eventStatus }) => {
           step={0.5}
           required
         />
-        <LocatinInputs eventInfo={eventInfo}/>
+        <LocatinInputs eventInfo={eventInfo} />
         <input name="suite" type="text" placeholder="מספר בית" required />
-        <textarea
-          name="description"
-          placeholder="תאור קצר על האירוע"
-        />
+        <textarea name="description" placeholder="תאור קצר על האירוע" />
         <input
           name="waiters_amount"
           type="number"

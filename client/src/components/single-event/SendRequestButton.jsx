@@ -1,16 +1,17 @@
-
 import React from "react";
 import { FetchPP } from "../Fetch";
 
-const SendRequestButton = ({ eventID }) => {
+const SendRequestButton = ({ eventID, toSetRequests }) => {
   const newReqApi = "/requests/new-request";
   const handlePending = () => {
+    const [increment, setIncrement] = toSetRequests;
     let id = { event_id: eventID };
 
-    FetchPP(newReqApi, id)
-      .then
-      // () => window.location.reload()
-      ();
+    FetchPP(newReqApi, id).then(() => {
+      console.log("im increment in request button");
+
+      setIncrement(increment + 1);
+    });
   };
 
   return (

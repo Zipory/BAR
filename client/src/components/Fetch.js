@@ -22,6 +22,8 @@ export async function FetchToken(url, setState) {
     .then((json) => {
       if (json?.succeed) {
         setState(json.data);
+      } else {
+        // alert(json?.message);
       }
       // console.log("json:", json);
     });
@@ -51,6 +53,7 @@ export async function FetchPost(url, data, setState) {
         return res.json();
       } else {
         console.error("Failed to create");
+        // alert(res?.message);
       }
     })
     .then((json) => {
@@ -119,11 +122,11 @@ export async function FetchNewEvent(url, data, setState) {
 export async function FetchPP(url, data) {
   let realUrl = server + url;
   console.log(realUrl);
-  console.log(data);
+  console.log("data: ", data);
   console.log("welcom to Fetch PP");
   let [token, isWaiter] = getToken();
 
-  fetch(realUrl, {
+  return fetch(realUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -139,9 +142,12 @@ export async function FetchPP(url, data) {
       } else {
         console.error("Failed to create");
       }
+
       return res.json();
     })
     .then((resData) => {
+      // console.log("resData:", resData);
+
       // console.log("Parsed Response:",data, resData);
       return resData; // Return the parsed data
     })

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { getToken } from "../entry/CheckToken";
 import { FetchPP } from "../Fetch";
-const RatingComponent = ({ name, eventID, waiterID}) => {
-  
+const RatingComponent = ({ name, eventID, waiterID }) => {
   const [rating, setRating] = useState(0);
   let [token, isAwaiter] = getToken();
   const ratingUrl = `/rating/new-rating`;
@@ -22,8 +21,8 @@ const RatingComponent = ({ name, eventID, waiterID}) => {
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", margin: "20px" }}>
-     {!isAwaiter && <h3>נא לדרג את השירות של: {name}</h3>}
-     {isAwaiter && <h3>נא לדרג את היחס שקבלת מחברת: {name}</h3>}
+      {!isAwaiter && <h3>נא לדרג את השירות של: {name}</h3>}
+      {isAwaiter && <h3>נא לדרג את היחס שקבלת מחברת: {name}</h3>}
       <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
         {[...Array(6).keys()].map((value) => (
           <button
@@ -37,8 +36,7 @@ const RatingComponent = ({ name, eventID, waiterID}) => {
               border: "1px solid gray",
               borderRadius: "5px",
               cursor: "pointer",
-            }}
-          >
+            }}>
             {value}
           </button>
         ))}
@@ -53,8 +51,7 @@ const RatingComponent = ({ name, eventID, waiterID}) => {
             border: "none",
             borderRadius: "5px",
             cursor: "pointer",
-          }}
-        >
+          }}>
           שמור דירוג
         </button>
       </div>
