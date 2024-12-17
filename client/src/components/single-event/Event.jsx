@@ -7,10 +7,10 @@ import SendRequestButton from "./SendRequestButton";
 import DeleteButton from "./DeleteButton";
 import GetPendingWaiters from "../manager/request/GetPendingWaiters";
 import GetApprovedWaiters from "../manager/request/GetApprovedWaiters";
-import RatingComponent from "../rating/SetRating";
 import { FetchPP, FetchToken } from "../Fetch";
 import MessageButton from "../single-event/MessageButton";
 import { userInfo } from "../../App";
+import Modal from "../rating/Modal";
 const Event = ({
   eventInfo,
   appendButton,
@@ -121,11 +121,11 @@ const Event = ({
 
         {/* will show only in past events, then the user don't have buttons. */}
         {!appendButton && possible && (
-          <RatingComponent
+          <Modal
             name={eventInfo.company_name}
             eventID={eventInfo.id}
           />
-        )}
+        ) || !appendButton && <button>תודה שדרגת</button>}
       </div>
     );
   }
