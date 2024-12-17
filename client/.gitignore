@@ -27,6 +27,3 @@ yarn-error.log*
 # the extra folder
 /extra
 
-# Ignore Dockerfile
-Dockerfile
-.Dockerignore
