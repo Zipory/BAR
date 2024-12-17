@@ -21,6 +21,7 @@ const Event = ({
   // console.log(eventInfo);
 
   const [possible, setPossible] = useState(false);
+  const [openRating, setOpenRating] = useState(false);
   let [token, isWaiter] = getToken();
   const [requestCon, setRequestCon] = useState(null);
   const [cancelCon, setCancelCon] = useState(null);

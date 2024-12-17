@@ -16,7 +16,7 @@ function Login() {
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
   const [user, setUser] = useContext(userInfo);
   const [title, setTitle] = useState(isAwaiter ? "מלצר" : "מנהל אירועים");
-  const navagetTo = {manager:  "/events-manager", waiter: "/waiter"};
+  const navagetTo = { manager: "/events-manager", waiter: "/waiter" };
   let navigate = useNavigate();
   const handleLogin = (event) => {
     document.querySelector(".myForm").checkVisibility();
@@ -24,24 +24,25 @@ function Login() {
     let data = {
       email: email,
       password: password,
-      isAwaiter: isAwaiter
-    }
+      isAwaiter: isAwaiter,
+    };
     console.log("Logging in with:", data);
     FetchPost(url, data, setUser);
   };
-  
+
   /*A good way to use navaget in if statement. */
   useEffect(() => {
     if (user !== null && user !== false) {
-      isAwaiter === true ?  navigate(navagetTo.waiter) :  navigate(navagetTo.manager);
+      isAwaiter === true
+        ? navigate(navagetTo.waiter)
+        : navigate(navagetTo.manager);
       // This effect will run only when 'user' get value.
     }
   }, [user]);
 
-
   return (
-    <div className="auth-container">
-      <GoHomeButton/>
+    <div className="auth-container " style={{ height: "75vh" }}>
+      <GoHomeButton />
       <h2>התחברות כ{title}</h2>
       <form onSubmit={handleLogin} className="myForm">
         <input
@@ -63,8 +64,7 @@ function Login() {
           />
           <div
             className="eyeClick"
-            onClick={() => setShowPassword(!showPassword)}
-          >
+            onClick={() => setShowPassword(!showPassword)}>
             {(showPassword && <FaEyeSlash />) || <FaEye />}
           </div>
         </div>

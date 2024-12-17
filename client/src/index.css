@@ -28,8 +28,8 @@ header {
   font-style: normal;
 }
 .logo {
-   font-family: "Rubik Moonrocks", sans-serif;
-   color: rgb(78, 78, 78);
+  font-family: "Rubik Moonrocks", sans-serif;
+  color: rgb(78, 78, 78);
 }
 .log-out {
   background-color: #fa4032;
@@ -50,7 +50,8 @@ header {
   text-shadow: 4px 4px 5px var(--shadow-color);
 }
 
-.left, .right {
+.left,
+.right {
   max-width: 400px;
   max-height: 500px;
 }
@@ -122,13 +123,14 @@ header {
   width: 30%;
   /* height: 75vh; */
   overflow: hidden;
-  background-color: rgb(128, 128, 128, 0.3);
+  /* background-color: rgb(128, 128, 128, 0.3); */
+  background: linear-gradient(135deg, #f2f2f2, #e0e0e0);
 }
 
-.waiters :hover, .employers :hover {
+.waiters :hover,
+.employers :hover {
   text-shadow: 5px 5px 5px var(--shadow-color);
 }
-
 
 .entry p,
 .entry h1 {
