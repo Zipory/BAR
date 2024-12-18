@@ -174,6 +174,16 @@ header {
   font-style: normal;
 }
 
+.very-small {
+  font-size: small;
+}
+
+.very-small-span {
+  background-color: #007bff;
+  color: #fff;
+  padding: 3px;
+}
+
 /* Styles for screens larger than 768px (e.g., tablets) */
 @media (max-width: 600px) {
   .body {

@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const preset = process.env.REACT_APP_CLOUDINARY_PRESET;
 const cloudinaryName = process.env.REACT_APP_CLOUDINARY_NAME;
 
-const CloudinaryHandle = ({ setCloudinaryUrl }) => {
+const CloudinaryHandle = ({ setCloudinaryUrl, cloudinaryUrl }) => {
   const [file, setFile] = useState(null);
-const [imageUrl, setImgUrl] = useState(null);
+  const [imageUrl, setImgUrl] = useState(null);
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
+  useEffect(() => {
+    if (cloudinaryUrl) {
+      console.log("Updated image_url:", cloudinaryUrl);
+      setImgUrl(cloudinaryUrl);
+    }
+  }, [cloudinaryUrl]); // This runs every time 'imageUrl' changes
 
   const uploadImage = async (e) => {
     e.preventDefault();
@@ -21,9 +27,10 @@ const [imageUrl, setImgUrl] = useState(null);
         `https://api.cloudinary.com/v1_1/${cloudinaryName}/image/upload`,
         formData
       );
+      let url = await response.data.secure_url;
       // the url of the img
-      setImgUrl(response.data.secure_url);
-      setCloudinaryUrl(() => imageUrl);
+      setCloudinaryUrl(url);
+      console.log("url", url);
     } catch (error) {
       console.error("Error uploading image", error);
     }
@@ -39,10 +46,10 @@ const [imageUrl, setImgUrl] = useState(null);
           <img
             src={imageUrl}
             alt="התמונה מאושרת"
-            style={{ width: 150, height: 150 , objectFit: "cover"}}
+            style={{ width: 150, height: 150, objectFit: "cover" }}
           />
         </div>
-      )}
+      ) || <p className="very-small">יש לאשר את התמונה ולהמתין להצגתה לפני לחיצה על <span className="very-small-span">התחברות</span></p>}
     </div>
   );
 };

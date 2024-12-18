@@ -203,8 +203,7 @@ function Register() {
           </div>
         </div>
         {isAwaiter && (
-        //  <ProfileImageUpload image={image}/>
-        <CloudinaryHandle setCloudinaryUrl={setCloudinaryUrl}/>
+        <CloudinaryHandle setCloudinaryUrl={setCloudinaryUrl} cloudinaryUrl={cloudinaryUrl}/>
         )}
         <button
           type="submit"
