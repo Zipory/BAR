@@ -11,8 +11,10 @@ const CanBut = ({ eventID }) => {
 
   return (
     <h2>
-      <button type="button" onClick={handleCancel}>
+      <button type="button" onDoubleClick={handleCancel}>
         בטל זימון
+        <br />
+        <small>(לחיצה כפולה)</small>
       </button>
     </h2>
   );
