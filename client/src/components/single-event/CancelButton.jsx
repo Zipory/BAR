@@ -14,7 +14,7 @@ const CancelButton = ({ eventID, toSetRequests }) => {
 
   return (
     <h2>
-      <button type="button" onClick={handleCancel} className="log-out">
+      <button type="button" onDoubleClick={handleCancel} className="log-out">
         בטל זימון
         <br />
         <small>(לחיצה כפולה)</small>

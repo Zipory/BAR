@@ -1,0 +1,54 @@
+services:
+  server:
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: node_server
+    ports:
+      - "4000:4000"
+    env_file:
+      - "./server/.env"
+    networks:
+      - bar-network
+    depends_on:
+      mysql: 
+        condition: service_healthy
+
+  client:
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: react_client
+    ports:
+      - "3000:3000"
+    networks:
+      - bar-network
+    env_file:
+      - "./client/.env"
+    depends_on:
+      - server
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    env_file:
+      - "./.env"
+    volumes:
+      - mysql_data2:/var/lib/mysql 
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - bar-network
+
+networks:
+  bar-network:
+    driver: bridge
+
+volumes:
+  mysql_data2:
