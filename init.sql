@@ -62,6 +62,7 @@ CREATE TABLE requests (
 );
 
 
+
 DELIMITER $$
 
 CREATE TRIGGER update_waiter_avg_rating_on_rating_update
@@ -124,3 +125,4 @@ BEGIN
 END $$
 
 DELIMITER ;
+
