@@ -60,3 +60,69 @@ CREATE TABLE requests (
     FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
     FOREIGN KEY (waiter_id) REFERENCES waiters(id) ON DELETE CASCADE
 );
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER update_waiter_avg_rating_on_rating_update
+AFTER UPDATE ON requests
+FOR EACH ROW
+BEGIN
+    IF NEW.rating_w <> OLD.rating_w THEN
+        UPDATE waiters
+        SET avg_rating = (
+            SELECT AVG(rating_w)
+            FROM requests
+            WHERE waiter_id = NEW.waiter_id
+        )
+        WHERE id = NEW.waiter_id;
+    END IF;
+END $$
+
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER update_avg_rating_after_request_update
+AFTER UPDATE ON requests
+FOR EACH ROW
+BEGIN
+    UPDATE companies
+    SET avg_rating = (
+        SELECT AVG(rating_c)
+        FROM requests
+        JOIN events ON requests.event_id = events.id
+        WHERE events.company_id = companies.id
+    )
+    WHERE companies.id = (
+        SELECT events.company_id
+        FROM events
+        WHERE events.id = NEW.event_id
+    );
+END $$
+
+DELIMITER ;
+
+
+DELIMITER $$
+
+CREATE TRIGGER update_approved_waiters_after_requests_update
+AFTER UPDATE ON requests
+FOR EACH ROW
+BEGIN
+    IF NEW.status <> OLD.status THEN
+        UPDATE events
+        SET approved_waiters = (
+            SELECT COUNT(*) 
+            FROM requests
+            WHERE event_id = NEW.event_id AND status = 'Approved'
+        )
+        WHERE id = NEW.event_id;
+    END IF;
+END $$
+
+DELIMITER ;
+
