@@ -582,51 +582,50 @@ async function updateEvent(req, res) {
 
 router.put("/update-event", authenticateToken, updateEvent);
 
-// router.put("/update-event", authenticateToken, (req, res) => {
-//   const userEmail = req.header("email");
-//   const event = req.body;
-//   const [arrayField, arrayContent] = arrayToSet(event);
-//   // console.log("event: ", event);
+async function canceledEvent(req, res) {
+  try {
+    //Extracting the user
+    const user = await extractingUserDetails(req.headers["authorization"]);
+    //If the user is not a company, return an error
+    if (user.isAwaiter) {
+      return res.status(403).json({
+        message: "You are not allowed to view this data",
+        succeed: false,
+        data: [],
+      });
+    }
+    //Getting the events by his own company id
+    let results = await pool.query(
+      `
+  SELECT * FROM events WHERE company_id = ? AND status = ?;
+  `,
+      [user.id, "Canceled"]
+    );
+    //Saving the relevant results
+    results = results[0];
+    //Cutting the ISO date
+    results = results.map((event) => {
+      return {
+        ...event,
+        e_date: cutIsoDate(event.e_date),
+      };
+    });
+    //Sending the response
+    return res.status(200).json({
+      message: "Events fetched successfully",
+      succeed: true,
+      data: results,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Error fetching data" + " => " + err.sqlMessage,
+      succeed: false,
+    });
+  }
+}
 
-//   sqlQuerySelect(
-//     "id",
-//     "companies",
-//     ["email"],
-//     "=",
-//     [userEmail],
-//     0,
-//     (err, results) => {
-//       if (err) {
-//         res.status(500).json({
-//           message: "Error finding employer ID inside database",
-//           succeed: false,
-//         });
-//       } else {
-//         sqlQueryUpdate(
-//           "events",
-//           arrayField,
-//           arrayContent,
-//           ["id", "company_id"],
-//           "=",
-//           [event.event_id, results[0].id],
-//           (err, results) => {
-//             if (err) {
-//               res.status(500).json({
-//                 message: "Error during updating event",
-//                 succeed: false,
-//               });
-//             } else {
-//               res.status(200).json({
-//                 message: "Event updated successfully",
-//                 succeed: true,
-//               });
-//             }
-//           }
-//         );
-//       }
-//     }
-//   );
-// });
+router.get("/canceld-events", authenticateToken, canceledEvent);
 
 export default router;
 

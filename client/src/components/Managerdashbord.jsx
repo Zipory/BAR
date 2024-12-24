@@ -15,6 +15,8 @@ const ManagerDashboard = () => {
   const [pastEventsIsVisible, setPastEventsIsVisible] = useState(false);
   const [futureEvents, setfutureEvents] = useState([]);
   const [futureEventsIsVisible, setFutureEventsIsVisible] = useState(false);
+  const [canceldEvents, setCanceledEvents] = useState([]); //added by beni
+  const [canceldEventsIsVisible, setCanceledEventsIsVisible] = useState(false); //added by beni
   const appendButton = true;
   const timeToRate = true;
   // check that the user is event-manager.
@@ -32,10 +34,12 @@ const ManagerDashboard = () => {
   const apiUrlAllEvents = "/events";
   const apiUrlFutureEvents = `/events/my-events/future`;
   const apiUrlPastEvents = `/events/my-events/past`;
+  const apiUrlCanceledEvents = `/events/canceld-events`; //added by beni
   useEffect(() => {
     FetchToken(apiUrlAllEvents, setAllEvents);
     FetchToken(apiUrlFutureEvents, setfutureEvents);
     FetchToken(apiUrlPastEvents, setPastEvents);
+    FetchToken(apiUrlCanceledEvents, setCanceledEvents);
   }, []);
 
   const toggleVisibilityOfAllEvents = (event) => {
@@ -51,6 +55,11 @@ const ManagerDashboard = () => {
     setPastEventsIsVisible((prevState) => !prevState);
     event.currentTarget.classList.toggle("clicked");
   };
+
+  const toggleVisibilityOfCanceledEvents = (event) => {
+    setCanceledEventsIsVisible((prevState) => !prevState);
+    event.currentTarget.classList.toggle("clicked");
+  }; //added by beni
 
   /**for the new event modal. */
   useEffect(() => {
@@ -105,6 +114,18 @@ const ManagerDashboard = () => {
           <strong>{pastEvents.length > 0 ? pastEvents.length : " "}</strong>
           אירועים שעברו
         </button>
+        {/* {button to see my canceld events} */}
+        <button
+          disabled={false}
+          onClick={(event) => {
+            toggleVisibilityOfCanceledEvents(event);
+          }}>
+          {canceldEventsIsVisible ? "הסתר " : "הראה "}
+          <strong>
+            {canceldEvents.length > 0 ? canceldEvents.length : " "}
+          </strong>
+          אירועים שבוטלו
+        </button>
         {/* {button to see all events} */}
         <button
           disabled={disableButton(allEvents)}
@@ -138,6 +159,13 @@ const ManagerDashboard = () => {
             isVisible={pastEventsIsVisible}
             events={pastEvents}
             timeToRate={timeToRate}
+          />
+        </section>
+        <section>
+          <ListOfEvents
+            title={"אירועים שבוטלו"}
+            isVisible={canceldEventsIsVisible}
+            events={canceldEvents}
           />
         </section>
       </div>

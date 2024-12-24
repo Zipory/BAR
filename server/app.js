@@ -9,7 +9,27 @@ import requestsRoutes from "./routes/requestsRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import ratingRoutes from "./routes/ratingRoutes.js";
 import {
+  getCurrentDate,
+  getCurrentTime,
+  cutIsoDate,
+  addHoursToDateAndTime,
+  compareDates,
+  compareTimes,
+  isValidDate,
+  isValidTime,
+  capitalizeFirstLetter,
+  //sql functions
+  sqlQueryInsert,
+  sqlQuerySelect,
+  sqlQueryDelete,
+  sqlQueryUpdate,
+  selectCompanies,
+
+  //jwt functions
   generateToken,
+  authenticateToken,
+  extractingUserDetails,
+  //bcrypt functions
   hashPassword,
   comparePassword,
 } from "./sources/function.js";
@@ -264,6 +284,30 @@ app.use("/events", eventsRoutes);
 app.use("/requests", requestsRoutes);
 app.use("/user", userRoutes);
 app.use("/rating", ratingRoutes);
+
+/**----------------Interval for past events update---------------- */
+const timeToInterval = 60 * 5 * 1000;
+
+async function updatePastEvents() {
+  try {
+    const date = getCurrentDate();
+    const time = getCurrentTime();
+    const dateAndTime = `${date} ${time}`;
+    let results = await pool.query(
+      `UPDATE events 
+     set status = 'Past'
+     WHERE (e_date < '${date}') OR (e_date = '${date}' AND e_time < '${time}') ;`
+    );
+    // console.log("results", results);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const interval = setInterval(() => {
+  updatePastEvents();
+}, timeToInterval);
+
 /*-----------------set listener open on port 4000 ------------------ */
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
