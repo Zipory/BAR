@@ -32,9 +32,8 @@ const WaiterInfo = ({info, eventID, timeToRate}) => {
   }, [possible]);
 
   function transformGender(gender) {
-   return gender === "Other" ? "אחר" : gender === "Female" ? "נקבה" : "זכר"
+   return gender.toLowerCase() === "other" ? "אחר" : gender === "female" ? "נקבה" : "זכר"
   }
-
   return (
     <div>
         <div>

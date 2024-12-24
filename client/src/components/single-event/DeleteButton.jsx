@@ -8,7 +8,8 @@ const DeleteButton = ({eventID}) => {
     className='log-out'
     onDoubleClick={() =>
       FetchDD(urlDelete, id)
-    }>ביטול האירוע <small>(לחיצה כפולה)</small></button>
+    }>ביטול האירוע       <br />
+        <small>(לחיצה כפולה)</small></button>
   )
 }
 
