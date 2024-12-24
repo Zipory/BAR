@@ -14,6 +14,7 @@ const ToggledComponent = ({
   const [filteredEvents, setFilteredEvents] = useState(events);
   const [cityFilter, setCityFilter] = useState(null);
   const [salaryFilter, setSalaryFilter] = useState(null);
+  const [dateFilter, setDateFilter] = useState(null);
   const [workLengthFilter, setWorkLengthFilter] = useState(null);
   const [requestList, setRequestList] = useState([]);
   const [increment, setIncrement] = useState(0);
@@ -115,50 +116,63 @@ const ToggledComponent = ({
               placeholder="סנן לפי משכורת"
               min={1}
             />
+
+            <input
+              type="date"
+              onChange={(e) => setDateFilter(e.target.value)}
+            />
           </div>
           <div className="filter-container buttons">
             <button
               onClick={() => {
-                if (!cityFilter && !salaryFilter && !workLengthFilter) {
-                  setFilteredEvents(events);
-                } else {
-                  setFilteredEvents(
-                    events.filter((event) => {
-                      let matchesCity = true;
-                      let matchesSalary = true;
-                      let matchesWorkLength = true;
-
-                      if (cityFilter) {
-                        matchesCity =
-                          event.location &&
-                          event.location
-                            .toLowerCase()
-                            .includes(cityFilter.toLowerCase());
-                      }
-
-                      if (salaryFilter) {
-                        const salary = parseFloat(event.salary);
-                        if (!isNaN(salary)) {
-                          matchesSalary = salary >= parseFloat(salaryFilter);
-                        } else {
-                          matchesSalary = false;
-                        }
-                      }
-
-                      return matchesCity && matchesSalary && matchesWorkLength;
-                    })
+                const matchesCity = (event) => {
+                  if (!cityFilter) return true;
+                  return (
+                    event.location &&
+                    event.location
+                      .toLowerCase()
+                      .includes(cityFilter.toLowerCase())
                   );
+                };
+
+                const matchesSalary = (event) => {
+                  if (!salaryFilter) return true;
+                  const salary = parseFloat(event.salary);
+                  return !isNaN(salary) && salary >= parseFloat(salaryFilter);
+                };
+
+                const matchesDate = (event) => {
+                  if (!dateFilter) return true;
+                  // ודא שהפורמט של התאריך זהה
+                  return (
+                    new Date(event.e_date).toISOString().split("T")[0] ===
+                    dateFilter
+                  );
+                };
+
+                if (!cityFilter && !salaryFilter && !dateFilter) {
+                  setFilteredEvents(events); // אין פילטרים, הצגת כל האירועים
+                } else {
+                  const filtered = events.filter(
+                    (event) =>
+                      matchesCity(event) &&
+                      matchesSalary(event) &&
+                      matchesDate(event)
+                  );
+                  setFilteredEvents(filtered);
                 }
               }}>
-              סנן
+              סנן🔍
             </button>
-            <button onClick={() => setFilteredEvents(events)}>הצג הכול</button>
+
+            <button onClick={() => setFilteredEvents(events)}>הכול📃</button>
           </div>
         </>
       ) : (
         ""
       )}
       <ol>
+        {filteredEvents.length === 0 && <h3>לא נמצאו אירועים</h3>}
         {filteredEvents.map((val, indx) => (
           <li className="li-event" event={val[0]} key={indx}>
             <Event

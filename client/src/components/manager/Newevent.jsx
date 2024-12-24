@@ -72,10 +72,17 @@ const Newevent = ({ setShowModal, eventStatus, setFutureEventsIsVisible }) => {
           name="waiters_amount"
           type="number"
           placeholder="כמות מלצרים"
+          min={1}
           required
         />
         <br />
-        <input name="salary" type="number" placeholder="סכום לתשלום" required />
+        <input
+          name="salary"
+          type="number"
+          placeholder="סכום לתשלום"
+          min={1}
+          required
+        />
         <div>
           <input
             type="radio"

@@ -62,14 +62,11 @@ const WaiterDashboard = () => {
   return (
     <>
       <h1 className="name">
-      {user?.face_url && (
-        <div>
-          <img className="profil"
-            src={user.face_url}
-            alt="תמונת פרופיל"
-          />
-        </div>
-          )}
+        {user?.face_url && (
+          <div>
+            <img className="profil" src={user.face_url} alt="תמונת פרופיל" />
+          </div>
+        )}
         {user?.first_name} {user?.last_name}
       </h1>
       <div className="dashboard">
