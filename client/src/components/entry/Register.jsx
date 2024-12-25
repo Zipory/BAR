@@ -34,6 +34,7 @@ function Register() {
   const [isAwaiter, setIsAwaiter] = useContext(typeOfUser);
   const [cloudinaryUrl, setCloudinaryUrl] = useState(null)
   const [title, setTitle] = useState(isAwaiter ? "מלצר" : "מנהל אירועים");
+  const [message, setMessage] = useState("   ");
 
   /* nav to login after singup. */
   let navigate = useNavigate();
@@ -44,12 +45,23 @@ function Register() {
   }, [singupOk]);
 
 
+const passwordVerification = (pass1, pass2) => {
+  return pass1 === pass2;
+}
 
+const addMessage = (mes) => {
+    setMessage(mes)  
+    // console.log("hello");
+    
+    setTimeout( () => setMessage("    "), 2000 );
+}
 
   /*for events-manager: create the post request, and set singup  */
   const managerRegister = (event) => {
-    document.querySelector(".myForm").checkVisibility();
-    event.preventDefault();
+    let isValid = document.querySelector(".myForm").checkValidity();
+      if (isValid) {
+        event.preventDefault();
+        if (passwordVerification(password.current.value, confirmPassword.current.value)) {
     let allInputs = {
       email: email.current.value,
       password: password.current.value,
@@ -60,12 +72,23 @@ function Register() {
       isAwaiter: isAwaiter,
     };
     FetchPost(postUrl, allInputs, setSingupOk);
+  }
+  else {
+    addMessage("אימות סיסמא לא תקין.");
+  }
+  }
   };
 
   /*for waiter: create the post request, and set singup  */
   const waiterRegister = (event) => {
-    document.querySelector(".myForm").checkVisibility();
-    event.preventDefault();
+    console.log("here")
+   
+    let isValid = document.querySelector(".myForm").checkValidity();
+  // document.querySelector(".myForm").checkVisibility();
+
+    if (isValid) {
+       event.preventDefault();
+       if (passwordVerification(password.current.value, confirmPassword.current.value)) {
     console.log(email.current.value);
     let allInputs = {
       email: email.current.value,
@@ -80,6 +103,11 @@ function Register() {
     };
     FetchPost(postUrl, allInputs, setSingupOk);
     console.log(allInputs);
+  }
+  else {
+    addMessage("אימות סיסמא לא תקין.");
+  }
+}
     
   };
   const handleRadio = (event) => {
@@ -99,6 +127,8 @@ function Register() {
             placeholder="שם איש הקשר"
             ref={contactPersonName}
             required
+            pattern="^[\u0590-\u05FF]{2,}$"
+            title="שם לא תקין: 2 אותיות לפחות בעברית בלבד"
           />
         )}
         {!isAwaiter && (
@@ -106,7 +136,9 @@ function Register() {
             type="text"
             placeholder="מספר פלאפון של איש הקשר"
             ref={contactPersonPhone}
+            pattern="^\d{10}$"
             required
+            title="נא להכניס מספר פלאפון תקין: 10 ספרות"
           />
         )}
         {!isAwaiter && (
@@ -121,10 +153,16 @@ function Register() {
           />
         )}
         {isAwaiter && (
-          <input type="text" placeholder="שם פרטי" ref={firstName} autoFocus  required></input>
+          <input type="text" placeholder="שם פרטי" ref={firstName} autoFocus  required 
+               pattern="^[\u0590-\u05FF]{2,}$"
+            title="שם פרטי לא תקין: 2 אותיות לפחות בעברית בלבד"
+          ></input>
         )}
         {isAwaiter && (
-          <input type="text" placeholder="שם משפחה" ref={lastName}  required></input>
+          <input type="text" placeholder="שם משפחה" ref={lastName}  required
+              pattern="^[\u0590-\u05FF]{2,}$"
+            title="שם משפחה לא תקין: 2 אותיות לפחות בעברית בלבד"
+          ></input>
         )}
         {isAwaiter && (
           <input
@@ -132,6 +170,9 @@ function Register() {
             type="tel"
             placeholder="פלאפון"
             ref={phoneNumber}
+            pattern="^\d{10}$"
+            required
+            title="נא להכניס מספר פלאפון תקין: 10 ספרות"
           ></input>
         )}
         {isAwaiter && (
@@ -205,6 +246,7 @@ function Register() {
         {isAwaiter && (
         <CloudinaryHandle setCloudinaryUrl={setCloudinaryUrl} cloudinaryUrl={cloudinaryUrl}/>
         )}
+        <div>{message}</div>
         <button
           type="submit"
           className="register-btn"
@@ -212,9 +254,11 @@ function Register() {
         >
           התחברות
         </button>
+       
       </form>
       {/* trying to create a popup if singup successed or not. */}
-      {singupOk && <h1>new user created.</h1> && setTimeout(() => {}, 3000)}
+      {/* {singupOk && <h1>new user created.</h1> && setTimeout(() => {}, 3000)} */}
+    
     </div>
   );
 }
